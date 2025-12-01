@@ -1,0 +1,561 @@
+
+import { GoogleGenAI, Type, GenerateContentResponse, Content, Modality } from "@google/genai";
+import { Grant, GrantSummary, VideoScene, PlantingSite, SuitableTree, EconomicBenefitAnalysis, Coords, GroundedResult, GroundedSource, SiteAnalysis } from "../types";
+
+// Always use new GoogleGenAI({apiKey: process.env.API_KEY});
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+
+export interface ChatResponse {
+    responseText: string;
+    followUpPrompts: string[];
+}
+
+export const getChatResponseWithFollowups = async (
+    systemInstruction: string,
+    history: Content[],
+    latestMessage: string
+): Promise<ChatResponse> => {
+    // Override system instruction to ensure animal shelter persona
+    const shelterPersona = "You are a friendly and knowledgeable assistant for the Green Hope Animal Rescue Project. Your goal is to answer user questions about animal adoption, shelter services, rescue missions, and volunteer opportunities. Keep your answers concise and helpful.";
+    
+    const contents: Content[] = [
+        ...history,
+        { role: 'user', parts: [{ text: latestMessage }] }
+    ];
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents,
+        config: {
+            systemInstruction: shelterPersona,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    responseText: { type: Type.STRING, description: "Your direct, helpful response to the user's question about animals/shelters." },
+                    followUpPrompts: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                        description: "3 short, relevant, and engaging follow-up questions or actions the user might want to take next (e.g., 'How to adopt?', 'Volunteer info')."
+                    }
+                },
+                required: ["responseText", "followUpPrompts"]
+            }
+        }
+    });
+
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+
+export const generateReport = async (topic: string, description: string, reportType: string): Promise<GroundedResult> => {
+    const prompt = `
+        Generate a comprehensive report for an Animal Shelter/Rescue organization.
+        Report Type: "${reportType}".
+        Topic: ${topic}
+        Description: ${description}
+
+        The report should be well-structured, detailed, and formatted in Markdown.
+        Use Google Search to find up-to-date and relevant information for the report, including current animal welfare trends, shelter best practices, veterinary protocols, or funding sources as applicable.
+        Include sections appropriate for the report type (e.g., for a Shelter Plan: Capacity Planning, Medical Protocols, Budget, Staffing).
+        List all web sources used.
+    `;
+
+    // Use ai.models.generateContent
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+            tools: [{ googleSearch: {} }],
+        }
+    });
+    
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+    const sources = groundingChunks.map(chunk => chunk.web).filter(s => s).map(s => ({ web: s })) as GroundedSource[];
+    
+    return {
+        text: response.text,
+        sources: sources,
+    };
+};
+
+export const findGrants = async (keywords: string): Promise<Grant[]> => {
+    const prompt = `
+        Find available Animal Welfare, Shelter, and Veterinary grants related to these keywords: "${keywords} animal shelter rescue".
+        Provide a list of 5 grants. For each grant, provide:
+        - grantTitle: The official title of the grant.
+        - fundingBody: The organization providing the funds.
+        - summary: A brief summary of the grant's purpose for animals.
+        - deadline: The application deadline.
+        - link: A direct URL to the grant page.
+    `;
+    
+    // Use ai.models.generateContent with responseSchema for JSON output
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        grantTitle: { type: Type.STRING },
+                        fundingBody: { type: Type.STRING },
+                        summary: { type: Type.STRING },
+                        deadline: { type: Type.STRING },
+                        link: { type: Type.STRING },
+                    },
+                    required: ["grantTitle", "fundingBody", "summary", "deadline", "link"]
+                }
+            }
+        }
+    });
+
+    // Extract text and parse JSON
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+export const findGrantsWithGrounding = async (keywords: string): Promise<GroundedResult> => {
+    const prompt = `Find the latest Animal Welfare, Shelter, and Veterinary grants related to these keywords: "${keywords}". Provide a summary of the top 3-5 grants, including their name, funding body, and a direct link to the application page. Also list all web sources used.`;
+    
+    const response: GenerateContentResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+            tools: [{ googleSearch: {} }],
+        },
+    });
+
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+    const sources = groundingChunks.map(chunk => chunk.web).filter(s => s).map(s => ({ web: s })) as GroundedSource[];
+    
+    return {
+        text: response.text,
+        sources: sources,
+    };
+};
+
+export const analyzeGrant = async (grant: Grant, userProfile: string): Promise<GrantSummary> => {
+    const prompt = `
+        Analyze the following grant opportunity based on my profile. Use Google Search to access the provided link and get the most up-to-date information.
+        
+        My Profile:
+        ${userProfile} (An Animal Shelter and Rescue Organization)
+
+        Grant Details:
+        Title: ${grant.grantTitle}
+        Funding Body: ${grant.fundingBody}
+        Summary: ${grant.summary}
+        Deadline: ${grant.deadline}
+        Link: ${grant.link}
+
+        After analyzing the grant from the link, extract the following information and respond ONLY with a valid JSON object. Do not add any other text or markdown formatting like \`\`\`json. The JSON object must contain these exact keys:
+        "grantTitle", "fundingBody", "deadline", "amount", "duration", "geography", "eligibility", "scope", "howToApply", "contact", and "relevancePercentage" (an integer from 0 to 100 indicating relevance to my profile).
+    `;
+    
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+            tools: [{ googleSearch: {} }],
+        }
+    });
+    
+    let jsonStr = response.text.trim();
+    // Clean up potential markdown formatting if the model adds it despite instructions.
+    if (jsonStr.startsWith('```json')) {
+        jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
+    }
+     try {
+        return JSON.parse(jsonStr);
+    } catch (e) {
+        console.error("Failed to parse JSON from grant analysis:", jsonStr);
+        throw new Error("The model did not return a valid JSON object for the grant analysis.");
+    }
+};
+
+export const findPlantingSites = async (description: string): Promise<PlantingSite[]> => {
+    // REPURPOSED: Finding Rescue/Shelter Sites instead of Planting Sites.
+    // The Schema keys remain the same to avoid breaking the frontend types, but the content is mapped.
+    const systemInstruction = `You are an expert animal welfare strategist for the Green Hope Project. Your task is to identify and recommend optimal locations for animal rescue operations, new shelters, or feeding stations based on user-defined goals. Analyze the request and provide 3-5 potential sites. 
+    
+    IMPORTANT: Map your response to the following JSON schema keys:
+    - locationName: Name of the rescue zone or shelter site.
+    - country: Country.
+    - latitude: Latitude.
+    - longitude: Longitude.
+    - rationale: Detailed explanation of why this site is needed for animals (stray population, lack of vets, etc.).
+    - suggestedSpecies: List of animals that need help here (e.g., "Stray Dogs", "Feral Cats", "Injured Birds").
+    - priority: Urgency level.
+    `;
+    
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-pro',
+        contents: description,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        locationName: { type: Type.STRING },
+                        country: { type: Type.STRING },
+                        latitude: { type: Type.NUMBER },
+                        longitude: { type: Type.NUMBER },
+                        rationale: { type: Type.STRING, description: "A detailed explanation in Markdown format about why this site is suitable for rescue operations." },
+                        suggestedSpecies: { type: Type.ARRAY, items: { type: Type.STRING } },
+                        priority: { type: Type.STRING, description: "Priority level: 'Critical', 'High', 'Medium', or 'Low'." },
+                    },
+                    required: ["locationName", "country", "latitude", "longitude", "rationale", "suggestedSpecies", "priority"]
+                }
+            }
+        }
+    });
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnalysis> => {
+    // REPURPOSED: Analyzing Shelter/Rescue Site Feasibility.
+    // Mapping Schema:
+    // estimatedCost -> Setup/Operational Cost
+    // treeCount -> Animal Capacity
+    // carbonSequestrationTonnesPerYear -> Estimated Yearly Adoptions
+    
+    const systemInstruction = `You are a shelter planner and financial analyst for an animal rescue NGO. Your task is to provide a detailed feasibility analysis for a proposed shelter or rescue project.`;
+    const userPrompt = `
+        Analyze the following proposed rescue site:
+        - Location: ${site.locationName}, ${site.country}
+        - Rationale: ${site.rationale}
+        - Target Animals: ${site.suggestedSpecies.join(', ')}
+
+        Provide the analysis in the following JSON format. Note the specific mapping for this schema:
+        - estimatedCost: A realistic cost range for setting up the shelter/operation.
+        - treeCount: The estimated ANIMAL CAPACITY (number of animals the site can hold).
+        - projectDurationYears: Estimated time to fully establish the center.
+        - carbonSequestrationTonnesPerYear: The estimated NUMBER OF ADOPTIONS per year.
+        - keyChallenges: List of 2-3 key potential challenges (e.g., zoning, disease control).
+        - successFactors: List of 2-3 critical success factors (e.g., community volunteers, vet partnership).
+    `;
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-pro',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    estimatedCost: { type: Type.STRING },
+                    treeCount: { type: Type.INTEGER, description: "Estimated ANIMAL CAPACITY." },
+                    projectDurationYears: { type: Type.STRING },
+                    carbonSequestrationTonnesPerYear: { type: Type.INTEGER, description: "Estimated YEARLY ADOPTIONS." },
+                    keyChallenges: { type: Type.ARRAY, items: { type: Type.STRING } },
+                    successFactors: { type: Type.ARRAY, items: { type: Type.STRING } },
+                },
+                required: ["estimatedCost", "treeCount", "projectDurationYears", "carbonSequestrationTonnesPerYear", "keyChallenges", "successFactors"]
+            }
+        }
+    });
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+}
+
+export const findPlantingSitesWithMaps = async (query: string, userCoords: Coords): Promise<GroundedResult> => {
+    const prompt = `Based on my current location, find information about: "${query}" related to animal welfare, vets, or pet resources. Provide details about relevant places and include links to Google Maps.`;
+
+    const response: GenerateContentResponse = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+            tools: [{googleMaps: {}}],
+            toolConfig: {
+                retrievalConfig: {
+                    latLng: {
+                        latitude: userCoords.lat,
+                        longitude: userCoords.lng
+                    }
+                }
+            }
+        },
+    });
+
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+    const sources: GroundedSource[] = groundingChunks
+        .map(chunk => {
+            if (chunk.maps) return { maps: chunk.maps };
+            if (chunk.web) return { web: chunk.web };
+            return null;
+        })
+        .filter((s): s is GroundedSource => s !== null);
+
+    return {
+        text: response.text,
+        sources: sources,
+    };
+};
+
+export const findSuitableTrees = async (latitude: number, longitude: number): Promise<SuitableTree[]> => {
+    // REPURPOSED: Finding Suitable Animals/Breeds for the environment.
+    // Schema Mapping:
+    // commonName -> Animal Breed/Type
+    // scientificName -> Scientific Name (or specifics)
+    // description -> Description of the animal's needs.
+    // rationale -> Why this animal is suitable for this specific location/environment.
+
+    const systemInstruction = `You are an expert veterinarian and animal behaviorist. Your task is to recommend suitable animal species or dog/cat breeds that would thrive in a specific geographic environment (considering climate, space, urban/rural). 
+    
+    Analyze the location based on latitude/longitude.
+    Provide a list of 3-5 suitable animals.
+    
+    Map to Schema:
+    - commonName: The breed or animal type (e.g., "Golden Retriever", "Domestic Shorthair Cat").
+    - scientificName: Scientific name (e.g. "Canis lupus familiaris").
+    - description: Brief description of the animal and its temperament.
+    - rationale: Why this animal suits this climate/environment (e.g., "Thick coat good for cold climate", "Small size good for urban apartment").
+    `;
+    
+    const userPrompt = `Recommend suitable animals/breeds for a shelter or home at latitude: ${latitude}, longitude: ${longitude}.`
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-pro',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        commonName: { type: Type.STRING },
+                        scientificName: { type: Type.STRING },
+                        description: { type: Type.STRING, description: "Description in Markdown." },
+                        rationale: { type: Type.STRING, description: "Rationale in Markdown." },
+                    },
+                    required: ["commonName", "scientificName", "description", "rationale"]
+                }
+            }
+        }
+    });
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+export const calculateEconomicBenefits = async (treeName: string, scientificName: string, coords: Coords): Promise<EconomicBenefitAnalysis> => {
+    // REPURPOSED: Calculate Care Costs & Impact.
+    // annualRevenuePerTree -> Annual Care Cost
+    // yearsToProfitability -> Avg Time to Adoption
+    // primaryProducts -> Care Requirements
+    // otherBenefits -> Social Benefits
+
+    const systemInstruction = `You are an animal shelter administrator. Calculate the costs and impact of rescuing a specific animal type.`;
+    const userPrompt = `
+        Provide an analysis for rescuing a "${treeName}" (${scientificName}) at latitude ${coords.lat}, longitude ${coords.lng}.
+        
+        Map to Schema:
+        - annualRevenuePerTree: Estimated ANNUAL CARE COST (Food, Vet, etc.). e.g. "$500 - $800".
+        - yearsToProfitability: Average TIME TO ADOPTION. e.g. "2-4 Months".
+        - primaryProducts: List of CARE REQUIREMENTS (e.g., "Daily Walks", "Grooming").
+        - otherBenefits: Summary of SOCIAL/COMMUNITY BENEFITS of rescuing this animal (e.g., "Therapy animal potential").
+    `;
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    annualRevenuePerTree: { type: Type.STRING },
+                    yearsToProfitability: { type: Type.STRING },
+                    primaryProducts: { type: Type.ARRAY, items: { type: Type.STRING } },
+                    otherBenefits: { type: Type.STRING, description: "A summary in Markdown." },
+                },
+                required: ["annualRevenuePerTree", "yearsToProfitability", "primaryProducts", "otherBenefits"]
+            }
+        }
+    });
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+
+export const suggestProjectGoals = async (latitude: number, longitude: number): Promise<string[]> => {
+    const systemInstruction = `You are a animal rescue strategist. Based on the provided geographic coordinates, generate 3 concise and actionable goals for an animal shelter or rescue project in that area (considering likely climate/environment).`;
+    const userPrompt = `Project location: latitude ${latitude}, longitude ${longitude}.`;
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    goals: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                        description: "An array of 3 distinct project goal strings."
+                    }
+                },
+                required: ["goals"]
+            }
+        }
+    });
+
+    const jsonStr = response.text.trim();
+    const parsed = JSON.parse(jsonStr);
+    return parsed.goals;
+};
+
+
+type ScriptScene = Omit<VideoScene, 'videoUrls' | 'imageUrl' | 'isGenerating' | 'isApproved' | 'error'>;
+
+export const generateVideoScript = async (prompt: string, image: string | null, duration: number, videoType: string): Promise<ScriptScene[]> => {
+    const systemInstruction = `You are a creative scriptwriter for an Animal Rescue organization. Your task is to generate a script for a short video about animal adoption, rescue stories, or shelter showcases. The script should be broken down into scenes. For each scene, provide inspiring narration and a detailed description of the visuals (focusing on cute/heroic animals). The total number of scenes should be appropriate for a ${duration}-second video.`;
+    
+    let userPrompt = `Video Topic: ${prompt}\nVideo Type: ${videoType}`;
+    if (image) {
+        userPrompt += "\nAn image has been provided as inspiration.";
+    }
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        id: { type: Type.STRING, description: "A unique ID for the scene, e.g., 'scene_1'" },
+                        narration: { type: Type.STRING, description: "The voiceover narration for this scene." },
+                        description: { type: Type.STRING, description: "A detailed visual description for the AI video/image generator." },
+                    },
+                    required: ["id", "narration", "description"],
+                }
+            }
+        }
+    });
+    
+    const jsonStr = response.text.trim();
+    return JSON.parse(jsonStr);
+};
+
+export const askGoogleBabaAboutImage = async (image: {data: string, mimeType: string}, userFocus?: string): Promise<GroundedResult> => {
+    const textPart = { text: `Analyze this image in the context of animal rescue and welfare. The user is particularly interested in: "${userFocus || 'General information, breed identification (if applicable), and potential adoption/rescue context.'}". Use Google Search to find relevant information.` };
+    const imagePart = { inlineData: image };
+
+    const response: GenerateContentResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: { parts: [imagePart, textPart] },
+        config: {
+            tools: [{ googleSearch: {} }],
+        },
+    });
+
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+    const sources = groundingChunks.map(chunk => chunk.web).filter(s => s).map(s => ({ web: s })) as GroundedSource[];
+    
+    return {
+        text: response.text,
+        sources: sources,
+    };
+};
+
+export const generateSceneVideo = async (description: string): Promise<string[]> => {
+    // This is a placeholder as video generation is a long-running operation.
+    // In a real app, this would initiate an operation and poll for results.
+    console.log("Generating video for:", description);
+    await new Promise(res => setTimeout(res, 3000)); // Simulate network delay
+    // Returning a placeholder URL
+    return [`/videos/placeholder.mp4`];
+};
+
+export const generateSceneImage = async (description: string): Promise<string> => {
+    const response = await ai.models.generateImages({
+        model: 'imagen-4.0-generate-001',
+        prompt: description,
+        config: {
+            numberOfImages: 1,
+            outputMimeType: 'image/jpeg',
+            aspectRatio: '16:9'
+        }
+    });
+
+    const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
+    return `data:image/jpeg;base64,${base64ImageBytes}`;
+};
+
+export const generateBlogImage = async (title: string): Promise<string> => {
+    // Robust prompt construction to handle non-English titles and avoid model errors.
+    const prompt = `A photorealistic, hopeful, and cute image for a blog post.
+    The title of the post is: '${title}'.
+    If the title is not in English, visualize the concept of the title.
+    The image must be suitable for an animal rescue organization.
+    Focus on happy animals (cats, dogs, wildlife) in a safe environment.
+    Avoid text overlays. Aspect ratio 16:9.`;
+    
+    const response = await ai.models.generateImages({
+        model: 'imagen-4.0-generate-001',
+        prompt: prompt,
+        config: {
+            numberOfImages: 1,
+            outputMimeType: 'image/jpeg',
+            aspectRatio: '16:9'
+        }
+    });
+
+    const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
+    return `data:image/jpeg;base64,${base64ImageBytes}`;
+};
+
+export const editImage = async (base64ImageData: string, mimeType: string, prompt: string): Promise<string> => {
+    const imagePart = {
+        inlineData: {
+            data: base64ImageData,
+            mimeType: mimeType,
+        },
+    };
+    const textPart = {
+        text: prompt,
+    };
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [imagePart, textPart],
+        },
+        config: {
+            responseModalities: [Modality.IMAGE],
+        },
+    });
+
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+            const base64ImageBytes: string = part.inlineData.data;
+            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+        }
+    }
+
+    throw new Error("No image was generated.");
+};
+
+
+export const generateMusicDescription = async (prompt: string): Promise<string> => {
+     const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `Describe a suitable background music track for a video with the following theme: "${prompt}". Describe the mood (likely heartwarming, playful, or emotional), instruments, and tempo.`,
+    });
+    return response.text;
+};
