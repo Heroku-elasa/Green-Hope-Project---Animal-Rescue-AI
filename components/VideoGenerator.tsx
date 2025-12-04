@@ -154,7 +154,7 @@ const Step1_InitialPrompt: React.FC<Pick<VideoGeneratorProps, 'prompt' | 'setPro
                             {[1, 2].map(num => (
                                 <label key={num} className={`cursor-pointer rounded-md p-3 text-center border-2 transition-colors ${numberOfVersions === num ? 'border-bf-orange bg-orange-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                                     <input type="radio" name="number-of-versions" value={num} checked={numberOfVersions === num} onChange={() => setNumberOfVersions(num)} className="sr-only" disabled={isScriptLoading}/>
-                                    <span className="text-sm font-bold text-gray-800">{num} Version{num > 1 ? 's' : ''}</span>
+                                    <span className="text-sm font-bold text-gray-800">{num} {t('videoGenerator.versions')}</span>
                                 </label>
                             ))}
                         </div>
@@ -164,13 +164,21 @@ const Step1_InitialPrompt: React.FC<Pick<VideoGeneratorProps, 'prompt' | 'setPro
                         <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {(['16:9', '9:16', '1:1', '4:5'] as const)
                                 .filter(ratio => videoType === 'research_showcase' ? ['16:9', '4:5'].includes(ratio) : true)
-                                .map(ratio => (
-                                <label key={ratio} className={`cursor-pointer rounded-md p-3 text-center border-2 transition-colors ${aspectRatio === ratio ? 'border-bf-orange bg-orange-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
-                                    <input type="radio" name="aspect-ratio" value={ratio} checked={aspectRatio === ratio} onChange={() => setAspectRatio(ratio)} className="sr-only" disabled={isScriptLoading} />
-                                    <span className="text-sm font-bold text-gray-800">{ratio}</span>
-                                    <span className="block text-xs text-gray-500">{ratio === '16:9' ? 'Widescreen' : ratio === '9:16' ? 'Vertical' : ratio === '1:1' ? 'Square' : 'Portrait'}</span>
-                                </label>
-                            ))}
+                                .map(ratio => {
+                                    let label = '';
+                                    if (ratio === '16:9') label = t('videoGenerator.ratios.widescreen');
+                                    else if (ratio === '9:16') label = t('videoGenerator.ratios.vertical');
+                                    else if (ratio === '1:1') label = t('videoGenerator.ratios.square');
+                                    else label = t('videoGenerator.ratios.portrait');
+
+                                    return (
+                                        <label key={ratio} className={`cursor-pointer rounded-md p-3 text-center border-2 transition-colors ${aspectRatio === ratio ? 'border-bf-orange bg-orange-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                                            <input type="radio" name="aspect-ratio" value={ratio} checked={aspectRatio === ratio} onChange={() => setAspectRatio(ratio)} className="sr-only" disabled={isScriptLoading} />
+                                            <span className="text-sm font-bold text-gray-800">{ratio}</span>
+                                            <span className="block text-xs text-gray-500">{label}</span>
+                                        </label>
+                                    );
+                                })}
                         </div>
                     </div>
 

@@ -363,7 +363,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                         handleAnalyzeSite(site);
                     });
                     
-                    marker.bindTooltip(`<b>${site.locationName}</b><br/>Priority: ${site.priority}<br/>Click to analyze`, { className: 'font-sans' });
+                    marker.bindTooltip(`<b>${site.locationName}</b><br/>${t('siteSelector.mapTooltip.priority')}: ${site.priority}<br/>${t('siteSelector.mapTooltip.clickAnalyze')}`, { className: 'font-sans' });
 
                     markersRef.current.push(marker);
                     latLngs.push(pos);

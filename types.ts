@@ -101,6 +101,18 @@ const translations: Record<string, any> = {
             { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'David Chen', title: 'Community Outreach', bio: 'Works on educational programs and cultural building.', linkedin: '#' },
         ]
     },
+    activitiesPage: {
+        items: [
+            { title: "Medical Treatment & Emergency", desc: "Our core mission. We provide surgeries, rehabilitation, and 24/7 care for injured strays.", iconKey: "medical", cta: "" },
+            { title: "Urban Spay/Neuter (TNR)", desc: "Managing the population humanely through Trap-Neuter-Return programs in Tehran.", iconKey: "cat", cta: "" },
+            { title: "AI Grant Finder", desc: "Using artificial intelligence to scan global databases for funding opportunities.", iconKey: "grant", cta: "Find Grants" },
+            { title: "Shelter Operations Planner", desc: "Generates comprehensive plans for shelter management, medical protocols, and expansion.", iconKey: "planner", cta: "Plan Operations" },
+            { title: "Education & Awareness", desc: "Creating video content to promote a culture of kindness and educate the public.", iconKey: "video", cta: "Create Video" },
+            { title: "Rescue Site Analysis", desc: "Analyzing geographic data to find optimal locations for new rescue stations.", iconKey: "map", cta: "Analyze Sites" },
+            { title: "Research & Development", desc: "Exploring new technologies like biometrics and telemedicine for animal welfare.", iconKey: "research", cta: "View R&D" },
+            { title: "AI System Architecture", desc: "Transparency in how we use AI to optimize our rescue operations.", iconKey: "ai", cta: "View System" }
+        ]
+    },
     animalsPage: {
         filterTitle: "Find Your Perfect Companion",
         filterSpecies: "Species",
@@ -337,6 +349,10 @@ const translations: Record<string, any> = {
         latLabelShort: "Lat",
         lngLabelShort: "Lng",
         mapLoading: "Loading map...",
+        mapTooltip: {
+            priority: "Priority",
+            clickAnalyze: "Click to analyze"
+        },
         nearbyAnalysis: {
             title: "Nearby Analysis",
             prompt: "What's nearby?",
@@ -389,7 +405,14 @@ const translations: Record<string, any> = {
         removeImage: "Remove Image",
         addWatermark: "Add Janpanah Watermark",
         numberOfVersions: "Number of Video Versions",
+        versions: "Version(s)",
         aspectRatio: "Aspect Ratio",
+        ratios: {
+            widescreen: "Widescreen",
+            vertical: "Vertical",
+            square: "Square",
+            portrait: "Portrait"
+        },
         durationLabel: "Approximate Video Duration",
         generateScriptButton: "Generate Script & Scenes",
         generatingScriptTitle: "Generating Script...",
@@ -708,6 +731,18 @@ const translations: Record<string, any> = {
             { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'دیوید چن', title: 'ارتباطات مردمی', bio: 'فعالیت در برنامه‌های آموزشی و فرهنگ‌سازی.', linkedin: '#' },
         ]
     },
+    activitiesPage: {
+        items: [
+            { title: "درمان پزشکی و اورژانس", desc: "ماموریت اصلی ما. ما جراحی، توانبخشی و مراقبت ۲۴ ساعته برای حیوانات ولگرد آسیب دیده ارائه می‌دهیم.", iconKey: "medical", cta: "" },
+            { title: "عقیم‌سازی شهری (TNR)", desc: "مدیریت جمعیت به روشی انسانی از طریق برنامه‌های زنده‌گیری، عقیم‌سازی و رهاسازی در تهران.", iconKey: "cat", cta: "" },
+            { title: "یابنده گرنت هوشمند", desc: "استفاده از هوش مصنوعی برای اسکن پایگاه‌های داده جهانی جهت یافتن فرصت‌های تأمین مالی.", iconKey: "grant", cta: "یافتن گرنت" },
+            { title: "برنامه‌ریز عملیات پناهگاه", desc: "تولید برنامه‌های جامع برای مدیریت پناهگاه، پروتکل‌های پزشکی و توسعه.", iconKey: "planner", cta: "برنامه‌ریزی عملیات" },
+            { title: "آموزش و آگاهی‌بخشی", desc: "تولید محتوای ویدیویی برای ترویج فرهنگ مهربانی و آموزش عمومی.", iconKey: "video", cta: "ساخت ویدیو" },
+            { title: "تحلیل سایت‌های نجات", desc: "تحلیل داده‌های جغرافیایی برای یافتن مکان‌های بهینه برای ایستگاه‌های نجات جدید.", iconKey: "map", cta: "تحلیل سایت‌ها" },
+            { title: "تحقیق و توسعه", desc: "بررسی فناوری‌های جدید مانند بیومتریک و پزشکی از راه دور برای رفاه حیوانات.", iconKey: "research", cta: "مشاهده تحقیق و توسعه" },
+            { title: "معماری سیستم هوش مصنوعی", desc: "شفافیت در نحوه استفاده ما از هوش مصنوعی برای بهینه‌سازی عملیات نجات.", iconKey: "ai", cta: "مشاهده سیستم" }
+        ]
+    },
     animalsPage: {
         filterTitle: "همراه ایده‌آل خود را پیدا کنید",
         filterSpecies: "گونه",
@@ -944,6 +979,10 @@ const translations: Record<string, any> = {
         latLabelShort: "عرض",
         lngLabelShort: "طول",
         mapLoading: "در حال بارگذاری نقشه...",
+        mapTooltip: {
+            priority: "اولویت",
+            clickAnalyze: "برای تحلیل کلیک کنید"
+        },
         nearbyAnalysis: {
             title: "تحلیل مناطق نزدیک",
             prompt: "چه چیزی در این نزدیکی است؟",
@@ -996,7 +1035,14 @@ const translations: Record<string, any> = {
         removeImage: "حذف تصویر",
         addWatermark: "افزودن واترمارک جان‌پناه",
         numberOfVersions: "تعداد نسخه‌های ویدیو",
+        versions: "نسخه(ها)",
         aspectRatio: "نسبت تصویر",
+        ratios: {
+            widescreen: "صفحه عریض",
+            vertical: "عمودی",
+            square: "مربع",
+            portrait: "پرتره"
+        },
         durationLabel: "مدت زمان تقریبی ویدیو",
         generateScriptButton: "تولید فیلمنامه و صحنه‌ها",
         generatingScriptTitle: "در حال تولید فیلمنامه...",
@@ -1204,16 +1250,6 @@ const translations: Record<string, any> = {
                 { title: "داشبوردهای سئوی شخص ثالث", text: "برای تحلیل‌های پیشرفته‌تر (مانند ردیابی بک‌لینک‌ها یا عملکرد رقبا)، باید در سرویس‌هایی مانند Ahrefs یا Semrush ثبت‌نام کنیم. این پلتفرم‌ها داشبوردهای جامعی ارائه می‌دهند." }
             ]
         }
-    },
-    errors: {
-        quota: "شما از سهمیه API فعلی خود فراتر رفته‌اید. لطفاً حساب صورتحساب خود را بررسی کرده یا بعداً دوباره تلاش کنید.",
-        internal: "یک مشکل موقتی در سرور رخ داده است. لطفاً لحظه‌ای صبر کرده و دوباره تلاش کنید. اگر مشکل ادامه داشت، درخواست خود را ساده‌تر کنید.",
-        permissionDenied: "دسترسی رد شد. لطفاً اطمینان حاصل کنید که کلید API شما به مدل درخواستی دسترسی دارد.",
-        invalidKey: "کلید API شما نامعتبر است. لطفاً پیکربندی خود را بررسی کنید.",
-        invalidArgument: "مشکلی در درخواست وجود داشت (مثلاً یک مقدار نامعتبر). لطفاً ورودی خود را بررسی کرده و دوباره تلاش کنید.",
-        network: "خطای شبکه رخ داد. لطفاً اتصال اینترنت خود را بررسی کرده و دوباره تلاش کنید.",
-        jsonParse: "هوش مصنوعی پاسخی با فرمت غیرمنتظره برگرداند. لطفاً درخواست خود را دوباره امتحان کنید.",
-        unknown: "یک خطای غیرمنتظره رخ داد. لطفاً بعداً دوباره تلاش کنید."
     }
   }
 };
