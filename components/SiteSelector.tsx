@@ -112,7 +112,7 @@ const SiteAnalysisModal: React.FC<{
 
 
 const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { 
         onFindLocations, 
         onFindTrees,
@@ -188,14 +188,14 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         setSiteAnalysis(null);
         setSiteAnalysisError(null);
         try {
-            const result = await geminiService.analyzePlantingSite(site);
+            const result = await geminiService.analyzePlantingSite(site, language);
             setSiteAnalysis(result);
         } catch (err) {
             setSiteAnalysisError(handleApiError(err));
         } finally {
             setIsAnalyzingSite(false);
         }
-    }, [handleApiError]);
+    }, [handleApiError, language]);
 
     useEffect(() => {
         setLatInput(coords?.lat.toFixed(6) || '');
@@ -418,14 +418,14 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         setMapsError(null);
         setMapsResult(null);
         try {
-            const result = await geminiService.findPlantingSitesWithMaps(mapsQuery, coords);
+            const result = await geminiService.findPlantingSitesWithMaps(mapsQuery, coords, language);
             setMapsResult(result);
         } catch (err) {
             setMapsError(handleApiError(err));
         } finally {
             setIsMapsLoading(false);
         }
-    }, [mapsQuery, coords, handleApiError, t]);
+    }, [mapsQuery, coords, handleApiError, t, language]);
 
     const handleGeolocate = () => {
         if (navigator.geolocation) {
@@ -464,7 +464,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         setLoadingAnalysisFor(treeId);
         setAnalysisError(prev => ({ ...prev, [treeId]: null }));
         try {
-            const result = await geminiService.calculateEconomicBenefits(tree.commonName, tree.scientificName, coords);
+            const result = await geminiService.calculateEconomicBenefits(tree.commonName, tree.scientificName, coords, language);
             setEconomicAnalysis(prev => ({ ...prev, [treeId]: result }));
         } catch (err) {
             const message = handleApiError(err);
@@ -472,7 +472,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         } finally {
             setLoadingAnalysisFor(null);
         }
-    }, [coords, handleApiError]);
+    }, [coords, handleApiError, language]);
 
     const renderForm = () => (
         <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">

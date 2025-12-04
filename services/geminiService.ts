@@ -164,13 +164,16 @@ export const analyzeGrant = async (grant: Grant, userProfile: string): Promise<G
     return parseJsonResponse(response.text, 'grant analysis');
 };
 
-export const findPlantingSites = async (description: string): Promise<PlantingSite[]> => {
+export const findPlantingSites = async (description: string, language: string): Promise<PlantingSite[]> => {
     // REPURPOSED: Finding Rescue/Shelter Sites instead of Planting Sites.
     // The Schema keys remain the same to avoid breaking the frontend types, but the content is mapped.
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate all text content (names, rationales, species) to Persian." : "Output Language: English.";
     const systemInstruction = `You are an expert animal welfare strategist for the Green Hope Project. Your task is to identify and recommend optimal locations for animal rescue operations, new shelters, or feeding stations based on user-defined goals. Analyze the request and provide 3-5 potential sites. 
     
+    ${langInstruction}
+
     IMPORTANT: Map your response to the following JSON schema keys:
-    - locationName: Name of the rescue zone or shelter site.
+    - locationName: Name of the rescue zone or shelter site (in ${language === 'fa' ? 'Persian' : 'English'}).
     - country: Country.
     - latitude: Latitude.
     - longitude: Longitude.
@@ -207,14 +210,11 @@ export const findPlantingSites = async (description: string): Promise<PlantingSi
     return parseJsonResponse(response.text, 'site locations');
 };
 
-export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnalysis> => {
+export const analyzePlantingSite = async (site: PlantingSite, language: string): Promise<SiteAnalysis> => {
     // REPURPOSED: Analyzing Shelter/Rescue Site Feasibility.
-    // Mapping Schema:
-    // estimatedCost -> Setup/Operational Cost
-    // treeCount -> Animal Capacity
-    // carbonSequestrationTonnesPerYear -> Estimated Yearly Adoptions
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Ensure all text fields are in Persian." : "Output Language: English.";
     
-    const systemInstruction = `You are a shelter planner and financial analyst for an animal rescue NGO. Your task is to provide a detailed feasibility analysis for a proposed shelter or rescue project.`;
+    const systemInstruction = `You are a shelter planner and financial analyst for an animal rescue NGO. Your task is to provide a detailed feasibility analysis for a proposed shelter or rescue project. ${langInstruction}`;
     const userPrompt = `
         Analyze the following proposed rescue site:
         - Location: ${site.locationName}, ${site.country}
@@ -253,8 +253,9 @@ export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnaly
     return parseJsonResponse(response.text, 'site analysis');
 }
 
-export const findPlantingSitesWithMaps = async (query: string, userCoords: Coords): Promise<GroundedResult> => {
-    const prompt = `Based on my current location, find information about: "${query}" related to animal welfare, vets, or pet resources. Provide details about relevant places and include links to Google Maps.`;
+export const findPlantingSitesWithMaps = async (query: string, userCoords: Coords, language: string): Promise<GroundedResult> => {
+    const langInstruction = language === 'fa' ? "Respond in Persian (Farsi)." : "Respond in English.";
+    const prompt = `Based on my current location, find information about: "${query}" related to animal welfare, vets, or pet resources. Provide details about relevant places and include links to Google Maps. ${langInstruction}`;
 
     const response: GenerateContentResponse = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -287,15 +288,13 @@ export const findPlantingSitesWithMaps = async (query: string, userCoords: Coord
     };
 };
 
-export const findSuitableTrees = async (latitude: number, longitude: number): Promise<SuitableTree[]> => {
+export const findSuitableTrees = async (latitude: number, longitude: number, language: string): Promise<SuitableTree[]> => {
     // REPURPOSED: Finding Suitable Animals/Breeds for the environment.
-    // Schema Mapping:
-    // commonName -> Animal Breed/Type
-    // scientificName -> Scientific Name (or specifics)
-    // description -> Description of the animal's needs.
-    // rationale -> Why this animal is suitable for this specific location/environment.
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate all text content (names, rationales, descriptions) to Persian." : "Output Language: English.";
 
     const systemInstruction = `You are an expert veterinarian and animal behaviorist. Your task is to recommend suitable animal species or dog/cat breeds that would thrive in a specific geographic environment (considering climate, space, urban/rural). 
+    
+    ${langInstruction}
     
     Analyze the location based on latitude/longitude.
     Provide a list of 3-5 suitable animals.
@@ -333,14 +332,11 @@ export const findSuitableTrees = async (latitude: number, longitude: number): Pr
     return parseJsonResponse(response.text, 'suitable animals');
 };
 
-export const calculateEconomicBenefits = async (treeName: string, scientificName: string, coords: Coords): Promise<EconomicBenefitAnalysis> => {
+export const calculateEconomicBenefits = async (treeName: string, scientificName: string, coords: Coords, language: string): Promise<EconomicBenefitAnalysis> => {
     // REPURPOSED: Calculate Care Costs & Impact.
-    // annualRevenuePerTree -> Annual Care Cost
-    // yearsToProfitability -> Avg Time to Adoption
-    // primaryProducts -> Care Requirements
-    // otherBenefits -> Social Benefits
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Ensure costs and text are localized/translated." : "Output Language: English.";
 
-    const systemInstruction = `You are an animal shelter administrator. Calculate the costs and impact of rescuing a specific animal type.`;
+    const systemInstruction = `You are an animal shelter administrator. Calculate the costs and impact of rescuing a specific animal type. ${langInstruction}`;
     const userPrompt = `
         Provide an analysis for rescuing a "${treeName}" (${scientificName}) at latitude ${coords.lat}, longitude ${coords.lng}.
         
@@ -372,8 +368,9 @@ export const calculateEconomicBenefits = async (treeName: string, scientificName
 };
 
 
-export const suggestProjectGoals = async (latitude: number, longitude: number): Promise<string[]> => {
-    const systemInstruction = `You are a animal rescue strategist. Based on the provided geographic coordinates, generate 3 concise and actionable goals for an animal shelter or rescue project in that area (considering likely climate/environment).`;
+export const suggestProjectGoals = async (latitude: number, longitude: number, language: string): Promise<string[]> => {
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi)." : "Output Language: English.";
+    const systemInstruction = `You are a animal rescue strategist. Based on the provided geographic coordinates, generate 3 concise and actionable goals for an animal shelter or rescue project in that area (considering likely climate/environment). ${langInstruction}`;
     const userPrompt = `Project location: latitude ${latitude}, longitude ${longitude}.`;
 
     const response = await ai.models.generateContent({

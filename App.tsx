@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Header from './components/Header';
@@ -50,7 +51,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 
 const App: React.FC = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [page, setPage] = useState<Page>('home');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -291,7 +292,7 @@ const App: React.FC = () => {
         setError(null);
         setSiteSelectorResults([]);
         try {
-            const locations = await geminiService.findPlantingSites(description);
+            const locations = await geminiService.findPlantingSites(description, language);
             setSiteSelectorResults(locations);
         } catch (err) {
             setError(handleApiError(err));
@@ -305,20 +306,20 @@ const App: React.FC = () => {
         setError(null);
         setSiteSelectorResults([]);
         try {
-            const trees = await geminiService.findSuitableTrees(coords.lat, coords.lng);
+            const trees = await geminiService.findSuitableTrees(coords.lat, coords.lng, language);
             setSiteSelectorResults(trees);
         } catch (err) {
             setError(handleApiError(err));
         } finally {
             setIsLoading(false);
         }
-    }, [handleApiError]);
+    }, [handleApiError, language]);
     
     const handleSuggestGoals = useCallback(async (coords: Coords) => {
         setIsSuggestingGoals(true);
         setSuggestedGoals([]);
         try {
-            const goals = await geminiService.suggestProjectGoals(coords.lat, coords.lng);
+            const goals = await geminiService.suggestProjectGoals(coords.lat, coords.lng, language);
             setSuggestedGoals(goals);
         } catch (err) {
             console.error("Failed to suggest goals:", err);
@@ -326,7 +327,7 @@ const App: React.FC = () => {
         } finally {
             setIsSuggestingGoals(false);
         }
-    }, []);
+    }, [language]);
 
     useEffect(() => {
         if (siteSelectorMode === 'trees' && siteSelectorCoords) {
