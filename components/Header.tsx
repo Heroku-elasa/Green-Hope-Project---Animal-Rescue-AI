@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ setPage, currentPage, user, onLogout })
     { page: 'about', labelKey: 'nav.about' },
     { page: 'animals', labelKey: 'nav.animals' },
     { page: 'activities', labelKey: 'nav.activities' },
-    { page: 'blog', labelKey: 'nav.contentHub' },
+    { page: 'blog', labelKey: 'nav.contentMaker' },
     { page: 'support', labelKey: 'nav.support' },
     { page: 'contact', labelKey: 'nav.contact' },
   ];
