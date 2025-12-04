@@ -15,7 +15,9 @@ const translations: Record<string, any> = {
       contact: "Contact",
       donate: "Donate Now",
       locations: "Locations",
-      shop: "Shop"
+      shop: "Shop",
+      signOut: "Sign Out",
+      openMenu: "Open main menu"
     },
     hero: {
         title: "Janpanah Shelter:<br/> Where Healing Begins",
@@ -673,7 +675,9 @@ const translations: Record<string, any> = {
       contact: "تماس با ما",
       donate: "کمک مالی",
       locations: "شعب",
-      shop: "فروشگاه"
+      shop: "فروشگاه",
+      signOut: "خروج از حساب",
+      openMenu: "باز کردن منوی اصلی"
     },
     hero: {
         title: "پناهگاه جان‌پناه:<br/> جایی که درمان آغاز می‌شود",
