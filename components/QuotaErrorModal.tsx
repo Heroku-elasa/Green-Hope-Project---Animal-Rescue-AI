@@ -1,4 +1,6 @@
 import React from 'react';
+// FIX: The 'is not a module' error was caused by an empty 'types.ts' file.
+// By adding content and exports to 'types.ts', the module can be resolved correctly. The import path is correct.
 import { useLanguage } from '../types';
 
 interface QuotaErrorModalProps {
@@ -12,7 +14,7 @@ const QuotaErrorModal: React.FC<QuotaErrorModalProps> = ({ isOpen, onClose }) =>
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 animate-fade-in" aria-modal="true" role="dialog">
-      <div className="bg-brand-blue rounded-lg shadow-xl p-6 w-full max-w-md mx-4 border border-red-500/50">
+      <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4 border border-red-500/50">
         <div className="text-center">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-900">
             <svg className="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -31,14 +33,14 @@ const QuotaErrorModal: React.FC<QuotaErrorModalProps> = ({ isOpen, onClose }) =>
             href="https://aistudio.google.com/billing"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-brand-gold text-base font-medium text-brand-blue hover:bg-yellow-200 focus:outline-none sm:text-sm text-center"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:text-sm text-center"
           >
             {t('quotaErrorModal.cta')}
           </a>
           <button
             type="button"
             onClick={onClose}
-            className="w-full inline-flex justify-center rounded-md border border-gray-600 shadow-sm px-4 py-2 bg-brand-blue/50 text-base font-medium text-white hover:bg-brand-blue/80 focus:outline-none sm:text-sm"
+            className="w-full inline-flex justify-center rounded-md border border-gray-600 shadow-sm px-4 py-2 bg-gray-700 text-base font-medium text-white hover:bg-gray-600 focus:outline-none sm:text-sm"
           >
             {t('quotaErrorModal.close')}
           </button>

@@ -1,40 +1,10 @@
 
-import { supabase } from './supabaseClient';
-import { Lawyer } from '../types';
+import { Grant } from '../types';
 
-// For Lawyers, we still use IndexedDB for caching extensive lists from search
-const DB_NAME = 'DadgarAIAppDB';
-const DB_VERSION = 2;
-const STORE_LAWYERS = 'lawyers';
+const DB_NAME = 'ZodiacAIAppDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'grants';
 
-export interface CaseData {
-    id?: number | string; // Supabase uses ID or UUID
-    registrationDate: string;
-    firstName: string;
-    lastName: string;
-    nationalCode: string;
-    mobile: string;
-    email: string;
-    type: string;
-    status: string;
-    priority: string;
-    caseNumber?: string;
-    branch?: string;
-    defendant?: string;
-    amount?: string;
-    description?: string;
-    user_id?: string; // Links to auth user
-}
-
-export interface SeoAuditData {
-    id?: number;
-    created_at?: string;
-    url: string;
-    score: number;
-    results: any; // JSON object for details
-}
-
-// --- INDEXEDDB SETUP (Keeping for Lawyer Cache) ---
 let db: IDBDatabase;
 
 export const initDB = (): Promise<boolean> => {
@@ -42,189 +12,87 @@ export const initDB = (): Promise<boolean> => {
     if (db) {
       return resolve(true);
     }
-    if (typeof window === 'undefined') {
-        return resolve(false);
-    }
+
     const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onerror = () => { console.error('IndexedDB error'); reject('Error opening IndexedDB.'); };
-    request.onsuccess = (event) => { db = (event.target as IDBOpenDBRequest).result; resolve(true); };
+
+    request.onerror = (event) => {
+      console.error('IndexedDB error:', request.error);
+      reject('Error opening IndexedDB.');
+    };
+
+    request.onsuccess = (event) => {
+      db = request.result;
+      resolve(true);
+    };
+
     request.onupgradeneeded = (event) => {
       const dbInstance = (event.target as IDBOpenDBRequest).result;
-      if (!dbInstance.objectStoreNames.contains(STORE_LAWYERS)) {
-        dbInstance.createObjectStore(STORE_LAWYERS, { keyPath: 'website' });
+      if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+        dbInstance.createObjectStore(STORE_NAME, { keyPath: 'link' });
       }
     };
   });
 };
 
-// --- LAWYERS (Local) ---
-export const addLawyers = (lawyers: Lawyer[]): Promise<void> => {
+export const addGrants = (grants: Grant[]): Promise<void> => {
   return new Promise((resolve, reject) => {
-    if (!db) return reject('DB not initialized.');
-    const transaction = db.transaction(STORE_LAWYERS, 'readwrite');
-    const store = transaction.objectStore(STORE_LAWYERS);
-    transaction.onerror = () => reject('Error adding lawyers.');
-    transaction.oncomplete = () => resolve();
-    lawyers.forEach(lawyer => store.put(lawyer));
-  });
-};
-
-export const getAllLawyers = (): Promise<Lawyer[]> => {
-  return new Promise((resolve, reject) => {
-    if (!db) return reject('DB not initialized.');
-    const transaction = db.transaction(STORE_LAWYERS, 'readonly');
-    const store = transaction.objectStore(STORE_LAWYERS);
-    const request = store.getAll();
-    request.onerror = () => reject('Error fetching all lawyers.');
-    request.onsuccess = () => resolve(request.result);
-  });
-};
-
-export const clearAllLawyers = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (!db) return reject('DB not initialized.');
-        const transaction = db.transaction(STORE_LAWYERS, 'readwrite');
-        const store = transaction.objectStore(STORE_LAWYERS);
-        const request = store.clear();
-        request.onerror = () => reject('Error clearing lawyers.');
-        request.onsuccess = () => resolve();
-    });
-};
-
-// --- HELPER: Check for Missing Table Error ---
-const isTableMissingError = (error: any) => {
-    const msg = (error?.message || JSON.stringify(error)).toLowerCase();
-    return msg.includes('does not exist') || msg.includes('could not find the table') || msg.includes('relation');
-};
-
-// --- CASES (Supabase) ---
-
-// Helper to map Frontend CamelCase to DB SnakeCase
-const toDbCase = (c: CaseData) => ({
-    registration_date: c.registrationDate,
-    first_name: c.firstName,
-    last_name: c.lastName,
-    national_code: c.nationalCode,
-    mobile: c.mobile,
-    email: c.email,
-    type: c.type,
-    status: c.status,
-    priority: c.priority,
-    case_number: c.caseNumber,
-    branch: c.branch,
-    defendant: c.defendant,
-    amount: c.amount,
-    description: c.description,
-    // ID is handled by DB if new, or passed if updating
-    ...(c.id ? { id: c.id } : {}) 
-});
-
-// Helper to map DB SnakeCase to Frontend CamelCase
-const fromDbCase = (c: any): CaseData => ({
-    id: c.id,
-    registrationDate: c.registration_date || '',
-    firstName: c.first_name || '',
-    lastName: c.last_name || '',
-    nationalCode: c.national_code || '',
-    mobile: c.mobile || '',
-    email: c.email || '',
-    type: c.type || '',
-    status: c.status || '',
-    priority: c.priority || '',
-    caseNumber: c.case_number,
-    branch: c.branch,
-    defendant: c.defendant,
-    amount: c.amount,
-    description: c.description,
-    user_id: c.user_id
-});
-
-export const getAllCases = async (): Promise<CaseData[]> => {
-    try {
-        const { data, error } = await supabase
-            .from('cases')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            if (isTableMissingError(error)) {
-                console.warn("Supabase: Table 'cases' not found. Using mock data. (Please create tables via Admin Dashboard)");
-                return [];
-            }
-            console.error("Supabase fetch error:", error.message || JSON.stringify(error));
-            return [];
-        }
-        return (data || []).map(fromDbCase);
-    } catch (e) {
-        console.error("Error connecting to Supabase", e);
-        return [];
+    if (!db) {
+      return reject('DB not initialized.');
     }
-};
+    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
 
-export const saveCase = async (caseData: CaseData): Promise<any> => {
-    // If auth user exists, attach ID
-    const { data: { user } } = await supabase.auth.getUser();
+    transaction.onerror = () => {
+      console.error('Transaction error:', transaction.error);
+      reject('Error adding grants.');
+    };
     
-    const dbPayload = {
-        ...toDbCase(caseData),
-        user_id: user?.id 
+    transaction.oncomplete = () => {
+      resolve();
     };
 
-    const { data, error } = await supabase
-        .from('cases')
-        .upsert(dbPayload)
-        .select();
-
-    if (error) {
-        if (isTableMissingError(error)) {
-             console.warn("Supabase: Table 'cases' not found. Save skipped. (Please create tables via Admin Dashboard)");
-             return null;
-        }
-        throw new Error(error.message || "Unknown Supabase error during save");
-    }
-    return data?.[0]?.id;
+    grants.forEach(grant => {
+      store.put(grant);
+    });
+  });
 };
 
-export const deleteCase = async (id: number | string): Promise<void> => {
-    const { error } = await supabase.from('cases').delete().eq('id', id);
-    if (error) {
-        if (isTableMissingError(error)) {
-             console.warn("Supabase: Table 'cases' not found. Delete skipped.");
-             return;
-        }
-        throw new Error(error.message || "Unknown Supabase error during delete");
+export const getAllGrants = (): Promise<Grant[]> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      return reject('DB not initialized.');
     }
+    const transaction = db.transaction(STORE_NAME, 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.getAll();
+
+    request.onerror = () => {
+      console.error('Get all grants error:', request.error);
+      reject('Error fetching all grants.');
+    };
+
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+  });
 };
 
-// --- SEO AUDITS (Supabase) ---
-
-export const saveSeoAudit = async (audit: SeoAuditData): Promise<void> => {
-    const { error } = await supabase
-        .from('seo_audits')
-        .insert([audit]);
-    
-    if (error) {
-        if (isTableMissingError(error)) {
-            console.warn("Supabase: Table 'seo_audits' not found. Save skipped.");
-            return;
+export const clearAllGrants = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            return reject('DB not initialized.');
         }
-        console.error("Error saving SEO audit:", error.message || JSON.stringify(error));
-    }
-};
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.clear();
 
-export const getSeoAudits = async (): Promise<SeoAuditData[]> => {
-    const { data, error } = await supabase
-        .from('seo_audits')
-        .select('*')
-        .order('created_at', { ascending: false });
+        request.onerror = () => {
+            console.error('Clear all grants error:', request.error);
+            reject('Error clearing grants.');
+        };
 
-    if (error) {
-        if (isTableMissingError(error)) {
-            console.warn("Supabase: Table 'seo_audits' not found. Returning empty list.");
-            return [];
-        }
-        console.error("Error fetching SEO audits:", error.message || JSON.stringify(error));
-        return [];
-    }
-    return data || [];
+        request.onsuccess = () => {
+            resolve();
+        };
+    });
 };

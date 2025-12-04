@@ -1,255 +1,255 @@
-
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" class="dark">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/f0819c9a-22ad-4d4e-9a4b-d8c2ef893dd2/1764579575951-019ad922-8b89-702a-b810-c608609faa9e.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=c774f9d56a46165f86a9757e83c2bbc3%2F20251201%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251201T085936Z&X-Amz-Expires=3600&X-Amz-Signature=2de49acd6a4c990786b04ad5454ba37dbbe609a28a39e68561559591ae5dbbc8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <title>Arman Law Firm | دستیار هوشمند حقوقی و بیمه</title>
-    <meta name="description" content="موسسه حقوقی آرمان، ارائه‌دهنده خدمات حقوقی هوشمند، تنظیم دادخواست با هوش مصنوعی، وکیل‌یاب و مشاوره حقوقی آنلاین در ایران.">
-    <meta name="keywords" content="وکیل, مشاوره حقوقی, هوش مصنوعی حقوقی, تنظیم دادخواست, وکیل پایه یک, موسسه حقوقی, بیمه, محاسبه دیه">
-    <meta name="author" content="Arman Law Firm">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://armanlawfirm.ir/">
-    <meta property="og:title" content="Arman Law Firm | دستیار هوشمند حقوقی">
-    <meta property="og:description" content="خدمات حقوقی مدرن با قدرت هوش مصنوعی. تنظیم قرارداد، مشاوره فوری و یافتن وکیل متخصص.">
-    <meta property="og:image" content="https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/f0819c9a-22ad-4d4e-9a4b-d8c2ef893dd2/1764579575951-019ad922-8b89-702a-b810-c608609faa9e.png">
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Janpanah Shelter - AI Rescue</title>
+  
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet Draw CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Leaflet Draw JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://armanlawfirm.ir/">
-    <meta property="twitter:title" content="Arman Law Firm | دستیار هوشمند حقوقی">
-    <meta property="twitter:description" content="خدمات حقوقی مدرن با قدرت هوش مصنوعی. تنظیم قرارداد، مشاوره فوری و یافتن وکیل متخصص.">
-    <meta property="twitter:image" content="https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/f0819c9a-22ad-4d4e-9a4b-d8c2ef893dd2/1764579575951-019ad922-8b89-702a-b810-c608609faa9e.png">
-
-    <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LegalService",
-      "name": "Arman Law Firm",
-      "alternateName": "موسسه حقوقی آرمان",
-      "image": "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/f0819c9a-22ad-4d4e-9a4b-d8c2ef893dd2/1764579575951-019ad922-8b89-702a-b810-c608609faa9e.png",
-      "description": "An AI-powered assistant for legal and insurance professionals in Iran.",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Shahid Ziabari Blvd, Setareh Shahr Building",
-        "addressLocality": "Rasht",
-        "addressRegion": "Gilan",
-        "postalCode": "1234567890",
-        "addressCountry": "IR"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 37.2682,
-        "longitude": 49.5891
-      },
-      "url": "https://armanlawfirm.ir",
-      "telephone": "+989027370260",
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": [
-            "Saturday",
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday"
-          ],
-          "opens": "09:00",
-          "closes": "18:00"
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bf-orange': '#f58220',
+            'bf-orange-dark': '#d96e17',
+            'bf-slate': '#3d3d3e',
+            'bf-buff': '#f7f6f2',
+            'bf-gray': '#2c2c2c',
+          },
+          fontFamily: {
+            sans: ['Open Sans', 'Vazirmatn', 'sans-serif'],
+            serif: ['Source Serif 4', 'Vazirmatn', 'serif'],
+          },
         }
-      ],
-      "priceRange": "$$"
+      }
     }
-    </script>
+  </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @font-face {
-        font-family: 'Iransans';
-        font-weight: 400;
-        src: url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum.woff2') format('woff2'),
-             url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum.woff') format('woff');
-      }
-      @font-face {
-        font-family: 'Iransans';
-        font-weight: 700;
-        src: url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Bold.woff2') format('woff2'),
-             url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Bold.woff') format('woff');
-      }
-      @font-face {
-        font-family: 'Iransans';
-        font-weight: 900;
-        src: url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Black.woff2') format('woff2'),
-             url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Black.woff') format('woff');
-      }
-      @font-face {
-        font-family: 'Iransans';
-        font-weight: 500;
-        src: url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Medium.woff2') format('woff2'),
-             url('https://sevinsazeh.com/wp-content/uploads/2024/03/IRANSansWebFaNum_Medium.woff') format('woff');
-      }
-      
-      /* Default Theme Variables (Legal Gold) */
-      :root {
-        --brand-gold: 190, 242, 100; /* #bef264 */
-        --brand-blue: 17, 24, 39;    /* #111827 */
-        --brand-dark: 15, 23, 42;    /* #0f172a */
-      }
-
-      body {
-        font-family: 'Iransans', 'Inter', sans-serif;
-        scroll-behavior: smooth;
-      }
-      .font-inter {
-         font-family: 'Inter', sans-serif;
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .strikethrough-animated {
-        color: #6ee7b7;
-      }
-      .strikethrough-animated::after {
+  <style>
+    /* Base styles */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f7f6f2; /* bf-buff */
+      color: #2c2c2c;
+    }
+    
+    /* Strikethrough animation for form completion */
+    .strikethrough-animated {
+        position: relative;
+    }
+    .strikethrough-animated::after {
         content: '';
         position: absolute;
-        top: 50%;
         left: 0;
+        top: 50%;
+        width: 0;
+        height: 1.5px;
+        background: #f58220; /* bf-orange */
+        transition: width 0.7s ease-in-out;
         width: 100%;
-        height: 1px;
-        background-color: #34d399;
-        transform: scaleX(0);
-        transform-origin: left;
-        animation: draw-strike 0.5s 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-      }
+    }
+    
+    /* Fade-in animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
 
-      @keyframes draw-strike {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(1); }
-      }
-      
-      .document-page {
-        background-color: #ffffff;
-        color: #111827;
-        padding: 2.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        max-width: 8.5in;
-        min-height: 11in;
-        margin: 0 auto;
-      }
-      .document-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        border-bottom: 2px solid #e5e7eb; /* gray-200 */
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-      }
-      .document-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-      .document-logo svg, .document-logo img {
-        height: 50px;
-        width: auto;
-      }
-      .document-logo span {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #374151; /* gray-700 */
-      }
-      .document-header-info {
-        text-align: right;
-        font-size: 0.875rem;
-        color: #4b5563; /* gray-600 */
-      }
-      html[dir="rtl"] .document-header-info {
+    /* Checkmark animation */
+    @keyframes checkmark-flourish {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .checkmark-flourish {
+      animation: checkmark-flourish 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    /* Parallax styles */
+    .parallax-hero-bg {
+      will-change: transform;
+    }
+
+    /* Fixed background for "window" parallax effect */
+    .subtle-pattern-bg {
+        background-attachment: fixed;
+    }
+
+    /* Prose styles for custom markdown rendering */
+    .prose-docs {
+        direction: ltr;
         text-align: left;
-      }
-      .document-body .prose, .document-body {
-        color: #111827;
-        max-width: none;
-      }
-      .document-body h1, .document-body h2, .document-body h3, .document-body h4,
-      .document-body h5, .document-body h6 {
-        color: #111827 !important;
-        font-family: 'Iransans', 'Inter', sans-serif;
-      }
-      .document-body p, .document-body li, .document-body td, .document-body th {
-        color: #374151 !important; /* gray-700 */
-        line-height: 2;
-      }
-      html[dir="rtl"] .document-body p, html[dir="rtl"] .document-body li {
-        text-align: justify;
-      }
-      .document-body > div > *:first-child {
-        margin-top: 0;
-      }
-      mark {
-        background-color: #fde047; /* yellow-300 */
-        padding: 2px 1px;
-        border-radius: 2px;
-        color: inherit;
-      }
-      mark.current-match {
-        background-color: #f97316; /* orange-500 */
-        color: white;
-      }
-    </style>
-     <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Iransans', 'Inter', 'sans-serif'],
-            },
-            colors: {
-              'brand-gold': 'rgb(var(--brand-gold) / <alpha-value>)', 
-              'brand-blue': 'rgb(var(--brand-blue) / <alpha-value>)',
-              'brand-dark': 'rgb(var(--brand-dark) / <alpha-value>)',
-            }
-          },
-        },
-      }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script type="importmap">
+    }
+    .prose-docs h1, .prose-docs h2, .prose-docs h3, .prose-docs h4 {
+      color: #3d3d3e;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.5em;
+      margin-top: 1.5em;
+      font-family: 'Source Serif 4', serif;
+    }
+    .prose-docs p, .prose-docs ul, .prose-docs li {
+      color: #4b5563; 
+      line-height: 1.7;
+    }
+    .prose-docs code {
+      background-color: #f3f4f6; 
+      color: #1f2937;
+      padding: 0.2em 0.4em;
+      border-radius: 0.25rem;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+    .prose-docs pre {
+      background-color: #1f2937; /* Keep code blocks dark */
+      color: #f3f4f6;
+      padding: 1em;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+    }
+    .prose-docs a {
+      color: #f58220;
+    }
+    .prose-docs a:hover {
+      text-decoration: underline;
+      color: #d96e17;
+    }
+    
+    /* Ken Burns effect for project images */
+    .ken-burns-container {
+        overflow: hidden;
+    }
+    .ken-burns-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: ken-burns 20s ease-in-out infinite alternate;
+        transform-origin: center;
+    }
+    @keyframes ken-burns {
+        0% { transform: scale(1) translate(0, 0); }
+        100% { transform: scale(1.15) translate(5px, -5px); }
+    }
+
+    /* Chatbot Styles */
+    .chat-window {
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease-out;
+        transform-origin: bottom right;
+    }
+    .chat-window.hidden {
+        transform: scale(0);
+        opacity: 0;
+    }
+    .chatbot-fab {
+        transition: transform 0.2s ease-out;
+    }
+    .chatbot-fab:hover {
+        transform: scale(1.1);
+    }
+    .chatbot-fab.open {
+       transform: rotate(180deg) scale(0.9);
+    }
+    
+    /* Custom scrollbar for chat */
+    .chat-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+    }
+    
+    /* Leaflet popup customization */
+    .leaflet-popup-content-wrapper {
+        background: #ffffff;
+        color: #333;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    .leaflet-popup-content {
+        margin: 12px;
+        font-family: 'Open Sans', 'Vazirmatn', sans-serif;
+    }
+    .leaflet-popup-tip {
+        background: #ffffff;
+    }
+    .leaflet-popup-close-button {
+        color: #9ca3af !important;
+    }
+    .leaflet-popup-close-button:hover {
+        color: #333 !important;
+    }
+
+    /* Leaflet Draw dark theme customization - Adjusted to light */
+    .leaflet-draw-toolbar a {
+        background-color: #ffffff;
+        border-radius: 4px;
+        color: #333 !important;
+    }
+    .leaflet-draw-toolbar a:hover {
+        background-color: #f3f4f6;
+    }
+    .leaflet-draw-actions li:first-child a {
+        border-radius: 4px;
+    }
+    .leaflet-draw-actions a {
+        background-color: #3d3d3e !important; 
+        color: #fff !important;
+    }
+    .leaflet-draw-actions a:hover {
+        background-color: #4b5563 !important;
+    }
+    .leaflet-draw-tooltip {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        color: #333;
+    }
+
+  </style>
+<script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.17.0",
-    "marked": "https://aistudiocdn.com/marked@^14.0.0",
-    "html-to-docx": "https://aistudiocdn.com/html-to-docx@^1.8.0",
-    "mammoth": "https://aistudiocdn.com/mammoth@^1.7.2",
-    "react-dropzone": "https://aistudiocdn.com/react-dropzone@^14.3.8",
-    "immer": "https://aistudiocdn.com/immer@^10.1.3",
-    "nanoid": "https://aistudiocdn.com/nanoid@^5.1.6",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/+esm"
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "marked": "https://aistudiocdn.com/marked@^17.0.1",
+    "mammoth": "https://aistudiocdn.com/mammoth@^1.11.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
   }
 }
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body class="bg-[#f7f6f2]">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>
