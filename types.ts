@@ -10,7 +10,7 @@ const translations: Record<string, any> = {
       about: "About Us",
       animals: "Our Animals",
       activities: "Activities & AI Tools",
-      contentHub: "Content Hub",
+      contentMaker: "Content Maker",
       support: "Support Us",
       contact: "Contact",
       donate: "Donate Now",
@@ -40,9 +40,9 @@ const translations: Record<string, any> = {
         portfolioTitle: "Janpanah Updates",
         portfolioItems: [
             { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "Treatment First", link: "#", description: "At Janpanah, our priority is treating animals who have suffered trauma. We provide medical care to those with no other support.", tags: ["Treatment", "Care", "Janpanah"], latitude: 35.6892, longitude: 51.3890},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "Urban Sterilization", link: "#", description: "A comprehensive program to control the population of urban strays through ethical sterilization and vaccination.", tags: ["TNR", "Cats", "Urban Health"], latitude: 35.7219, longitude: 51.3347},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "Public Education", link: "#", description: "Working to change the culture and showing that kindness to animals is a universal value.", tags: ["Culture", "Education", "Kindness"], latitude: 35.6961, longitude: 51.4231},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "Emergency Rescue", link: "#", description: "Responding to reports of injured animals and providing immediate sanctuary.", tags: ["Rescue", "Emergency", "Shelter"], latitude: 35.7550, longitude: 51.4050},
+            { img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=800&auto=format&fit=crop", title: "Urban Sterilization", link: "#", description: "A comprehensive program to control the population of urban strays through ethical sterilization and vaccination.", tags: ["TNR", "Cats", "Urban Health"], latitude: 35.7219, longitude: 51.3347},
+            { img: "https://images.unsplash.com/photo-1524514392646-1f5e084360bc?q=80&w=800&auto=format&fit=crop", title: "Public Education", link: "#", description: "Working to change the culture and showing that kindness to animals is a universal value.", tags: ["Culture", "Education", "Kindness"], latitude: 35.6961, longitude: 51.4231},
+            { img: "https://images.unsplash.com/photo-1587764379873-1e54ca2fa524?q=80&w=800&auto=format&fit=crop", title: "Emergency Rescue", link: "#", description: "Responding to reports of injured animals and providing immediate sanctuary.", tags: ["Rescue", "Emergency", "Shelter"], latitude: 35.7550, longitude: 51.4050},
         ],
         achievementsTitle: "Our Impact",
         achievements: [
@@ -59,17 +59,17 @@ const translations: Record<string, any> = {
         },
         customersTitle: "Supported By",
         customerLogos: [
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'Partner 1' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'Partner 2' },
+            { img: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/24/WWF_logo.svg/1200px-WWF_logo.svg.png', alt: 'WWF' },
+            { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Humane_Society_of_the_United_States_logo.svg/1200px-Humane_Society_of_the_United_States_logo.svg.png', alt: 'Humane Society' },
             { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png', alt: 'ASPCA' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'Partner 3' },
+            { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Four_Paws_logo.svg/1200px-Four_Paws_logo.svg.png', alt: 'Four Paws' },
         ],
         calendarTitle: "News & Stories",
         latestPosts: [
             { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "Janpanah Head: We are Therapists First", date: "Sept 07, 2021", comments: 8, link: "https://hakimemehr.ir/fa/news/65134" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "The Cycle of Kindness in Society", date: "Aug 15, 2023", comments: 22, link: "#" },
-            { title: "Managing Shelter Supplies with Predictive Analytics", date: "June 12, 2024", comments: 9, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "Why Vaccination is Better than Elimination", date: "May 25, 2024", comments: 18, link: "#" },
+            { img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop", title: "The Cycle of Kindness in Society", date: "Aug 15, 2023", comments: 22, link: "#" },
+            { img: "https://images.unsplash.com/photo-1585837575652-2c902e9567c6?q=80&w=800&auto=format&fit=crop", title: "Managing Shelter Supplies with Predictive Analytics", date: "June 12, 2024", comments: 9, link: "#" },
+            { img: "https://images.unsplash.com/photo-1628009368231-760335298025?q=80&w=800&auto=format&fit=crop", title: "Why Vaccination is Better than Elimination", date: "May 25, 2024", comments: 18, link: "#" },
         ]
     },
     footer: {
@@ -102,9 +102,9 @@ const translations: Record<string, any> = {
         subtitle: "Dedicated individuals working for the welfare of animals.",
         members: [
             { img: 'http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg', name: 'Monireh Safari', title: 'Head of Janpanah Shelter', bio: 'Founder and leader focusing on treatment of injured animals and cultural education regarding animal rights.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'Dr. Aris Thorne', title: 'Lead Veterinarian', bio: 'Specialist in trauma surgery for rescued strays.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'Lena Petrova', title: 'Shelter Manager', bio: 'Manages daily operations and adoption coordination.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'David Chen', title: 'Community Outreach', bio: 'Works on educational programs and cultural building.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1537368910025-4003508db278?q=80&w=400&auto=format&fit=crop', name: 'Dr. Aris Thorne', title: 'Lead Veterinarian', bio: 'Specialist in trauma surgery for rescued strays.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop', name: 'Lena Petrova', title: 'Shelter Manager', bio: 'Manages daily operations and adoption coordination.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop', name: 'David Chen', title: 'Community Outreach', bio: 'Works on educational programs and cultural building.', linkedin: '#' },
         ]
     },
     activitiesPage: {
@@ -118,6 +118,46 @@ const translations: Record<string, any> = {
             { title: "Research & Development", desc: "Exploring new technologies like biometrics and telemedicine for animal welfare.", iconKey: "research", cta: "View R&D" },
             { title: "AI System Architecture", desc: "Transparency in how we use AI to optimize our rescue operations.", iconKey: "ai", cta: "View System" }
         ]
+    },
+    contentMaker: {
+        title: "AI Content Maker",
+        subtitle: "Generate engaging social media posts for rescues, events, and shelter updates.",
+        types: {
+            rescue: "Rescue Story",
+            event: "Event",
+            general: "General Update"
+        },
+        form: {
+            nameLabel: "Animal Name",
+            namePlaceholder: "e.g., Hampo",
+            conditionLabel: "Medical Condition / Injury",
+            conditionPlaceholder: "e.g., Broken leg from car accident, severe mange",
+            needsLabel: "Specific Needs (Wishlist)",
+            needsPlaceholder: "e.g., Orthopedic surgery, antibiotics, special food",
+            toneLabel: "Campaign Tone",
+            toneUrgent: "Urgent & Critical",
+            toneHopeful: "Hopeful & Recovery",
+            eventTitleLabel: "Event Title",
+            eventTitlePlaceholder: "e.g., Summer Adoption Fair",
+            dateLabel: "Date & Time",
+            datePlaceholder: "e.g., Friday, July 12th at 4 PM",
+            locationLabel: "Location",
+            locationPlaceholder: "e.g., Janpanah Main Shelter",
+            eventDetailsLabel: "Event Details",
+            eventDetailsPlaceholder: "e.g., Fun for the whole family, dog walking, refreshments...",
+            topicLabel: "Update Topic",
+            topicPlaceholder: "e.g., New Shelter Wing Opening",
+            detailsLabel: "Key Details",
+            detailsPlaceholder: "e.g., Construction is finished, we need volunteers to paint...",
+            button: "Generate Content"
+        },
+        results: {
+            instagram: "Instagram Caption",
+            telegram: "Telegram Post",
+            hashtags: "Hashtags",
+            wishlist: "Suggested Wishlist Items"
+        },
+        validationError: "Please fill in all required fields."
     },
     animalsPage: {
         filterTitle: "Find Your Perfect Companion",
@@ -479,29 +519,6 @@ const translations: Record<string, any> = {
         placeholder: "Your edited image will appear here.",
         validationError: "Please upload an image and provide an edit description."
     },
-    rescueStoryteller: {
-      title: "Rescue Story & Fundraiser",
-      subtitle: "Generate emotional social media campaigns for injured animals, inspired by Cuddly. Perfect for Instagram and Telegram.",
-      form: {
-        nameLabel: "Animal Name",
-        namePlaceholder: "e.g., Hampo",
-        conditionLabel: "Medical Condition / Injury",
-        conditionPlaceholder: "e.g., Broken leg from car accident, severe mange",
-        needsLabel: "Specific Needs (Wishlist)",
-        needsPlaceholder: "e.g., Orthopedic surgery, antibiotics, special food",
-        toneLabel: "Campaign Tone",
-        toneUrgent: "Urgent & Critical",
-        toneHopeful: "Hopeful & Recovery",
-        button: "Generate Campaign"
-      },
-      results: {
-        instagram: "Instagram Caption",
-        telegram: "Telegram Post",
-        hashtags: "Hashtags",
-        wishlist: "Suggested Wishlist Items"
-      },
-      validationError: "Please fill in all fields to generate a compelling story."
-    },
     quotaErrorModal: {
         title: "API Quota Exceeded",
         body: "You have exceeded your current API quota. Please check your billing account or try again later. Some features may be unavailable.",
@@ -651,7 +668,7 @@ const translations: Record<string, any> = {
       about: "درباره ما",
       animals: "حیوانات ما",
       activities: "فعالیت‌ها و پروژه‌ها",
-      contentHub: "مرکز محتوا",
+      contentMaker: "محتواساز",
       support: "حمایت و مشارکت",
       contact: "تماس با ما",
       donate: "کمک مالی",
@@ -681,9 +698,9 @@ const translations: Record<string, any> = {
         portfolioTitle: "اخبار جان‌پناه",
         portfolioItems: [
             { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "اولویت با درمان است", link: "#", description: "در جان‌پناه، اولویت ما درمان حیواناتی است که دچار تروما شده‌اند. ما به کسانی که هیچ حامی دیگری ندارند خدمات پزشکی ارائه می‌دهдим.", tags: ["درمان", "مراقبت", "جان‌پناه"], latitude: 35.6892, longitude: 51.3890},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "عقیم‌سازی شهری", link: "#", description: "یک برنامه جامع برای کنترل جمعیت حیوانات شهری از طریق عقیم‌سازی اخلاقی و واکسیناسیون.", tags: ["TNR", "گربه‌ها", "سلامت شهری"], latitude: 35.7219, longitude: 51.3347},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "آموزش همگانی", link: "#", description: "تلاش برای تغییر فرهنگ و نشان دادن اینکه مهربانی با حیوانات یک ارزش همگانی است.", tags: ["فرهنگ", "آموزش", "مهربانی"], latitude: 35.6961, longitude: 51.4231},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "نجات اضطراری", link: "#", description: "پاسخ به گزارش‌های حیوانات آسیب‌دیده و انتقال فوری به پناهگاه.", tags: ["نجات", "اضطراری", "پناهگاه"], latitude: 35.7550, longitude: 51.4050},
+            { img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=800&auto=format&fit=crop", title: "عقیم‌سازی شهری", link: "#", description: "یک برنامه جامع برای کنترل جمعیت حیوانات شهری از طریق عقیم‌سازی اخلاقی و واکسیناسیون.", tags: ["TNR", "گربه‌ها", "سلامت شهری"], latitude: 35.7219, longitude: 51.3347},
+            { img: "https://images.unsplash.com/photo-1524514392646-1f5e084360bc?q=80&w=800&auto=format&fit=crop", title: "آموزش همگانی", link: "#", description: "تلاش برای تغییر فرهنگ و نشان دادن اینکه مهربانی با حیوانات یک ارزش همگانی است.", tags: ["فرهنگ", "آموزش", "مهربانی"], latitude: 35.6961, longitude: 51.4231},
+            { img: "https://images.unsplash.com/photo-1587764379873-1e54ca2fa524?q=80&w=800&auto=format&fit=crop", title: "نجات اضطراری", link: "#", description: "پاسخ به گزارش‌های حیوانات آسیب‌دیده و انتقال فوری به پناهگاه.", tags: ["نجات", "اضطراری", "پناهگاه"], latitude: 35.7550, longitude: 51.4050},
         ],
         achievementsTitle: "تأثیر ما",
         achievements: [
@@ -700,17 +717,17 @@ const translations: Record<string, any> = {
         },
         customersTitle: "با حمایت",
         customerLogos: [
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'Partner 1' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'Partner 2' },
+            { img: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/24/WWF_logo.svg/1200px-WWF_logo.svg.png', alt: 'WWF' },
+            { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Humane_Society_of_the_United_States_logo.svg/1200px-Humane_Society_of_the_United_States_logo.svg.png', alt: 'Humane Society' },
             { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png', alt: 'ASPCA' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'Partner 3' },
+            { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Four_Paws_logo.svg/1200px-Four_Paws_logo.svg.png', alt: 'Four Paws' },
         ],
         calendarTitle: "اخبار و داستان‌ها",
         latestPosts: [
             { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "سرپرست مجموعه جان‌پناه: در مرحله اول درمانگر حیوانات هستیم", date: "۱۶ شهريور ۱۴۰۰", comments: 8, link: "https://hakimemehr.ir/fa/news/65134" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "چرخه مهربانی در جامعه", date: "۲۴ مرداد ۱۴۰۲", comments: 22, link: "#" },
-            { title: "مدیریت لوازم پناهگاه با تحلیل‌های پیش‌بینی‌کننده", date: "۲۳ خرداد ۱۴۰۳", comments: 9, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "چرا واکسیناسیون بهتر از حذف فیزیکی است", date: "۵ خرداد ۱۴۰۳", comments: 18, link: "#" },
+            { img: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop", title: "چرخه مهربانی در جامعه", date: "۲۴ مرداد ۱۴۰۲", comments: 22, link: "#" },
+            { img: "https://images.unsplash.com/photo-1585837575652-2c902e9567c6?q=80&w=800&auto=format&fit=crop", title: "مدیریت لوازم پناهگاه با تحلیل‌های پیش‌بینی‌کننده", date: "۲۳ خرداد ۱۴۰۳", comments: 9, link: "#" },
+            { img: "https://images.unsplash.com/photo-1628009368231-760335298025?q=80&w=800&auto=format&fit=crop", title: "چرا واکسیناسیون بهتر از حذف فیزیکی است", date: "۵ خرداد ۱۴۰۳", comments: 18, link: "#" },
         ]
     },
     footer: {
@@ -743,9 +760,9 @@ const translations: Record<string, any> = {
         subtitle: "افراد متعهدی که برای رفاه حیوانات تلاش می‌کنند.",
         members: [
             { img: 'http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg', name: 'منیره صفری', title: 'سرپرست پناهگاه جان‌پناه', bio: 'بنیان‌گذار و رهبر مجموعه با تمرکز بر درمان حیوانات آسیب‌دیده و فرهنگ‌سازی در زمینه حقوق حیوانات.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'دکتر آریس تورن', title: 'دامپزشک ارشد', bio: 'متخصص جراحی تروما برای حیوانات ولگرد نجات‌یافته.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'لنا پتروا', title: 'مدیر پناهگاه', bio: 'مدیریت عملیات روزانه و هماهنگی فرزندخواندگی.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'دیوید چن', title: 'ارتباطات مردمی', bio: 'فعالیت در برنامه‌های آموزشی و فرهنگ‌سازی.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1537368910025-4003508db278?q=80&w=400&auto=format&fit=crop', name: 'دکتر آریس تورن', title: 'دامپزشک ارشد', bio: 'متخصص جراحی تروما برای حیوانات ولگرد نجات‌یافته.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop', name: 'لنا پتروا', title: 'مدیر پناهگاه', bio: 'مدیریت عملیات روزانه و هماهنگی فرزندخواندگی.', linkedin: '#' },
+            { img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop', name: 'دیوید چن', title: 'ارتباطات مردمی', bio: 'فعالیت در برنامه‌های آموزشی و فرهنگ‌سازی.', linkedin: '#' },
         ]
     },
     activitiesPage: {
@@ -759,6 +776,46 @@ const translations: Record<string, any> = {
             { title: "تحقیق و توسعه", desc: "بررسی فناوری‌های جدید مانند بیومتریک و پزشکی از راه دور برای رفاه حیوانات.", iconKey: "research", cta: "مشاهده تحقیق و توسعه" },
             { title: "معماری سیستم هوش مصنوعی", desc: "شفافیت در نحوه استفاده ما از هوش مصنوعی برای بهینه‌سازی عملیات نجات.", iconKey: "ai", cta: "مشاهده سیستم" }
         ]
+    },
+    contentMaker: {
+        title: "محتواساز هوشمند",
+        subtitle: "تولید پست‌های جذاب برای نجات، رویدادها و اخبار پناهگاه.",
+        types: {
+            rescue: "داستان نجات",
+            event: "رویداد",
+            general: "خبر عمومی"
+        },
+        form: {
+            nameLabel: "نام حیوان",
+            namePlaceholder: "مثال: همپا",
+            conditionLabel: "وضعیت پزشکی / آسیب",
+            conditionPlaceholder: "مثال: شکستگی پا در تصادف، جرب شدید",
+            needsLabel: "نیازهای خاص (لیست آرزوها)",
+            needsPlaceholder: "مثال: جراحی ارتوپدی، آنتی‌بیوتیک، غذای ریکاوری",
+            toneLabel: "لحن کمپین",
+            toneUrgent: "فوری و حیاتی",
+            toneHopeful: "امیدوارکننده و بهبودی",
+            eventTitleLabel: "عنوان رویداد",
+            eventTitlePlaceholder: "مثال: بازارچه خیریه تابستانی",
+            dateLabel: "تاریخ و ساعت",
+            datePlaceholder: "مثال: جمعه، ۲۲ تیر ساعت ۱۶",
+            locationLabel: "مکان",
+            locationPlaceholder: "مثال: پناهگاه اصلی جان‌پناه",
+            eventDetailsLabel: "جزئیات رویداد",
+            eventDetailsPlaceholder: "مثال: سرگرمی برای خانواده‌ها، پیاده‌روی با سگ‌ها...",
+            topicLabel: "موضوع خبر",
+            topicPlaceholder: "مثال: افتتاح بخش جدید پناهگاه",
+            detailsLabel: "جزئیات کلیدی",
+            detailsPlaceholder: "مثال: ساخت‌وساز تمام شده، به داوطلب برای رنگ‌آمیزی نیاز داریم...",
+            button: "تولید محتوا"
+        },
+        results: {
+            instagram: "کپشن اینستاگرام",
+            telegram: "پست تلگرام",
+            hashtags: "هشتگ‌ها",
+            wishlist: "اقلام پیشنهادی لیست آرزوها"
+        },
+        validationError: "لطفاً تمام فیلدهای الزامی را پر کنید."
     },
     animalsPage: {
         filterTitle: "همراه ایده‌آل خود را پیدا کنید",
