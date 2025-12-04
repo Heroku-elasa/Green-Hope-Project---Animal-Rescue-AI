@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { REPORT_TYPES } from '../constants';
 import { useLanguage } from '../types';
@@ -39,16 +40,16 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({
   };
 
   return (
-    <div className="bg-slate-900/60 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-slate-700">
-      <h2 className="text-2xl font-bold mb-6 text-white">{t('generatorForm.title')}</h2>
+    <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
+      <h2 className="text-2xl font-bold mb-6 text-bf-slate font-serif">{t('generatorForm.title')}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="reportType" className={`block text-sm font-medium text-gray-300 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.docType')}</label>
+          <label htmlFor="reportType" className={`block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.docType')}</label>
           <select
             id="reportType"
             value={reportType}
             onChange={(e) => setReportType(e.target.value)}
-            className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-900"
           >
             {REPORT_TYPES.map(option => (
               <option key={option.value} value={option.value}>
@@ -58,24 +59,24 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({
           </select>
         </div>
         <div>
-          <label htmlFor="topic" className={`block text-sm font-medium text-gray-300 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.topic')}</label>
+          <label htmlFor="topic" className={`block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.topic')}</label>
           <input
             type="text"
             id="topic"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-900"
             placeholder={t('generatorForm.topicPlaceholder')}
           />
         </div>
         <div>
-          <label htmlFor="description" className={`block text-sm font-medium text-gray-300 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.description')}</label>
+          <label htmlFor="description" className={`block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2 relative transition-colors duration-500 ${isComplete ? 'strikethrough-animated' : ''}`}>{t('generatorForm.description')}</label>
           <textarea
             id="description"
             rows={8}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-900"
             placeholder={t('generatorForm.descriptionPlaceholder')}
           />
         </div>
@@ -83,7 +84,7 @@ const GeneratorForm: React.FC<GeneratorFormProps> = ({
           <button
             type="submit"
             disabled={isLoading || isQuotaExhausted}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 via-purple-700 to-pink-700 hover:from-blue-700 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-pink-500 disabled:bg-gray-500 disabled:cursor-not-allowed transition-all"
+            className="w-full flex justify-center py-4 px-4 border border-transparent rounded-full shadow-md text-sm font-bold uppercase tracking-wide text-white bg-bf-orange hover:bg-bf-orange-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bf-orange disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
           >
             {isLoading ? (
               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

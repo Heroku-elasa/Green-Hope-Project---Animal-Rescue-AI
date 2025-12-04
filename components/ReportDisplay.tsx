@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { marked } from 'marked';
 import { useLanguage, GroundedResult } from '../types';
@@ -81,18 +82,19 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ generatedReport, isLoadin
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${t('reportDisplay.docTitle')}</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; padding: 2rem; max-width: 800px; margin: 0 auto; color: #333; }
-    h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
-    h1 { border-bottom: 2px solid #eee; padding-bottom: 0.3em; }
+    body { font-family: 'Open Sans', sans-serif; line-height: 1.6; padding: 2rem; max-width: 800px; margin: 0 auto; color: #333; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Source Serif 4', serif; margin-top: 1.5em; margin-bottom: 0.5em; color: #3d3d3e; }
+    h1 { border-bottom: 2px solid #f58220; padding-bottom: 0.3em; }
     h2 { border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
     code { font-family: monospace; background-color: #f4f4f4; padding: 0.2em 0.4em; border-radius: 3px; }
     pre { background-color: #f4f4f4; padding: 1em; border-radius: 5px; overflow-x: auto; }
     pre code { background-color: transparent; padding: 0; }
     table { border-collapse: collapse; width: 100%; margin: 1em 0; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    blockquote { color: #666; margin: 0; padding-left: 1em; border-left: 0.25em solid #dfe2e5; }
+    th { background-color: #f7f6f2; }
+    blockquote { color: #666; margin: 0; padding-left: 1em; border-left: 0.25em solid #f58220; }
     ul { padding-left: 20px; }
+    a { color: #f58220; text-decoration: none; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -120,11 +122,11 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ generatedReport, isLoadin
   };
 
   return (
-    <div className="min-h-[60vh] flex flex-col">
-      <div className="flex justify-between items-center p-4 bg-slate-800/80 border-b border-slate-700">
-        <h3 className="text-lg font-semibold text-white flex items-center" key={isComplete ? 'complete' : 'pending'}>
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 min-h-[60vh] flex flex-col">
+      <div className="flex justify-between items-center p-4 bg-gray-50 border-b border-gray-200 rounded-t-xl">
+        <h3 className="text-lg font-bold text-bf-slate font-serif flex items-center" key={isComplete ? 'complete' : 'pending'}>
           {isComplete && (
-            <svg className="h-5 w-5 text-pink-400 mr-2 animate-fade-in" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg className="h-5 w-5 text-green-500 mr-2 animate-fade-in" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
           )}
@@ -134,37 +136,37 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ generatedReport, isLoadin
           <div className="relative" ref={exportMenuRef}>
             <button
               onClick={() => setIsExportMenuOpen(prev => !prev)}
-              className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-md transition-colors flex items-center"
+              className="px-3 py-1 bg-white hover:bg-gray-100 text-bf-slate border border-gray-300 text-sm rounded-md transition-colors flex items-center font-bold"
             >
               {t('reportDisplay.export')}
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"></path></svg>
             </button>
             {isExportMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-slate-700 rounded-md shadow-lg z-20 border border-slate-600">
-                <ul className="py-1 text-white">
-                  <li className="px-4 py-2 hover:bg-slate-600 cursor-pointer" onClick={handleCopy}>{t('reportDisplay.copy')}</li>
-                  <li className="px-4 py-2 hover:bg-slate-600 cursor-pointer" onClick={handleDownloadMD}>{t('reportDisplay.downloadMD')}</li>
-                  <li className="px-4 py-2 hover:bg-slate-600 cursor-pointer" onClick={handleDownloadHTML}>{t('reportDisplay.downloadHTML')}</li>
-                  <li className="px-4 py-2 hover:bg-slate-600 cursor-pointer" onClick={handlePrint}>{t('reportDisplay.printPDF')}</li>
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-200">
+                <ul className="py-1 text-gray-700">
+                  <li className="px-4 py-2 hover:bg-bf-buff cursor-pointer" onClick={handleCopy}>{t('reportDisplay.copy')}</li>
+                  <li className="px-4 py-2 hover:bg-bf-buff cursor-pointer" onClick={handleDownloadMD}>{t('reportDisplay.downloadMD')}</li>
+                  <li className="px-4 py-2 hover:bg-bf-buff cursor-pointer" onClick={handleDownloadHTML}>{t('reportDisplay.downloadHTML')}</li>
+                  <li className="px-4 py-2 hover:bg-bf-buff cursor-pointer" onClick={handlePrint}>{t('reportDisplay.printPDF')}</li>
                 </ul>
               </div>
             )}
           </div>
         )}
       </div>
-      <div className="p-6 prose prose-invert prose-sm sm:prose-base max-w-none text-gray-300 flex-grow overflow-y-auto">
-        {error && <div className="text-red-400 p-4 bg-red-900/50 rounded-md">{error}</div>}
+      <div className="p-8 prose-docs max-w-none flex-grow overflow-y-auto">
+        {error && <div className="text-red-600 p-4 bg-red-50 rounded-md border border-red-200">{error}</div>}
         
         <div dangerouslySetInnerHTML={{ __html: reportHtml }} />
 
         {reportSources.length > 0 && !isLoading && (
-            <div className="mt-8 pt-6 border-t border-slate-700 animate-fade-in">
-                <h4 className="font-semibold text-pink-300 mb-2">{t('grantFinder.sources')}:</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm">
+            <div className="mt-8 pt-6 border-t border-gray-200 animate-fade-in">
+                <h4 className="font-bold text-bf-slate mb-2 font-serif">{t('grantFinder.sources')}:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
                     {reportSources.map((source, index) => (
                         source.web && (
                             <li key={index}>
-                                <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title={source.web.title}>
+                                <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-bf-orange hover:underline" title={source.web.title}>
                                     {source.web.title || source.web.uri}
                                 </a>
                             </li>
@@ -176,15 +178,15 @@ const ReportDisplay: React.FC<ReportDisplayProps> = ({ generatedReport, isLoadin
 
         {isLoading && (
            <div className="flex items-center justify-center">
-            <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-pink-400"></div>
-            <span className="ml-2 text-gray-400">{t('reportDisplay.generating')}</span>
+            <div className="w-6 h-6 border-4 border-dashed rounded-full animate-spin border-bf-orange"></div>
+            <span className="ml-3 text-gray-500 font-medium">{t('reportDisplay.generating')}</span>
           </div>
         )}
 
         {!isLoading && !reportText && !error && (
-            <div className="text-center text-gray-500 py-16">
-                <p>{t('reportDisplay.placeholder1')}</p>
-                <p>{t('reportDisplay.placeholder2')}</p>
+            <div className="text-center text-gray-400 py-16">
+                <p className="text-lg">{t('reportDisplay.placeholder1')}</p>
+                <p className="text-sm">{t('reportDisplay.placeholder2')}</p>
             </div>
         )}
         <div ref={endOfReportRef} />

@@ -44,51 +44,51 @@ const SiteAnalysisModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[1002] animate-fade-in" aria-modal="true" role="dialog">
-      <div className="bg-slate-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-pink-500/50 max-h-[90vh] flex flex-col">
-        <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
-           <h3 className="text-lg font-semibold leading-6 text-white">{t('siteAnalysisModal.title')}: <span className="text-pink-400">{site.locationName}</span></h3>
-           <button onClick={onClose} className="p-1 text-gray-400 hover:text-white transition-colors" aria-label={t('siteAnalysisModal.close')}>
+      <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl mx-4 border border-gray-200 max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center border-b border-gray-200 pb-3 mb-4">
+           <h3 className="text-xl font-bold text-bf-slate font-serif leading-6">{t('siteAnalysisModal.title')}: <span className="text-pink-600">{site.locationName}</span></h3>
+           <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-md hover:bg-gray-100" aria-label={t('siteAnalysisModal.close')}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
            </button>
         </div>
         <div className="overflow-y-auto pr-2 flex-grow">
           {isLoading && (
             <div className="text-center py-10">
-              <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-400 mx-auto mb-4"></div>
-              <h4 className="text-lg font-semibold text-white">{t('siteAnalysisModal.analyzing')}</h4>
+              <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-500 mx-auto mb-4"></div>
+              <h4 className="text-lg font-bold text-gray-700">{t('siteAnalysisModal.analyzing')}</h4>
             </div>
           )}
-          {error && <div className="text-red-400 p-4 bg-red-900/50 rounded-md">{t('siteAnalysisModal.error')} {error}</div>}
+          {error && <div className="text-red-600 p-4 bg-red-50 rounded-md border border-red-200">{t('siteAnalysisModal.error')} {error}</div>}
           {analysis && !isLoading && (
             <div className="space-y-6 animate-fade-in">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                  <div className="bg-slate-900/50 p-3 rounded-lg">
-                      <div className="text-xs text-gray-400">{t('siteAnalysisModal.estimatedCost')}</div>
-                      <div className="text-xl font-bold text-pink-400">{analysis.estimatedCost}</div>
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t('siteAnalysisModal.estimatedCost')}</div>
+                      <div className="text-lg font-bold text-pink-600 mt-1">{analysis.estimatedCost}</div>
                   </div>
-                  <div className="bg-slate-900/50 p-3 rounded-lg">
-                      <div className="text-xs text-gray-400">{t('siteAnalysisModal.treeCount')}</div>
-                      <div className="text-xl font-bold text-pink-400">{analysis.treeCount.toLocaleString()}</div>
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t('siteAnalysisModal.treeCount')}</div>
+                      <div className="text-lg font-bold text-pink-600 mt-1">{analysis.treeCount.toLocaleString()}</div>
                   </div>
-                  <div className="bg-slate-900/50 p-3 rounded-lg">
-                      <div className="text-xs text-gray-400">{t('siteAnalysisModal.duration')}</div>
-                      <div className="text-xl font-bold text-pink-400">{analysis.projectDurationYears}</div>
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t('siteAnalysisModal.duration')}</div>
+                      <div className="text-lg font-bold text-pink-600 mt-1">{analysis.projectDurationYears}</div>
                   </div>
-                  <div className="bg-slate-900/50 p-3 rounded-lg">
-                      <div className="text-xs text-gray-400">{t('siteAnalysisModal.carbonSeq')}</div>
-                      <div className="text-xl font-bold text-pink-400">{analysis.carbonSequestrationTonnesPerYear.toLocaleString()} <span className="text-sm font-normal text-gray-400">{t('siteAnalysisModal.tonnesPerYear')}</span></div>
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t('siteAnalysisModal.carbonSeq')}</div>
+                      <div className="text-lg font-bold text-pink-600 mt-1">{analysis.carbonSequestrationTonnesPerYear.toLocaleString()} <span className="text-sm font-normal text-gray-500 block">{t('siteAnalysisModal.tonnesPerYear')}</span></div>
                   </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-white mb-2">{t('siteAnalysisModal.keyChallenges')}</h4>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-300">
+                  <h4 className="font-bold text-bf-slate mb-3 border-b border-gray-200 pb-1">{t('siteAnalysisModal.keyChallenges')}</h4>
+                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
                     {analysis.keyChallenges.map((item, index) => <li key={index}>{item}</li>)}
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-white mb-2">{t('siteAnalysisModal.successFactors')}</h4>
-                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-300">
+                  <h4 className="font-bold text-bf-slate mb-3 border-b border-gray-200 pb-1">{t('siteAnalysisModal.successFactors')}</h4>
+                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
                     {analysis.successFactors.map((item, index) => <li key={index}>{item}</li>)}
                   </ul>
                 </div>
@@ -96,11 +96,11 @@ const SiteAnalysisModal: React.FC<{
             </div>
           )}
         </div>
-        <div className="mt-5 sm:mt-6 pt-4 border-t border-slate-700 text-right">
+        <div className="mt-5 sm:mt-6 pt-4 border-t border-gray-200 text-right">
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex justify-center rounded-md border border-slate-600 shadow-sm px-4 py-2 bg-slate-700 text-base font-medium text-white hover:bg-slate-600 focus:outline-none sm:text-sm"
+            className="inline-flex justify-center rounded-full border border-gray-300 shadow-sm px-6 py-2 bg-white text-base font-bold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bf-orange sm:text-sm transition-colors"
           >
             {t('siteAnalysisModal.close')}
           </button>
@@ -165,16 +165,15 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
     const PopupContent = ({ coords, onConfirm }: { coords: Coords, onConfirm: () => void }) => {
         const { t } = useLanguage();
         return (
-            <div className="text-white">
-                <h4 className="font-bold mb-2">{t('siteSelector.confirmPopup.title')}</h4>
+            <div className="text-gray-800 font-sans">
+                <h4 className="font-bold mb-2 text-bf-slate">{t('siteSelector.confirmPopup.title')}</h4>
                 <p className="text-sm mb-3">
                     {t('siteSelector.confirmPopup.coordinates')
                         .replace('{lat}', coords.lat.toFixed(4))
                         .replace('{lng}', coords.lng.toFixed(4))}
                 </p>
                 <button
-                    // A bit of a hack to get Tailwind styles into dynamically generated Leaflet content
-                    className="w-full text-center text-sm bg-teal-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors"
+                    className="w-full text-center text-sm bg-teal-600 text-white font-bold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors uppercase tracking-wide"
                     onClick={onConfirm}
                 >
                     {t('siteSelector.confirmPopup.button')}
@@ -211,8 +210,8 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
             });
             mapInstanceRef.current = map;
 
-            const tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 maxZoom: 18,
             });
 
@@ -225,13 +224,13 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
             const mapContainer = mapRef.current;
             if (mapContainer) {
                 const tooltip = document.createElement('div');
-                tooltip.className = 'absolute z-[1001] bg-slate-900/80 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none hidden';
+                tooltip.className = 'absolute z-[1001] bg-white text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-200 pointer-events-none hidden font-sans';
                 mapContainer.appendChild(tooltip);
 
                 map.on('mousemove', (e: any) => {
                     tooltip.style.left = `${e.containerPoint.x + 10}px`;
                     tooltip.style.top = `${e.containerPoint.y + 10}px`;
-                    tooltip.innerHTML = `${t('siteSelector.latLabelShort')}: ${e.latlng.lat.toFixed(4)}, ${t('siteSelector.lngLabelShort')}: ${e.latlng.lng.toFixed(4)}`;
+                    tooltip.innerHTML = `<strong>${t('siteSelector.latLabelShort')}:</strong> ${e.latlng.lat.toFixed(4)}, <strong>${t('siteSelector.lngLabelShort')}:</strong> ${e.latlng.lng.toFixed(4)}`;
                     tooltip.classList.remove('hidden');
                 });
 
@@ -271,8 +270,8 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                 edit: { featureGroup: drawnItems, remove: false },
                 draw: {
                     polyline: false, circle: false, circlemarker: false, marker: false,
-                    polygon: { shapeOptions: { color: '#ec4899' } },
-                    rectangle: { shapeOptions: { color: '#ec4899' } },
+                    polygon: { shapeOptions: { color: '#f58220' } },
+                    rectangle: { shapeOptions: { color: '#f58220' } },
                 },
             });
             drawControlRef.current = drawControl;
@@ -332,7 +331,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         markersRef.current = [];
 
         const createIcon = (color: string) => {
-            const iconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="${color}" stroke="white" stroke-width="1"><path d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0zm0 11.5a3 3 0 110-6 3 3 0 010 6z"/></svg>`;
+            const iconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="${color}" stroke="white" stroke-width="2"><path d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0zm0 11.5a3 3 0 110-6 3 3 0 010 6z"/></svg>`;
             const iconUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`;
             return L.icon({
                 iconUrl: iconUrl,
@@ -364,7 +363,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                         handleAnalyzeSite(site);
                     });
                     
-                    marker.bindTooltip(`<b>${site.locationName}</b><br/>Priority: ${site.priority}<br/>Click to analyze`);
+                    marker.bindTooltip(`<b>${site.locationName}</b><br/>Priority: ${site.priority}<br/>Click to analyze`, { className: 'font-sans' });
 
                     markersRef.current.push(marker);
                     latLngs.push(pos);
@@ -476,13 +475,13 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
     }, [coords, handleApiError]);
 
     const renderForm = () => (
-        <div className="bg-slate-900/60 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-slate-700">
+        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
             <div className="mb-6">
-                <div className="flex rounded-md shadow-sm bg-slate-700/80 p-1">
-                    <button onClick={() => setMode('locations')} className={`w-1/2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'locations' ? 'bg-pink-600 text-white' : 'text-gray-300 hover:bg-slate-600'}`}>
+                <div className="flex rounded-md shadow-sm bg-gray-100 p-1">
+                    <button onClick={() => setMode('locations')} className={`w-1/2 px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md transition-colors ${mode === 'locations' ? 'bg-pink-600 text-white shadow-sm' : 'text-gray-600 hover:bg-white hover:shadow-sm'}`}>
                         {t('siteSelector.findLocationsMode')}
                     </button>
-                    <button onClick={() => setMode('trees')} className={`w-1/2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'trees' ? 'bg-pink-600 text-white' : 'text-gray-300 hover:bg-slate-600'}`}>
+                    <button onClick={() => setMode('trees')} className={`w-1/2 px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md transition-colors ${mode === 'trees' ? 'bg-pink-600 text-white shadow-sm' : 'text-gray-600 hover:bg-white hover:shadow-sm'}`}>
                         {t('siteSelector.findTreesMode')}
                     </button>
                 </div>
@@ -490,20 +489,20 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
             {mode === 'locations' ? (
                 <form onSubmit={handleLocationsSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-300">{t(`siteSelector.locations.label`)}</label>
+                        <label htmlFor="description" className="block text-sm font-bold uppercase tracking-wide text-gray-700">{t(`siteSelector.locations.label`)}</label>
                         <textarea id="description" rows={8} value={locationsInput} onChange={(e) => setLocationsInput(e.target.value)}
-                            className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+                            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-gray-900"
                             placeholder={t(`siteSelector.locations.placeholder`)} disabled={isLoading} />
                     </div>
                     
                      <div className="pt-2 space-y-3">
-                        <h4 className="text-sm font-medium text-gray-400">{t('siteSelector.locations.examplePrompts.title')}</h4>
+                        <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wide">{t('siteSelector.locations.examplePrompts.title')}</h4>
                         <div className="flex flex-col space-y-2">
                             {t('siteSelector.locations.examplePrompts.prompts').map((prompt: string, index: number) => (
                                 <button key={index} type="button" onClick={() => handleExamplePromptClick(prompt)}
-                                    className="text-left p-3 flex items-start text-sm gap-3 bg-slate-800/60 hover:bg-slate-700/80 rounded-lg transition-colors text-gray-300 hover:text-white border border-slate-700 disabled:opacity-50"
+                                    className="text-left p-3 flex items-start text-sm gap-3 bg-gray-50 hover:bg-white rounded-lg transition-colors text-gray-700 border border-gray-200 shadow-sm hover:shadow-md disabled:opacity-50"
                                     disabled={isLoading}>
-                                    <svg className="w-5 h-5 text-pink-400 mt-px flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                    <svg className="w-5 h-5 text-pink-500 mt-px flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                                     </svg>
                                     <span>{prompt}</span>
@@ -513,69 +512,69 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                     </div>
 
                     <div>
-                        <button type="submit" disabled={isLoading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 via-purple-700 to-pink-700 hover:from-blue-700 hover:to-pink-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all">
+                        <button type="submit" disabled={isLoading} className="w-full flex justify-center py-4 px-4 border border-transparent rounded-full shadow-md text-sm font-bold uppercase tracking-wide text-white bg-gradient-to-r from-blue-600 via-purple-700 to-pink-700 hover:from-blue-700 hover:to-pink-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all">
                             {isLoading ? t('siteSelector.generating') : t(`siteSelector.locations.button`)}
                         </button>
                     </div>
-                     <div className="text-center p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                        <p className="text-sm text-gray-400">{t('siteSelector.drawArea')}</p>
+                     <div className="text-center p-4 bg-gray-50 rounded-md border border-gray-200">
+                        <p className="text-sm text-gray-500">{t('siteSelector.drawArea')}</p>
                     </div>
                 </form>
             ) : (
                  <div className="space-y-6">
-                    <form onSubmit={handleCoordsSubmit} className="space-y-4 p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                        <h4 className="font-bold text-white text-md">{t('siteSelector.manualCoordsTitle')}</h4>
+                    <form onSubmit={handleCoordsSubmit} className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+                        <h4 className="font-bold text-bf-slate text-md">{t('siteSelector.manualCoordsTitle')}</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="latitude-input" className="block text-xs font-medium text-gray-300">{t('siteSelector.latitude')}</label>
+                                <label htmlFor="latitude-input" className="block text-xs font-bold uppercase tracking-wide text-gray-600">{t('siteSelector.latitude')}</label>
                                 <input type="number" id="latitude-input" step="any" value={latInput} onChange={(e) => setLatInput(e.target.value)}
-                                    className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+                                    className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-gray-900"
                                     placeholder="e.g., 34.0522" />
                             </div>
                             <div>
-                                <label htmlFor="longitude-input" className="block text-xs font-medium text-gray-300">{t('siteSelector.longitude')}</label>
+                                <label htmlFor="longitude-input" className="block text-xs font-bold uppercase tracking-wide text-gray-600">{t('siteSelector.longitude')}</label>
                                 <input type="number" id="longitude-input" step="any" value={lngInput} onChange={(e) => setLngInput(e.target.value)}
-                                    className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+                                    className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-gray-900"
                                     placeholder="e.g., -118.2437" />
                             </div>
                         </div>
-                        <button type="submit" disabled={isLoading} className="w-full text-center text-sm bg-teal-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
+                        <button type="submit" disabled={isLoading} className="w-full text-center text-sm bg-teal-600 text-white font-bold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed uppercase tracking-wide">
                              {isLoading ? t('siteSelector.generating') : t('siteSelector.analyzeCoordsButton')}
                         </button>
                     </form>
-                     <div className="pt-6 border-t border-slate-700/50 space-y-4">
-                        <h4 className="font-semibold text-white">{t('siteSelector.nearbyAnalysis.title')}</h4>
+                     <div className="pt-6 border-t border-gray-200 space-y-4">
+                        <h4 className="font-bold text-bf-slate">{t('siteSelector.nearbyAnalysis.title')}</h4>
                         <form onSubmit={handleMapsSearchSubmit} className="space-y-3">
                              <div>
-                                <label htmlFor="maps-query" className="block text-sm font-medium text-gray-300">{t('siteSelector.nearbyAnalysis.prompt')}</label>
+                                <label htmlFor="maps-query" className="block text-sm font-bold uppercase tracking-wide text-gray-700">{t('siteSelector.nearbyAnalysis.prompt')}</label>
                                 <input type="text" id="maps-query" value={mapsQuery} onChange={e => setMapsQuery(e.target.value)} 
-                                className="mt-1 block w-full bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
+                                className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-gray-900"
                                 placeholder={t('siteSelector.nearbyAnalysis.placeholder')} />
                              </div>
-                            <button type="submit" disabled={isMapsLoading || !coords} className="w-full text-center text-sm bg-blue-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">
+                            <button type="submit" disabled={isMapsLoading || !coords} className="w-full text-center text-sm bg-blue-600 text-white font-bold py-2 px-3 rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed uppercase tracking-wide">
                                  {isMapsLoading ? t('siteSelector.generating') : t('siteSelector.nearbyAnalysis.button')}
                             </button>
                         </form>
                     </div>
-                    <div className="text-center p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                        <p className="text-sm text-gray-400">{t('siteSelector.selectOnMap')}</p>
+                    <div className="text-center p-4 bg-gray-50 rounded-md border border-gray-200">
+                        <p className="text-sm text-gray-500">{t('siteSelector.selectOnMap')}</p>
                     </div>
                      { (isSuggestingGoals || suggestedGoals.length > 0) && (
-                        <div className="pt-6 border-t border-slate-700/50 space-y-4 animate-fade-in">
-                            <h4 className="font-semibold text-white">{t('siteSelector.suggestedGoals.title')}</h4>
+                        <div className="pt-6 border-t border-gray-200 space-y-4 animate-fade-in">
+                            <h4 className="font-bold text-bf-slate">{t('siteSelector.suggestedGoals.title')}</h4>
                             {isSuggestingGoals ? (
-                                <div className="text-center text-sm text-gray-400 flex items-center justify-center">
-                                    <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-pink-400 mr-2"></div>
+                                <div className="text-center text-sm text-gray-500 flex items-center justify-center">
+                                    <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-pink-500 mr-2"></div>
                                     {t('siteSelector.suggestedGoals.loading')}
                                 </div>
                             ) : (
                                 <div className="space-y-2">
                                     {suggestedGoals.map((goal, index) => (
                                         <button key={index} onClick={() => onUseSuggestedGoal(goal)} 
-                                            className="w-full text-left p-3 bg-slate-800 hover:bg-slate-700 rounded-md transition-colors text-sm text-gray-300"
+                                            className="w-full text-left p-3 bg-white hover:bg-gray-50 border border-gray-200 rounded-md transition-colors text-sm text-gray-700 shadow-sm"
                                             title={t('siteSelector.suggestedGoals.useGoal')}>
                                             <p>{goal}</p>
-                                            <span className="block text-xs text-pink-400 mt-1 font-semibold">{t('siteSelector.suggestedGoals.useGoal')} &rarr;</span>
+                                            <span className="block text-xs text-pink-600 mt-1 font-bold">{t('siteSelector.suggestedGoals.useGoal')} &rarr;</span>
                                         </button>
                                     ))}
                                 </div>
@@ -589,16 +588,16 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
     
     const renderResults = () => {
         const renderLocationCard = (item: PlantingSite, index: number) => (
-            <div key={index} className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 space-y-4 animate-fade-in">
-                <h4 className="text-xl font-bold text-pink-400">{item.locationName}, <span className="text-lg font-medium text-gray-300">{item.country}</span></h4>
+            <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4 animate-fade-in hover:shadow-md transition-shadow">
+                <h4 className="text-xl font-bold text-pink-600 font-serif">{item.locationName}, <span className="text-lg font-medium text-gray-600">{item.country}</span></h4>
                 <div>
-                    <h5 className="font-semibold text-white mb-2">{t('siteSelector.locationResult.rationale')}</h5>
-                    <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(item.rationale) }} />
+                    <h5 className="font-bold text-bf-slate mb-2 uppercase text-xs tracking-wide">{t('siteSelector.locationResult.rationale')}</h5>
+                    <div className="prose prose-sm prose-slate max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: marked.parse(item.rationale) }} />
                 </div>
                 <div>
-                    <h5 className="font-semibold text-white mb-2">{t('siteSelector.locationResult.species')}</h5>
+                    <h5 className="font-bold text-bf-slate mb-2 uppercase text-xs tracking-wide">{t('siteSelector.locationResult.species')}</h5>
                     <ul className="list-disc list-inside space-y-1">
-                        {item.suggestedSpecies.map(species => <li key={species} className="text-gray-300">{species}</li>)}
+                        {item.suggestedSpecies.map(species => <li key={species} className="text-gray-600">{species}</li>)}
                     </ul>
                 </div>
             </div>
@@ -616,49 +615,49 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
             };
 
             return (
-                 <div key={index} className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 space-y-4 animate-fade-in">
-                    <h4 className="text-xl font-bold text-pink-400">{item.commonName} <span className="text-lg font-medium text-gray-400 italic">({item.scientificName})</span></h4>
+                 <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4 animate-fade-in hover:shadow-md transition-shadow">
+                    <h4 className="text-xl font-bold text-pink-600 font-serif">{item.commonName} <span className="text-lg font-medium text-gray-500 italic">({item.scientificName})</span></h4>
                     <div>
-                        <h5 className="font-semibold text-white mb-2">{t('siteSelector.treeResult.description')}</h5>
-                         <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(item.description) }} />
+                        <h5 className="font-bold text-bf-slate mb-2 uppercase text-xs tracking-wide">{t('siteSelector.treeResult.description')}</h5>
+                         <div className="prose prose-sm prose-slate max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: marked.parse(item.description) }} />
                     </div>
                     <div>
-                        <h5 className="font-semibold text-white mb-2">{t('siteSelector.treeResult.rationale')}</h5>
-                         <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(item.rationale) }} />
+                        <h5 className="font-bold text-bf-slate mb-2 uppercase text-xs tracking-wide">{t('siteSelector.treeResult.rationale')}</h5>
+                         <div className="prose prose-sm prose-slate max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: marked.parse(item.rationale) }} />
                     </div>
-                    <div className="pt-4 border-t border-slate-700 flex flex-col sm:flex-row gap-3">
+                    <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
                         <button 
                             onClick={handleFindGrantsClick}
-                            className="w-full text-center text-sm bg-teal-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors"
+                            className="w-full text-center text-sm bg-teal-600 text-white font-bold py-2 px-3 rounded-md hover:bg-teal-700 transition-colors uppercase tracking-wide"
                         >
                             {t('siteSelector.treeResult.findGrantsButton')}
                         </button>
                         <button 
                             onClick={() => handleAnalyzeEconomicBenefits(item)}
                             disabled={isLoadingAnalysis}
-                            className="w-full text-center text-sm bg-purple-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-500"
+                            className="w-full text-center text-sm bg-purple-600 text-white font-bold py-2 px-3 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-300 uppercase tracking-wide"
                         >
                             {isLoadingAnalysis ? t('siteSelector.treeResult.analyzingBenefits') : t('siteSelector.treeResult.analyzeBenefitsButton')}
                         </button>
                     </div>
                     { (isLoadingAnalysis || analysis || errorAnalysis) && (
-                        <div className="mt-4 p-4 bg-slate-900/50 rounded-md border border-slate-700 animate-fade-in">
-                            <h5 className="font-semibold text-white mb-3">{t('siteSelector.treeResult.economicAnalysisTitle')}</h5>
+                        <div className="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200 animate-fade-in">
+                            <h5 className="font-bold text-bf-slate mb-3 uppercase text-xs tracking-wide">{t('siteSelector.treeResult.economicAnalysisTitle')}</h5>
                             {isLoadingAnalysis && (
-                                <div className="flex items-center justify-center text-gray-400">
-                                    <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-purple-400 mr-2"></div>
+                                <div className="flex items-center justify-center text-gray-500">
+                                    <div className="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-purple-500 mr-2"></div>
                                     <span>{t('siteSelector.treeResult.analyzingBenefits')}</span>
                                 </div>
                             )}
-                            {errorAnalysis && <div className="text-red-400 text-sm">{errorAnalysis}</div>}
+                            {errorAnalysis && <div className="text-red-500 text-sm">{errorAnalysis}</div>}
                             {analysis && (
-                                <dl className="text-sm space-y-2">
-                                    <div className="flex justify-between"><dt className="text-gray-400">{t('siteSelector.treeResult.annualRevenue')}:</dt><dd className="font-medium text-white">{analysis.annualRevenuePerTree}</dd></div>
-                                    <div className="flex justify-between"><dt className="text-gray-400">{t('siteSelector.treeResult.yearsToProfit')}:</dt><dd className="font-medium text-white">{analysis.yearsToProfitability}</dd></div>
-                                    <div className="flex justify-between"><dt className="text-gray-400">{t('siteSelector.treeResult.primaryProducts')}:</dt><dd className="font-medium text-white text-right">{analysis.primaryProducts.join(', ')}</dd></div>
-                                    <div>
-                                        <dt className="text-gray-400 mb-1">{t('siteSelector.treeResult.otherBenefits')}:</dt>
-                                        <dd className="prose prose-xs prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(analysis.otherBenefits) }} />
+                                <dl className="text-sm space-y-2 text-gray-700">
+                                    <div className="flex justify-between"><dt className="text-gray-500 font-medium">{t('siteSelector.treeResult.annualRevenue')}:</dt><dd className="font-bold text-bf-slate">{analysis.annualRevenuePerTree}</dd></div>
+                                    <div className="flex justify-between"><dt className="text-gray-500 font-medium">{t('siteSelector.treeResult.yearsToProfit')}:</dt><dd className="font-bold text-bf-slate">{analysis.yearsToProfitability}</dd></div>
+                                    <div className="flex justify-between"><dt className="text-gray-500 font-medium">{t('siteSelector.treeResult.primaryProducts')}:</dt><dd className="font-bold text-bf-slate text-right">{analysis.primaryProducts.join(', ')}</dd></div>
+                                    <div className="mt-2 pt-2 border-t border-gray-200">
+                                        <dt className="text-gray-500 font-medium mb-1">{t('siteSelector.treeResult.otherBenefits')}:</dt>
+                                        <dd className="prose prose-xs prose-slate max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: marked.parse(analysis.otherBenefits) }} />
                                     </div>
                                 </dl>
                             )}
@@ -669,42 +668,42 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
         };
 
         return (
-            <div className="bg-slate-900/60 rounded-lg shadow-lg backdrop-blur-sm border border-slate-700 min-h-[60vh] flex flex-col">
-                <div className="flex justify-between items-center p-4 bg-slate-800/80 border-b border-slate-700">
-                    <h3 className="text-lg font-semibold text-white">{t('siteSelector.resultsTitle')}</h3>
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 min-h-[60vh] flex flex-col">
+                <div className="flex justify-between items-center p-4 bg-gray-50 border-b border-gray-200 rounded-t-xl">
+                    <h3 className="text-lg font-bold text-bf-slate font-serif">{t('siteSelector.resultsTitle')}</h3>
                 </div>
                 <div className="p-6 flex-grow overflow-y-auto space-y-6">
                      {isMapsLoading && (
                         <div className="flex items-center justify-center h-full">
-                            <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-400"></div>
-                            <span className="ml-3 text-gray-400">{t('siteSelector.generating')}</span>
+                            <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-500"></div>
+                            <span className="ml-3 text-gray-500 font-medium">{t('siteSelector.generating')}</span>
                         </div>
                     )}
-                    {mapsError && <div className="text-red-400 p-4 bg-red-900/50 rounded-md">{mapsError}</div>}
+                    {mapsError && <div className="text-red-600 p-4 bg-red-50 rounded-md border border-red-200">{mapsError}</div>}
                     {mapsResult && (
-                        <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 space-y-4 animate-fade-in">
-                            <h4 className="text-xl font-bold text-teal-400">{t('siteSelector.nearbyAnalysis.resultsTitle').replace('{query}', mapsQuery)}</h4>
-                            <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(mapsResult.text) }} />
+                        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4 animate-fade-in">
+                            <h4 className="text-xl font-bold text-teal-600 font-serif">{t('siteSelector.nearbyAnalysis.resultsTitle').replace('{query}', mapsQuery)}</h4>
+                            <div className="prose prose-sm prose-slate max-w-none text-gray-600" dangerouslySetInnerHTML={{ __html: marked.parse(mapsResult.text) }} />
                             {mapsResult.sources && mapsResult.sources.length > 0 && (
                                 <div>
-                                    <h5 className="font-semibold text-white mt-4 mb-2">{t('grantFinder.sources')}:</h5>
+                                    <h5 className="font-bold text-bf-slate mt-4 mb-2 uppercase text-xs tracking-wide">{t('grantFinder.sources')}:</h5>
                                     <ul className="space-y-2 text-sm">
                                         {mapsResult.sources.map((source, index) => (
-                                            <li key={index} className="bg-slate-900/50 p-2 rounded-md">
+                                            <li key={index} className="bg-gray-50 p-3 rounded-md border border-gray-100">
                                                 {source.maps && (
                                                     <div className="space-y-1">
-                                                        <a href={source.maps.uri} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline font-semibold" title={source.maps.title}>
+                                                        <a href={source.maps.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold" title={source.maps.title}>
                                                             {source.maps.title} ({t('siteSelector.nearbyAnalysis.mapLink')})
                                                         </a>
                                                         {source.maps.placeAnswerSources?.reviewSnippets?.map((snippet, sIndex) => (
-                                                            <a key={sIndex} href={snippet.uri} target="_blank" rel="noopener noreferrer" className="block text-xs text-gray-400 hover:text-gray-200 pl-4 italic" title={snippet.text}>
+                                                            <a key={sIndex} href={snippet.uri} target="_blank" rel="noopener noreferrer" className="block text-xs text-gray-500 hover:text-gray-800 pl-4 italic" title={snippet.text}>
                                                                 - "{snippet.text}" ({t('siteSelector.nearbyAnalysis.reviewLink')})
                                                             </a>
                                                         ))}
                                                     </div>
                                                 )}
                                                 {source.web && (
-                                                    <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title={source.web.title}>
+                                                    <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium" title={source.web.title}>
                                                         {source.web.title || source.web.uri}
                                                     </a>
                                                 )}
@@ -717,11 +716,11 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                     )}
                      {isLoading && (
                         <div className="flex items-center justify-center h-full">
-                            <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-400"></div>
-                            <span className="ml-3 text-gray-400">{t('siteSelector.generating')}</span>
+                            <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-pink-500"></div>
+                            <span className="ml-3 text-gray-500 font-medium">{t('siteSelector.generating')}</span>
                         </div>
                     )}
-                    {error && <div className="text-red-400 p-4 bg-red-900/50 rounded-md">{error}</div>}
+                    {error && <div className="text-red-600 p-4 bg-red-50 rounded-md border border-red-200">{error}</div>}
                     {!isLoading && !error && results.length > 0 && (
                         <div className="space-y-6">
                             {results.map((item, index) => mode === 'locations' 
@@ -731,7 +730,7 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                         </div>
                     )}
                     {!isLoading && !error && results.length === 0 && !isMapsLoading && !mapsResult && (
-                        <div className="text-center text-gray-500 flex items-center justify-center h-full">
+                        <div className="text-center text-gray-400 flex items-center justify-center h-full">
                             <p>{t('siteSelector.placeholder')}</p>
                         </div>
                     )}
@@ -755,25 +754,25 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
             <div className="text-center">
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 tracking-tight">
+                <h1 className="text-4xl sm:text-5xl font-extrabold text-bf-slate font-serif tracking-tight">
                     {t('siteSelector.title')}
                 </h1>
-                <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">{t('siteSelector.subtitle')}</p>
+                <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">{t('siteSelector.subtitle')}</p>
             </div>
             
             <div className="mt-12 max-w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                 <div className="lg:sticky top-28">
                     <div className="relative">
-                        <div ref={mapRef} className="h-[60vh] lg:h-[85vh] w-full rounded-lg bg-slate-800 border border-slate-700 shadow-lg" />
+                        <div ref={mapRef} className="h-[60vh] lg:h-[85vh] w-full rounded-xl bg-gray-100 border border-gray-300 shadow-lg" />
                         
                         {isMapLoading && (
-                            <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-[1001] rounded-lg transition-opacity duration-300 animate-fade-in">
-                                <div className="flex flex-col items-center text-white">
-                                    <svg className="w-8 h-8 animate-spin text-pink-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center z-[1001] rounded-xl transition-opacity duration-300 animate-fade-in">
+                                <div className="flex flex-col items-center text-gray-700">
+                                    <svg className="w-8 h-8 animate-spin text-bf-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    <p className="mt-3 text-sm">{t('siteSelector.mapLoading')}</p>
+                                    <p className="mt-3 text-sm font-bold">{t('siteSelector.mapLoading')}</p>
                                 </div>
                             </div>
                         )}
@@ -782,13 +781,13 @@ const SiteSelector: React.FC<SiteSelectorProps> = (props) => {
                         <button 
                             onClick={handleGeolocate}
                             disabled={isGeolocating}
-                            className="absolute top-24 right-2.5 z-[1000] bg-slate-900/70 backdrop-blur-sm rounded-md p-2 border border-white/20 shadow-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-wait"
+                            className="absolute top-24 right-2.5 z-[1000] bg-white/90 backdrop-blur-sm rounded-md p-2 border border-gray-300 shadow-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-wait text-gray-700"
                             title={t('siteSelector.findMyLocation')}
                         >
                             {isGeolocating ? (
-                                <svg className="w-6 h-6 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <svg className="w-6 h-6 text-bf-orange animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             ) : (
-                                <svg className="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             )}
                         </button>
                     </div>

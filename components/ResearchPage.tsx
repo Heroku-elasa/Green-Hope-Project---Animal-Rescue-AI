@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLanguage } from '../types';
 
@@ -13,13 +14,13 @@ const ResearchPage: React.FC = () => {
     const startups: Startup[] = t('researchPage.startups');
 
     return (
-        <div className="animate-fade-in text-white">
+        <div className="animate-fade-in text-bf-slate">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 tracking-tight">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-bf-slate font-serif tracking-tight">
                         {t('researchPage.title')}
                     </h1>
-                    <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">{t('researchPage.subtitle')}</p>
+                    <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">{t('researchPage.subtitle')}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -29,14 +30,14 @@ const ResearchPage: React.FC = () => {
                             href={startup.link} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="group bg-slate-800/70 rounded-lg shadow-lg backdrop-blur-sm border border-slate-700 overflow-hidden flex flex-col sm:flex-row items-center p-6 text-center sm:text-left transition-all hover:border-pink-500/50 hover:bg-slate-800"
+                            className="group bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col sm:flex-row items-center p-6 text-center sm:text-left transition-all hover:shadow-xl hover:border-bf-orange"
                         >
-                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-                                <img src={startup.logo} alt={`${startup.name} logo`} className="h-20 w-32 object-contain filter grayscale group-hover:grayscale-0 transition-all" />
+                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6 w-32 h-20 flex items-center justify-center bg-gray-50 rounded-lg p-2">
+                                <img src={startup.logo} alt={`${startup.name} logo`} className="max-h-full max-w-full object-contain filter group-hover:contrast-125 transition-all" />
                             </div>
                             <div className="flex-grow">
-                                <h3 className="text-xl font-bold text-pink-400">{startup.name}</h3>
-                                <p className="text-gray-300 text-sm mt-2">{startup.description}</p>
+                                <h3 className="text-xl font-bold text-bf-slate group-hover:text-bf-orange transition-colors font-serif">{startup.name}</h3>
+                                <p className="text-gray-600 text-sm mt-2 leading-relaxed">{startup.description}</p>
                             </div>
                         </a>
                     ))}

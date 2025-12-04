@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage, AppState, Page } from '../types';
 import * as geminiService from '../services/geminiService';
@@ -148,8 +149,8 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   useEffect(() => {
     if (mapRef.current && !mapInstanceRef.current && typeof L !== 'undefined') {
         const map = L.map(mapRef.current, {
-            center: [15, 15],
-            zoom: 2,
+            center: [35.6892, 51.3890], // Center on Tehran
+            zoom: 11,
             scrollWheelZoom: false,
             zoomControl: false,
         });
@@ -159,7 +160,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
-            maxZoom: 10,
+            maxZoom: 18,
         }).addTo(map);
         
         const mapIconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f58220"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 5.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>`;
@@ -181,44 +182,54 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
 
   return (
     <div className="animate-fade-in text-bf-gray font-sans">
-      {/* Hero Section */}
-      <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center text-center overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute z-0 w-auto min-w-full min-h-full max-w-none object-cover"
-          src={t('hero.videoUrl')}
-        >
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 px-4 max-w-5xl mx-auto">
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white font-serif leading-tight tracking-tight mb-6 drop-shadow-md"
-              dangerouslySetInnerHTML={{ __html: t('hero.title') }} />
-          <p className="mt-4 text-xl sm:text-2xl text-white font-semibold max-w-3xl mx-auto drop-shadow-sm leading-relaxed">{t('hero.subtitle')}</p>
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              onClick={() => setPage('projects')}
-              className="px-10 py-4 bg-bf-orange text-white text-lg font-bold rounded-full shadow-lg hover:bg-white hover:text-bf-orange transition-all uppercase tracking-wide"
-            >
-              {t('hero.button1')}
-            </button>
-            <button
-              onClick={() => handleScrollTo('footer')}
-              className="px-10 py-4 bg-white text-bf-orange text-lg font-bold rounded-full shadow-lg hover:bg-gray-100 transition-colors uppercase tracking-wide"
-            >
-              {t('hero.button2')}
-            </button>
-          </div>
+      {/* Splash Hero Section - Replaces Video Hero */}
+      <section className="bg-bf-buff">
+        <div className="max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row h-auto md:h-[600px] lg:h-[700px] overflow-hidden md:rounded-b-3xl shadow-sm">
+                {/* Image Side */}
+                <div className="md:w-1/2 h-[300px] md:h-full relative overflow-hidden">
+                    <img 
+                        src={t('hero.imageUrl')} 
+                        alt="Rescue Animal" 
+                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-[2000ms]" 
+                    />
+                </div>
+                {/* Content Side */}
+                <div className="md:w-1/2 bg-white flex flex-col justify-center p-8 md:p-16 lg:p-20 relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-bf-buff rounded-bl-full opacity-50 -mr-16 -mt-16 hidden md:block"></div>
+                    
+                    <span className="text-bf-orange font-bold uppercase tracking-widest text-sm mb-4 block">
+                        Lifesaving, this season and beyond
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-bf-slate font-serif leading-tight mb-6" dangerouslySetInnerHTML={{ __html: t('hero.title') }} />
+                    <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-lg">
+                        {t('hero.subtitle')}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                            onClick={() => setPage('animals')}
+                            className="px-8 py-3 bg-bf-orange hover:bg-bf-orange-dark text-white font-bold rounded-full shadow-md transition-all uppercase tracking-wide flex items-center justify-center group"
+                        >
+                            {t('hero.button1')}
+                            <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform rtl:rotate-180 rtl:mr-2 rtl:ml-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <button
+                            onClick={() => handleScrollTo('footer')}
+                            className="px-8 py-3 bg-white border-2 border-bf-slate text-bf-slate hover:bg-bf-buff font-bold rounded-full transition-colors uppercase tracking-wide"
+                        >
+                            {t('hero.button2')}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
       </section>
 
       {/* Intro Section - The "Quote" */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <blockquote className="text-center max-w-4xl mx-auto">
+            <blockquote className="text-center max-w-4xl mx-auto relative pl-0 md:pl-12">
+                <svg className="hidden md:block absolute left-0 top-0 w-16 h-16 text-bf-orange opacity-20 -translate-y-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H9C9.00001 15 9.00001 14 9.00001 13C9.00001 12 9.00001 11 9.00001 10H14.017C14.5693 10 15.017 9.55228 15.017 9V3C15.017 2.44772 14.5693 2 14.017 2H5C4.44772 2 4 2.44772 4 3V12C4 16.9706 8.02944 21 13 21H14.017ZM21.017 21L21.017 18C21.017 16.8954 20.1216 16 19.017 16H16C16 15 16 14 16 13C16 12 16 11 16 10H21.017C21.5693 10 22.017 9.55228 22.017 9V3C22.017 2.44772 21.5693 2 21.017 2H12C11.4477 2 11 2.44772 11 3V12C11 16.9706 15.0294 21 20 21H21.017Z" /></svg>
                 <p className="text-2xl sm:text-3xl lg:text-4xl text-bf-slate font-serif italic leading-relaxed">
                     {t('home.introTitle')}
                 </p>
@@ -231,20 +242,20 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('home.servicesTitle')}</h2>
-            <div className="w-24 h-1 bg-bf-orange mx-auto mt-4"></div>
+            <div className="w-24 h-1 bg-bf-orange mx-auto mt-4 rounded-full"></div>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
               <button 
                 key={index}
                 onClick={() => setPage(servicePageMap[service.iconKey])}
-                className="text-center p-8 bg-white rounded-lg shadow-md border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
+                className="text-center p-8 bg-white rounded-xl shadow-md border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group"
               >
-                <div className="flex items-center justify-center h-20 w-20 rounded-full bg-bf-buff mx-auto text-bf-orange mb-6 group-hover:bg-bf-orange group-hover:text-white transition-colors">
+                <div className="flex items-center justify-center h-20 w-20 rounded-full bg-bf-buff mx-auto text-bf-orange mb-6 group-hover:bg-bf-orange group-hover:text-white transition-colors duration-300">
                     <Icon iconKey={service.iconKey} className="w-10 h-10"/>
                 </div>
-                <h3 className="text-xl font-bold text-bf-slate mb-3">{service.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{service.text}</p>
+                <h3 className="text-xl font-bold text-bf-slate mb-3 group-hover:text-bf-orange transition-colors">{service.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">{service.text}</p>
               </button>
             ))}
           </div>
@@ -259,20 +270,20 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-2">
             {portfolioItems.slice(0, 4).map((item, index) => (
-                <div key={index} className="group bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border border-gray-100 hover:shadow-2xl transition-shadow">
+                <div key={index} className="group bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border border-gray-100 hover:shadow-2xl transition-all duration-300">
                     <div className="relative h-72 w-full overflow-hidden">
                         <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                             {item.tags.map(tag => (
-                                <span key={tag} className="bg-white/90 text-bf-slate text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">{tag}</span>
+                                <span key={tag} className="bg-white/95 backdrop-blur-sm text-bf-slate text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">{tag}</span>
                             ))}
                         </div>
                     </div>
                     <div className="p-8 flex-grow flex flex-col">
                         <h3 className="text-2xl font-bold text-bf-slate mb-3 group-hover:text-bf-orange transition-colors font-serif">{item.title}</h3>
                         <p className="text-gray-600 mb-6 flex-grow text-base leading-relaxed">{item.description}</p>
-                        <a href={item.link} className="inline-flex items-center font-bold text-bf-orange uppercase tracking-wide text-sm hover:underline">
-                            Read Story <span className="ml-2">»</span>
+                        <a href={item.link} className="inline-flex items-center font-bold text-bf-orange uppercase tracking-wide text-sm hover:underline group-hover:translate-x-1 transition-transform">
+                            Read Story <span className="ml-2 rtl:hidden">»</span><span className="mr-2 hidden rtl:inline">«</span>
                         </a>
                     </div>
                 </div>
@@ -295,7 +306,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
             <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 text-center">
                 {achievements.map((item, index) => (
                     <div key={index} className="flex flex-col items-center group">
-                        <div className="text-bf-orange mb-4 group-hover:scale-110 transition-transform">
+                        <div className="text-bf-orange mb-4 group-hover:scale-110 transition-transform duration-300">
                             <Icon iconKey={item.iconKey} className="w-12 h-12"/>
                         </div>
                         <p className="text-5xl font-bold text-white mt-2 mb-2 font-serif">{item.count}{item.suffix}</p>
@@ -350,12 +361,13 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
             <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {latestPosts.map((post, index) => (
                     <div key={index} className="group flex flex-col overflow-hidden rounded-lg shadow-md bg-white border border-gray-100 hover:shadow-xl transition-shadow">
-                        <div className="flex-shrink-0 h-48 w-full bg-gray-200 overflow-hidden">
+                        <div className="flex-shrink-0 h-48 w-full bg-gray-200 overflow-hidden relative">
                             {post.img ? (
                                <img className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-500" src={post.img} alt={post.title} />
                             ) : (
                                 <div className="h-48 w-full bg-gray-200 animate-pulse"></div>
                             )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <div className="flex flex-1 flex-col justify-between p-6">
                             <div className="flex-1">
@@ -363,10 +375,11 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
                                     <p className="text-xl font-bold text-bf-slate group-hover:text-bf-orange transition-colors font-serif leading-tight">{post.title}</p>
                                 </a>
                             </div>
-                            <div className="mt-6 flex items-center border-t border-gray-100 pt-4">
+                            <div className="mt-6 flex items-center border-t border-gray-100 pt-4 justify-between">
                                 <div className="text-sm font-medium text-gray-500">
                                     <time dateTime={post.date}>{post.date}</time>
                                 </div>
+                                <span className="text-xs font-bold text-bf-orange uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity">Read More</span>
                             </div>
                         </div>
                     </div>

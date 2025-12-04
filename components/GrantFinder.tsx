@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import mammoth from 'mammoth';
 import { findGrants, GrantResult } from '../services/geminiService';
@@ -340,9 +341,9 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
 
     const RelevanceBadge: React.FC<{ score: number }> = ({ score }) => {
         const getPillColor = () => {
-            if (score >= 75) return 'bg-green-500/20 text-green-300';
-            if (score >= 50) return 'bg-yellow-500/20 text-yellow-300';
-            return 'bg-red-500/20 text-red-300';
+            if (score >= 75) return 'bg-green-100 text-green-700';
+            if (score >= 50) return 'bg-yellow-100 text-yellow-700';
+            return 'bg-red-100 text-red-700';
         };
         return (
             <div className={`inline-flex items-baseline px-2 py-1 rounded-full text-xs font-semibold ${getPillColor()}`}>
@@ -355,47 +356,47 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
     return (
         <section id="grant-finder" className="py-16 sm:py-24 space-y-12">
             <div className="text-center">
-                <h2 className="text-3xl font-bold text-white">{t('grantFinder.title')}</h2>
-                <p className="mt-2 text-gray-400 max-w-2xl mx-auto">{t('grantFinder.subtitle')}</p>
+                <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('grantFinder.title')}</h2>
+                <p className="mt-4 text-gray-600 max-w-2xl mx-auto">{t('grantFinder.subtitle')}</p>
             </div>
 
-            <div className="max-w-3xl mx-auto bg-gray-800/50 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-gray-700 space-y-6">
+            <div className="max-w-3xl mx-auto bg-white rounded-xl p-8 shadow-lg border border-gray-200 space-y-6">
                 <div>
-                    <label htmlFor="file-upload" className="block text-sm font-medium text-gray-300 mb-2">{t('grantFinder.uploadLabel')}</label>
-                    <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 p-3 bg-gray-700/50 border-2 border-dashed border-gray-600 rounded-md">
-                        <label htmlFor="file-upload" className="cursor-pointer bg-gray-600 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-md transition-colors w-full sm:w-auto text-center focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-800 focus-within:ring-blue-500">
+                    <label htmlFor="file-upload" className="block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">{t('grantFinder.uploadLabel')}</label>
+                    <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 p-3 bg-gray-50 border-2 border-dashed border-gray-300 rounded-md">
+                        <label htmlFor="file-upload" className="cursor-pointer bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors w-full sm:w-auto text-center focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-bf-orange">
                             <span>{t('grantFinder.selectFile')}</span>
                             <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".docx,.txt,.md" />
                         </label>
                         <div className="flex-grow">
                         {selectedFile ? (
-                            <div className="flex items-center justify-between text-sm text-gray-300 w-full">
+                            <div className="flex items-center justify-between text-sm text-gray-700 w-full">
                                 <span className="truncate pr-2">{selectedFile.name}</span>
-                                <button onClick={handleClearFile} className="text-red-400 hover:text-red-300 font-bold text-lg flex-shrink-0 rounded-full w-6 h-6 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-400" aria-label={t('grantFinder.removeFile')} title={t('grantFinder.removeFile')}>&times;</button>
+                                <button onClick={handleClearFile} className="text-red-500 hover:text-red-600 font-bold text-lg flex-shrink-0 rounded-full w-6 h-6 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400" aria-label={t('grantFinder.removeFile')} title={t('grantFinder.removeFile')}>&times;</button>
                             </div>
-                        ) : <p className="text-sm text-gray-400">{t('grantFinder.fileTypes')}</p> }
+                        ) : <p className="text-sm text-gray-500">{t('grantFinder.fileTypes')}</p> }
                         </div>
                     </div>
                 </div>
                  <div>
-                    <div className="relative"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-600"></div></div>
-                        <div className="relative flex justify-center"><span className="bg-gray-800/50 px-2 text-sm text-gray-400 backdrop-blur-sm">{t('grantFinder.or')}</span></div>
+                    <div className="relative"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300"></div></div>
+                        <div className="relative flex justify-center"><span className="bg-white px-2 text-sm text-gray-500 font-bold uppercase">{t('grantFinder.or')}</span></div>
                     </div>
                 </div>
                 <div>
-                    <label htmlFor="keywords-prompt" className="block text-sm font-medium text-gray-300">{t('grantFinder.keywordsLabel')}</label>
+                    <label htmlFor="keywords-prompt" className="block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">{t('grantFinder.keywordsLabel')}</label>
                     <textarea id="keywords-prompt" rows={3} value={keywords} onChange={(e) => setKeywords(e.target.value)}
-                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white"
+                        className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-900"
                         placeholder={t('grantFinder.keywordsPlaceholder')} />
                 </div>
                 <div>
-                    <label htmlFor="max-results" className="block text-sm font-medium text-gray-300">{t('grantFinder.maxResults')} ({maxResults})</label>
+                    <label htmlFor="max-results" className="block text-sm font-bold uppercase tracking-wide text-gray-700 mb-2">{t('grantFinder.maxResults')} ({maxResults})</label>
                     <input id="max-results" type="range" min="5" max="50" step="5" value={maxResults} onChange={(e) => setMaxResults(Number(e.target.value))}
-                        className="mt-1 block w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500" />
+                        className="mt-1 block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bf-orange" />
                 </div>
                 <div>
                     <button onClick={handleSearch} disabled={isLoading || isFileLoading || (!keywords.trim() && !selectedFile) || isQuotaExhausted}
-                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors">
+                        className="w-full flex justify-center py-4 px-4 border border-transparent rounded-full shadow-md text-sm font-bold uppercase tracking-wide text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
                         {isFileLoading ? t('grantFinder.readingFile') : isLoading ? t('grantFinder.finding') : isQuotaExhausted ? t('quotaErrorModal.title') : t('grantFinder.findButton')}
                     </button>
                 </div>
@@ -404,28 +405,28 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
             {savedGrants.length > 0 && (
                 <div className="mt-12 space-y-8 animate-fade-in">
                     <div className="flex justify-between items-center">
-                        <h3 className="text-2xl font-bold text-white">{t('grantFinder.savedTitle')}</h3>
-                        <button onClick={onClearAllSaved} className="px-3 py-1 bg-red-800/70 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500">{t('grantFinder.clearAll')}</button>
+                        <h3 className="text-2xl font-bold text-bf-slate font-serif">{t('grantFinder.savedTitle')}</h3>
+                        <button onClick={onClearAllSaved} className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold rounded-full transition-colors focus:outline-none">{t('grantFinder.clearAll')}</button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {savedGrants.map((grant, index) => (
-                            <div key={`${grant.grantTitle}-${index}`} className="bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6 flex flex-col">
-                                <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-400"><h4 className="text-lg font-bold text-green-400">{grant.grantTitle}</h4></a>
-                                <p className="text-sm text-gray-400 mb-2">{t('grantFinder.from')} {grant.fundingBody}</p>
-                                <p className="text-sm font-semibold text-yellow-300 bg-yellow-900/50 px-2 py-1 rounded-md self-start mb-4">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
-                                <div className="space-y-3 text-sm flex-grow">
-                                    <p><strong className="text-gray-300">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
+                            <div key={`${grant.grantTitle}-${index}`} className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col hover:shadow-lg transition-shadow">
+                                <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bf-orange"><h4 className="text-lg font-bold text-bf-orange mb-1">{grant.grantTitle}</h4></a>
+                                <p className="text-sm text-gray-500 mb-3">{t('grantFinder.from')} {grant.fundingBody}</p>
+                                <p className="text-sm font-bold text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full self-start mb-4 inline-block">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
+                                <div className="space-y-3 text-sm flex-grow text-gray-600">
+                                    <p><strong className="text-bf-slate">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
                                 </div>
-                                <div className="mt-4 pt-4 border-t border-gray-700">
-                                    <label htmlFor={`notes-${index}`} className="block text-sm font-medium text-gray-300 mb-2">{t('grantFinder.notesLabel')}</label>
+                                <div className="mt-4 pt-4 border-t border-gray-100">
+                                    <label htmlFor={`notes-${index}`} className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-2">{t('grantFinder.notesLabel')}</label>
                                     <textarea id={`notes-${index}`} rows={3}
-                                        className="w-full bg-gray-900 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white transition-colors"
+                                        className="w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-900 transition-colors"
                                         placeholder={t('grantFinder.notesPlaceholder')} value={grant.notes || ''} onChange={(e) => onNoteChange(index, e.target.value)} />
                                 </div>
-                                <div className="mt-6 grid grid-cols-2 gap-2">
-                                     <button onClick={() => onRemoveGrant(grant)} className="col-span-2 text-center bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500">{t('grantFinder.remove')}</button>
-                                     <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500">{t('grantFinder.useForProposal')}</button>
-                                     <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-500 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500">{t('grantFinder.analyze')}</button>
+                                <div className="mt-6 grid grid-cols-2 gap-3">
+                                     <button onClick={() => onRemoveGrant(grant)} className="col-span-2 text-center bg-white border border-red-500 text-red-600 font-bold py-2 px-4 rounded-md hover:bg-red-50 transition-colors">{t('grantFinder.remove')}</button>
+                                     <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-bold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">{t('grantFinder.useForProposal')}</button>
+                                     <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-200 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">{t('grantFinder.analyze')}</button>
                                 </div>
                             </div>
                         ))}
@@ -436,31 +437,31 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
             <div className="mt-12 space-y-8">
                 <div className="flex justify-between items-center flex-wrap gap-4">
                     <div>
-                        <h3 className="text-2xl font-bold text-white">{t('grantFinder.crateTitle')}</h3>
-                        <p className="text-sm text-gray-400">{t('grantFinder.crateSubtitle')}</p>
+                        <h3 className="text-2xl font-bold text-bf-slate font-serif">{t('grantFinder.crateTitle')}</h3>
+                        <p className="text-sm text-gray-500">{t('grantFinder.crateSubtitle')}</p>
                     </div>
                     {allGrants.length > 0 &&
-                        <button onClick={onClearAllDbGrants} className="px-3 py-1 bg-red-800/70 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500">{t('grantFinder.clearCrate')}</button>
+                        <button onClick={onClearAllDbGrants} className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold rounded-full transition-colors focus:outline-none">{t('grantFinder.clearCrate')}</button>
                     }
                 </div>
 
                 {isLoading && (
-                    <div className="max-w-3xl mx-auto bg-gray-800/50 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-gray-700 text-center">
-                        <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-400 mx-auto mb-4"></div>
-                        <h3 className="text-lg font-semibold text-white">{t('grantFinder.loadingTitle')}</h3>
-                        <p className="text-gray-400 mt-2">{t('grantFinder.loadingSubtitle')}</p>
+                    <div className="max-w-3xl mx-auto bg-white rounded-xl p-8 shadow-lg border border-gray-200 text-center">
+                        <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-bf-orange mx-auto mb-4"></div>
+                        <h3 className="text-lg font-bold text-bf-slate">{t('grantFinder.loadingTitle')}</h3>
+                        <p className="text-gray-500 mt-2">{t('grantFinder.loadingSubtitle')}</p>
                     </div>
                 )}
-                {error && !error.includes('(Quota Exceeded)') && <div className="max-w-3xl mx-auto text-red-400 p-4 bg-red-900/50 rounded-md">{error}</div>}
+                {error && !error.includes('(Quota Exceeded)') && <div className="max-w-3xl mx-auto text-red-600 p-4 bg-red-50 rounded-md border border-red-200">{error}</div>}
                 
                 {!isLoading && (
                     <div className="space-y-6">
                         {sortedGrants.length > 0 ? (
                             <>
                                 <div className="flex justify-end">
-                                    <label htmlFor="sort-key" className="text-sm text-gray-400 self-center mr-2">{t('grantFinder.sortBy')}:</label>
+                                    <label htmlFor="sort-key" className="text-sm text-gray-500 font-bold uppercase tracking-wide self-center mr-2">{t('grantFinder.sortBy')}:</label>
                                     <select id="sort-key" value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)}
-                                        className="bg-gray-700 border-gray-600 rounded-md shadow-sm py-1.5 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white">
+                                        className="bg-white border border-gray-300 rounded-md shadow-sm py-1.5 px-3 focus:outline-none focus:ring-bf-orange focus:border-bf-orange sm:text-sm text-gray-700">
                                         <option value="relevanceScore">{t('grantFinder.sort.relevance')}</option>
                                         <option value="deadline">{t('grantFinder.sort.deadline')}</option>
                                         <option value="amount">{t('grantFinder.sort.amount')}</option>
@@ -469,27 +470,27 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {sortedGrants.map((grant, index) => (
-                                        <div key={grant.link} className="bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6 flex flex-col">
+                                        <div key={grant.link} className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col hover:shadow-lg transition-shadow">
                                             <div className="flex-grow">
                                                 <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
-                                                    <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline flex-1 min-w-0 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-400">
-                                                        <h4 className="text-lg font-bold text-green-400 truncate" title={grant.grantTitle}>{grant.grantTitle}</h4>
+                                                    <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline flex-1 min-w-0 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bf-orange">
+                                                        <h4 className="text-lg font-bold text-bf-orange truncate" title={grant.grantTitle}>{grant.grantTitle}</h4>
                                                     </a>
                                                     {grant.relevanceScore != null && <RelevanceBadge score={grant.relevanceScore} />}
                                                 </div>
-                                                <p className="text-sm text-gray-400 mb-2">{t('grantFinder.from')} {grant.fundingBody}</p>
-                                                <p className="text-sm font-semibold text-yellow-300 bg-yellow-900/50 px-2 py-1 rounded-md self-start mb-4">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
-                                                <div className="space-y-3 text-sm">
-                                                    <p><strong className="text-gray-300">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
-                                                    {grant.amount && grant.amount !== 'Not specified' && <p><strong className="text-gray-300">{t('grantFinder.sort.amount')}:</strong> {grant.amount}</p>}
-                                                    {grant.geography && grant.geography !== 'Not specified' && <p><strong className="text-gray-300">{t('grantFinder.sort.geography')}:</strong> {grant.geography}</p>}
+                                                <p className="text-sm text-gray-500 mb-3">{t('grantFinder.from')} {grant.fundingBody}</p>
+                                                <p className="text-sm font-bold text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full self-start mb-4 inline-block">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
+                                                <div className="space-y-3 text-sm text-gray-600">
+                                                    <p><strong className="text-bf-slate">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
+                                                    {grant.amount && grant.amount !== 'Not specified' && <p><strong className="text-bf-slate">{t('grantFinder.sort.amount')}:</strong> {grant.amount}</p>}
+                                                    {grant.geography && grant.geography !== 'Not specified' && <p><strong className="text-bf-slate">{t('grantFinder.sort.geography')}:</strong> {grant.geography}</p>}
                                                     {grant.requirementDocuments && grant.requirementDocuments.length > 0 && (
                                                         <div>
-                                                            <strong className="text-gray-300">{t('grantFinder.documents')}:</strong>
+                                                            <strong className="text-bf-slate">{t('grantFinder.documents')}:</strong>
                                                             <ul className="list-disc list-inside mt-1 space-y-1">
                                                                 {grant.requirementDocuments.map((doc, i) => (
                                                                     <li key={i} className="truncate">
-                                                                        <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-400" title={doc.title}>{doc.title}</a>
+                                                                        <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline" title={doc.title}>{doc.title}</a>
                                                                     </li>
                                                                 ))}
                                                             </ul>
@@ -497,10 +498,10 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="mt-6 pt-4 border-t border-gray-700 grid grid-cols-2 gap-2">
-                                                <button onClick={() => onSaveGrant(grant)} disabled={isGrantSaved(grant)} className="col-span-2 text-center font-semibold py-2 px-4 rounded-md transition-colors bg-purple-600 text-white hover:bg-purple-700 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">{isGrantSaved(grant) ? t('grantFinder.saved') : t('grantFinder.save')}</button>
-                                                <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500">{t('grantFinder.useForProposal')}</button>
-                                                <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-500 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500">{t('grantFinder.analyze')}</button>
+                                            <div className="mt-6 pt-4 border-t border-gray-100 grid grid-cols-2 gap-3">
+                                                <button onClick={() => onSaveGrant(grant)} disabled={isGrantSaved(grant)} className="col-span-2 text-center font-bold py-2 px-4 rounded-md transition-colors bg-purple-600 text-white hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed">{isGrantSaved(grant) ? t('grantFinder.saved') : t('grantFinder.save')}</button>
+                                                <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-bold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">{t('grantFinder.useForProposal')}</button>
+                                                <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-200 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">{t('grantFinder.analyze')}</button>
                                             </div>
                                         </div>
                                     ))}
@@ -508,13 +509,13 @@ const GrantFinder: React.FC<GrantFinderProps> = ({
                             </>
                         ) : (
                             rawTextResult ? (
-                                <div className="mt-6 bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6">
-                                    <h4 className="font-semibold text-white mb-2">{t('grantFinder.parseErrorTitle')}</h4>
-                                    <p className="text-sm text-gray-400 mb-4">{t('grantFinder.parseErrorSubtitle')}</p>
-                                    <pre className="whitespace-pre-wrap bg-gray-900/50 p-4 rounded-md text-sm text-gray-300 overflow-x-auto">{rawTextResult}</pre>
+                                <div className="mt-6 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                                    <h4 className="font-bold text-bf-slate mb-2">{t('grantFinder.parseErrorTitle')}</h4>
+                                    <p className="text-sm text-gray-500 mb-4">{t('grantFinder.parseErrorSubtitle')}</p>
+                                    <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-md text-sm text-gray-800 border border-gray-200 overflow-x-auto">{rawTextResult}</pre>
                                 </div>
                             ) : (
-                                <div className="text-center text-gray-500 py-10 bg-gray-800/30 rounded-lg">
+                                <div className="text-center text-gray-500 py-10 bg-white rounded-xl border border-gray-200">
                                     <p>{t('grantFinder.crateEmpty')}</p>
                                 </div>
                             )

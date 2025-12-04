@@ -19,7 +19,8 @@ const translations: Record<string, any> = {
         subtitle: "We are therapists for animals first. We believe in the cycle of kindness and use technology to support our shelter's mission of treatment, support, and culture building.",
         button1: "Meet the Animals",
         button2: "Support Us",
-        videoUrl: "https://storage.googleapis.com/verdant-assets/forest-hero-2.mp4"
+        // Switched from videoUrl to imageUrl for the new "Splash" design
+        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop" 
     },
     home: {
         introTitle: "\"In the first stage, we are therapists for animals. We treat injured animals that have no supporter. We believe kindness exists in everyone, religious or not.\"",
@@ -182,7 +183,6 @@ const translations: Record<string, any> = {
         noResults: "No grants found for these keywords. Try a broader search.",
         useGrounding: "Use Live Web Search (more up-to-date)",
         sources: "Sources",
-        // New GrantFinder Translations
         subtitle: "Search for funding opportunities or analyze your own documents.",
         uploadLabel: "Upload Grant Document",
         selectFile: "Select File",
@@ -501,43 +501,43 @@ const translations: Record<string, any> = {
         startups: [
             {
                 name: "Petia (Benchmark)",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Generic Placeholder
+                logo: "https://placehold.co/200x100/f58220/ffffff?text=Petia", 
                 description: "An Iranian startup founded by Ali Delshad Tehrani. We look to Petia's 'Health Card' concept as a model for digitizing stray animal medical records. Their history highlights the need for stronger municipal cooperation for shelter infrastructure, a challenge we aim to solve with AI data.",
                 link: "https://petia.ir/"
             },
             {
                 name: "Cuddly",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Placeholder/Generic as logo not available
+                logo: "https://placehold.co/200x100/3d3d3e/ffffff?text=Cuddly",
                 description: "A crowdfunding platform dedicated to helping animal organizations raise funds for medical cases and wishlists. Essential for our 'Treatment First' mission.",
                 link: "https://cuddly.com/"
             },
             {
                 name: "Snout",
-                logo: "https://petstablished.com/favicon.png", // Placeholder
+                logo: "https://placehold.co/200x100/4c758a/ffffff?text=Snout",
                 description: "Uses nose print biometrics to identify lost dogs, similar to fingerprints for humans. A vital tool for identifying strays where microchips are scarce.",
                 link: "https://www.snoutid.com/"
             },
             {
                 name: "Petfinder",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Petfinder_logo.svg/2560px-Petfinder_logo.svg.png",
+                logo: "https://placehold.co/200x100/663399/ffffff?text=Petfinder",
                 description: "A leading online, searchable database of animals who need homes. It is also a directory of nearly 11,000 animal shelters and adoption organizations.",
                 link: "https://www.petfinder.com/"
             },
             {
                 name: "Petstablished",
-                logo: "https://petstablished.com/favicon.png",
+                logo: "https://placehold.co/200x100/228b22/ffffff?text=Petstablished",
                 description: "Provides comprehensive shelter management software, including tools for adoption, fostering, fundraising, and record-keeping.",
                 link: "https://petstablished.com/"
             },
             {
                 name: "Doobert",
-                logo: "https://vet-ct.com/images/logo.svg", // Placeholder
+                logo: "https://placehold.co/200x100/ff4500/ffffff?text=Doobert",
                 description: "Connects animal rescues with volunteers for transport, fostering, and photography. Creating a supply chain for saving lives.",
                 link: "https://www.doobert.com/"
             },
             {
                 name: "VetCT",
-                logo: "https://vet-ct.com/images/logo.svg",
+                logo: "https://placehold.co/200x100/008080/ffffff?text=VetCT",
                 description: "A global teleconsulting and teleradiology company that provides specialist support to veterinary teams.",
                 link: "https://vet-ct.com/"
             }
@@ -626,7 +626,8 @@ const translations: Record<string, any> = {
         subtitle: "ما در مرحله اول درمانگر حیوانات هستیم. ما به چرخه محبت در همه انسان‌ها باور داریم و از فناوری برای حمایت از مأموریت درمان و فرهنگ‌سازی استفاده می‌کنیم.",
         button1: "دیدار با حیوانات",
         button2: "حمایت کنید",
-        videoUrl: "https://storage.googleapis.com/verdant-assets/forest-hero-2.mp4"
+        // Switched from videoUrl to imageUrl for the new "Splash" design
+        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop"
     },
     home: {
         introTitle: "«در مرحله اول درمانگر حیوانات هستیم یعنی در ابتدا حیواناتی که دچار آسیب شده‌اند و حمایت کننده‌ای ندارند را درمان می‌کنیم. چرخه محبت و مهربانی همیشه بوده و هست.» - منیره صفری، سرپرست جان‌پناه",
@@ -789,7 +790,6 @@ const translations: Record<string, any> = {
         noResults: "هیچ گرنتی برای این کلمات کلیدی یافت نشد. جستجوی گسترده‌تری را امتحان کنید.",
         useGrounding: "استفاده از جستجوی زنده وب (به‌روزتر)",
         sources: "منابع",
-        // New GrantFinder Translations
         subtitle: "جستجو برای فرصت‌های تأمین مالی یا تحلیل اسناد خودتان.",
         uploadLabel: "آپلود سند گرنت",
         selectFile: "انتخاب فایل",
@@ -1108,43 +1108,43 @@ const translations: Record<string, any> = {
         startups: [
             {
                 name: "پتیا (الگوی بومی)",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Generic Placeholder
+                logo: "https://placehold.co/200x100/f58220/ffffff?text=Petia",
                 description: "استارتاپ پتیا (تاسیس علی دلشاد تهرانی) پیشگام خدمات آنلاین حیوانات است. ما قصد داریم از ایده «پت‌کارت» (کارت سلامت) آن‌ها برای پرونده‌سازی دیجیتال حیوانات حمایتی استفاده کنیم. تجربه آن‌ها در عدم حمایت شهرداری برای ساخت پناهگاه، نقشه راهی برای ماست تا با ابزارهای هوش مصنوعی این موانع را رفع کنیم.",
                 link: "https://petia.ir/"
             },
             {
                 name: "Cuddly",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Placeholder as specific logo not avail
+                logo: "https://placehold.co/200x100/3d3d3e/ffffff?text=Cuddly", 
                 description: "یک پلتفرم تأمین مالی جمعی که به سازمان‌های حیوانات کمک می‌کند تا برای موارد پزشکی و لیست آرزوها کمک مالی جمع کنند. ضروری برای مأموریت 'درمان در اولویت'.",
                 link: "https://cuddly.com/"
             },
             {
                 name: "Snout",
-                logo: "https://petstablished.com/favicon.png", // Placeholder
+                logo: "https://placehold.co/200x100/4c758a/ffffff?text=Snout",
                 description: "استفاده از بیومتریک اثر بینی برای شناسایی سگ‌های گمشده، مشابه اثر انگشت انسان. ابزاری حیاتی برای شناسایی سگ‌های ولگرد در جایی که میکروچیپ کمیاب است.",
                 link: "https://www.snoutid.com/"
             },
             {
                 name: "Petfinder",
-                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Petfinder_logo.svg/2560px-Petfinder_logo.svg.png",
+                logo: "https://placehold.co/200x100/663399/ffffff?text=Petfinder",
                 description: "یک پایگاه داده آنلاین و قابل جستجو از حیواناتی که به خانه نیاز دارند. این سایت همچنین فهرستی از تقریباً ۱۱۰۰۰ پناهگاه و سازمان واگذاری حیوانات در آمریکا، کانادا و مکزیک است.",
                 link: "https://www.petfinder.com/"
             },
             {
                 name: "Petstablished",
-                logo: "https://petstablished.com/favicon.png",
+                logo: "https://placehold.co/200x100/228b22/ffffff?text=Petstablished",
                 description: "نرم‌افزار جامع مدیریت پناهگاه که شامل ابزارهایی برای واگذاری، نگهداری موقت، جمع‌آوری کمک‌های مالی و ثبت سوابق است و به بهینه‌سازی عملیات سازمان‌های نجات کمک می‌کند.",
                 link: "https://petstablished.com/"
             },
             {
                 name: "Doobert",
-                logo: "https://vet-ct.com/images/logo.svg", // Placeholder
+                logo: "https://placehold.co/200x100/ff4500/ffffff?text=Doobert", 
                 description: "اتصال پناهگاه‌ها به داوطلبان برای حمل و نقل، نگهداری موقت و عکاسی. ایجاد زنجیره تأمین برای نجات زندگی‌ها.",
                 link: "https://www.doobert.com/"
             },
             {
                 name: "VetCT",
-                logo: "https://vet-ct.com/images/logo.svg",
+                logo: "https://placehold.co/200x100/008080/ffffff?text=VetCT",
                 description: "یک شرکت جهانی مشاوره از راه دور و رادیولوژی از راه دور که پشتیبانی تخصصی به تیم‌های دامپزشکی ارائه می‌دهد و دسترسی به مشاوره تخصصی برای موارد پیچیده در مراقبت‌های بهداشتی حیوانات را فراهم می‌کند.",
                 link: "https://vet-ct.com/"
             }

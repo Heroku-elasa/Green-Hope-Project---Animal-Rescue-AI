@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { marked } from 'marked';
 
@@ -27,20 +28,20 @@ const FunctionDocsPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="animate-fade-in text-white">
+        <div className="animate-fade-in text-bf-slate">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 tracking-tight">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-bf-slate font-serif tracking-tight">
                         Function Documentation
                     </h1>
-                    <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                    <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
                         This page provides a technical overview of the application's core functions and services.
                     </p>
                 </div>
                 
-                <div className="max-w-4xl mx-auto bg-slate-800/70 rounded-lg shadow-lg backdrop-blur-sm border border-slate-700 p-8">
-                    {isLoading && <p>Loading documentation...</p>}
-                    {error && <p className="text-red-400">Error: {error}</p>}
+                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+                    {isLoading && <p className="text-gray-500">Loading documentation...</p>}
+                    {error && <p className="text-red-500">Error: {error}</p>}
                     {!isLoading && !error && (
                         <div className="prose-docs" dangerouslySetInnerHTML={{ __html: markdown }} />
                     )}
