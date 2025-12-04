@@ -167,13 +167,13 @@ export const analyzeGrant = async (grant: Grant, userProfile: string): Promise<G
 export const findPlantingSites = async (description: string, language: string): Promise<PlantingSite[]> => {
     // REPURPOSED: Finding Rescue/Shelter Sites instead of Planting Sites.
     // The Schema keys remain the same to avoid breaking the frontend types, but the content is mapped.
-    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate all text content (names, rationales, species) to Persian." : "Output Language: English.";
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate ALL text content (names, rationales, species) to Persian. Do not include English text." : "Output Language: English.";
     const systemInstruction = `You are an expert animal welfare strategist for the Green Hope Project. Your task is to identify and recommend optimal locations for animal rescue operations, new shelters, or feeding stations based on user-defined goals. Analyze the request and provide 3-5 potential sites. 
     
     ${langInstruction}
 
     IMPORTANT: Map your response to the following JSON schema keys:
-    - locationName: Name of the rescue zone or shelter site (in ${language === 'fa' ? 'Persian' : 'English'}).
+    - locationName: Name of the rescue zone or shelter site (MUST be in ${language === 'fa' ? 'Persian' : 'English'}).
     - country: Country.
     - latitude: Latitude.
     - longitude: Longitude.
@@ -182,10 +182,12 @@ export const findPlantingSites = async (description: string, language: string): 
     - priority: Urgency level.
     `;
     
+    const userPrompt = `Goal: ${description}\n\n${langInstruction}`;
+
     const response = await ai.models.generateContent({
         // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
         model: 'gemini-3-pro-preview',
-        contents: description,
+        contents: userPrompt,
         config: {
             systemInstruction,
             responseMimeType: "application/json",
@@ -212,7 +214,7 @@ export const findPlantingSites = async (description: string, language: string): 
 
 export const analyzePlantingSite = async (site: PlantingSite, language: string): Promise<SiteAnalysis> => {
     // REPURPOSED: Analyzing Shelter/Rescue Site Feasibility.
-    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Ensure all text fields are in Persian." : "Output Language: English.";
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Ensure ALL text fields are in Persian." : "Output Language: English.";
     
     const systemInstruction = `You are a shelter planner and financial analyst for an animal rescue NGO. Your task is to provide a detailed feasibility analysis for a proposed shelter or rescue project. ${langInstruction}`;
     const userPrompt = `
@@ -228,6 +230,8 @@ export const analyzePlantingSite = async (site: PlantingSite, language: string):
         - carbonSequestrationTonnesPerYear: The estimated NUMBER OF ADOPTIONS per year.
         - keyChallenges: List of 2-3 key potential challenges (e.g., zoning, disease control).
         - successFactors: List of 2-3 critical success factors (e.g., community volunteers, vet partnership).
+
+        ${langInstruction}
     `;
     const response = await ai.models.generateContent({
         // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
@@ -290,7 +294,7 @@ export const findPlantingSitesWithMaps = async (query: string, userCoords: Coord
 
 export const findSuitableTrees = async (latitude: number, longitude: number, language: string): Promise<SuitableTree[]> => {
     // REPURPOSED: Finding Suitable Animals/Breeds for the environment.
-    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate all text content (names, rationales, descriptions) to Persian." : "Output Language: English.";
+    const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi). Translate ALL text content (names, rationales, descriptions) to Persian." : "Output Language: English.";
 
     const systemInstruction = `You are an expert veterinarian and animal behaviorist. Your task is to recommend suitable animal species or dog/cat breeds that would thrive in a specific geographic environment (considering climate, space, urban/rural). 
     
@@ -306,7 +310,7 @@ export const findSuitableTrees = async (latitude: number, longitude: number, lan
     - rationale: Why this animal suits this climate/environment (e.g., "Thick coat good for cold climate", "Small size good for urban apartment").
     `;
     
-    const userPrompt = `Recommend suitable animals/breeds for a shelter or home at latitude: ${latitude}, longitude: ${longitude}.`
+    const userPrompt = `Recommend suitable animals/breeds for a shelter or home at latitude: ${latitude}, longitude: ${longitude}.\n${langInstruction}`
     const response = await ai.models.generateContent({
         // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
         model: 'gemini-3-pro-preview',
@@ -345,6 +349,8 @@ export const calculateEconomicBenefits = async (treeName: string, scientificName
         - yearsToProfitability: Average TIME TO ADOPTION. e.g. "2-4 Months".
         - primaryProducts: List of CARE REQUIREMENTS (e.g., "Daily Walks", "Grooming").
         - otherBenefits: Summary of SOCIAL/COMMUNITY BENEFITS of rescuing this animal (e.g., "Therapy animal potential").
+
+        ${langInstruction}
     `;
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
@@ -371,7 +377,7 @@ export const calculateEconomicBenefits = async (treeName: string, scientificName
 export const suggestProjectGoals = async (latitude: number, longitude: number, language: string): Promise<string[]> => {
     const langInstruction = language === 'fa' ? "Output Language: Persian (Farsi)." : "Output Language: English.";
     const systemInstruction = `You are a animal rescue strategist. Based on the provided geographic coordinates, generate 3 concise and actionable goals for an animal shelter or rescue project in that area (considering likely climate/environment). ${langInstruction}`;
-    const userPrompt = `Project location: latitude ${latitude}, longitude ${longitude}.`;
+    const userPrompt = `Project location: latitude ${latitude}, longitude ${longitude}.\n${langInstruction}`;
 
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
