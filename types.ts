@@ -551,12 +551,18 @@ const translations: Record<string, any> = {
     researchPage: {
         title: "Research & Development",
         subtitle: "Exploring the landscape of technology in animal welfare to enhance our rescue operations.",
+        takeawaysTitle: "Key Takeaways for Janpanah:",
         startups: [
             {
                 name: "Petia (Benchmark)",
                 logo: "https://placehold.co/200x100/f58220/ffffff?text=Petia", 
                 description: "An Iranian startup founded by Ali Delshad Tehrani. We look to Petia's 'Health Card' concept as a model for digitizing stray animal medical records. Their history highlights the need for stronger municipal cooperation for shelter infrastructure, a challenge we aim to solve with AI data.",
-                link: "https://petia.ir/"
+                link: "https://petia.ir/",
+                lessons: [
+                    "Digitizing Medical Records: Implementing a similar 'Health Card' for strays.",
+                    "Service Marketplace: Connecting vets and volunteers efficiently.",
+                    "Strategic Resilience: Overcoming lack of municipal infrastructure with independent data."
+                ]
             },
             {
                 name: "Cuddly",
@@ -1234,12 +1240,18 @@ const translations: Record<string, any> = {
     researchPage: {
         title: "تحقیق و توسعه",
         subtitle: "بررسی چشم‌انداز فناوری در حوزه رفاه حیوانات برای بهبود عملیات نجات.",
+        takeawaysTitle: "نکات کلیدی برای جان‌پناه:",
         startups: [
             {
                 name: "پتیا (الگوی بومی)",
                 logo: "https://placehold.co/200x100/f58220/ffffff?text=Petia",
                 description: "استارتاپ پتیا (تاسیس علی دلشاد تهرانی) پیشگام خدمات آنلاین حیوانات است. ما قصد داریم از ایده «پت‌کارت» (کارت سلامت) آن‌ها برای پرونده‌سازی دیجیتال حیوانات حمایتی استفاده کنیم. تجربه آن‌ها در عدم حمایت شهرداری برای ساخت پناهگاه، نقشه راهی برای ماست تا با ابزارهای هوش مصنوعی این موانع را رفع کنیم.",
-                link: "https://petia.ir/"
+                link: "https://petia.ir/",
+                lessons: [
+                    "دیجیتالی کردن سوابق: اجرای طرح 'کارت سلامت' برای حیوانات خیابانی.",
+                    "بازار خدمات: اتصال کارآمد دامپزشکان و داوطلبان.",
+                    "تاب‌آوری استراتژیک: غلبه بر فقدان زیرساخت‌های شهری با داده‌های مستقل."
+                ]
             },
             {
                 name: "Cuddly",
