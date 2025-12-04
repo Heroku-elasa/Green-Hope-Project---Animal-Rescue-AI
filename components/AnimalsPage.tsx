@@ -1,7 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
-import { useLanguage, Page, AdoptionApplication } from '../types';
+import { useLanguage, Page, AdoptionApplication, AnimalProfile } from '../types';
 import ImageEditor from './ImageEditor';
+import * as geminiService from '../services/geminiService';
 
 interface AnimalsPageProps {
     setPage: (page: Page) => void;
@@ -17,7 +18,7 @@ interface AnimalsPageProps {
     onClear: () => void;
 }
 
-const animals = [
+const animals: AnimalProfile[] = [
     { name: "Hampo", status: "Under Treatment", img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", desc: "Found with a broken leg, currently recovering.", species: 'dog', age: 'adult', temperament: 'calm' },
     { name: "Luna", status: "Available for Adoption", img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", desc: "A gentle soul looking for a quiet home. Vaccinated.", species: 'cat', age: 'senior', temperament: 'shy' },
     { name: "Simba", status: "Available for Adoption", img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", desc: "A playful and energetic young dog, great with kids.", species: 'dog', age: 'young', temperament: 'playful' },
@@ -34,6 +35,11 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
     const [speciesFilter, setSpeciesFilter] = useState('all');
     const [ageFilter, setAgeFilter] = useState('all');
     const [temperamentFilter, setTemperamentFilter] = useState('all');
+    
+    // AI Filter State
+    const [aiQuery, setAiQuery] = useState('');
+    const [aiFilteredNames, setAiFilteredNames] = useState<string[] | null>(null);
+    const [isAiFiltering, setIsAiFiltering] = useState(false);
     
     // Adoption Form State
     const [fullName, setFullName] = useState('');
@@ -52,10 +58,34 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
             const speciesMatch = speciesFilter === 'all' || animal.species === speciesFilter;
             const ageMatch = ageFilter === 'all' || animal.age === ageFilter;
             const temperamentMatch = temperamentFilter === 'all' || animal.temperament === temperamentFilter;
-            return speciesMatch && ageMatch && temperamentMatch;
+            
+            // AI Filter: If names are present, check inclusion.
+            const aiMatch = aiFilteredNames === null || aiFilteredNames.includes(animal.name);
+
+            return speciesMatch && ageMatch && temperamentMatch && aiMatch;
         });
-    }, [speciesFilter, ageFilter, temperamentFilter]);
+    }, [speciesFilter, ageFilter, temperamentFilter, aiFilteredNames]);
     
+    const handleAiSearch = async () => {
+        if (!aiQuery.trim()) return;
+        setIsAiFiltering(true);
+        try {
+            const matches = await geminiService.filterAnimalsByDescription(animals, aiQuery);
+            setAiFilteredNames(matches);
+        } catch (e) {
+            console.error("AI Filtering failed", e);
+            // On error, maybe just reset or show all? Or alert.
+            // For now, we keep the previous state or could reset.
+        } finally {
+            setIsAiFiltering(false);
+        }
+    };
+
+    const clearAiFilter = () => {
+        setAiQuery('');
+        setAiFilteredNames(null);
+    }
+
     const handleAdoptionSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
@@ -99,10 +129,11 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
                 </div>
 
                 {/* Filter Section */}
-                <div className="bg-white rounded-xl border border-gray-200 p-8 mb-12 shadow-sm">
-                     <h3 className="text-xl font-bold text-bf-slate mb-4 text-center font-serif">{t('animalsPage.filterTitle')}</h3>
+                <div className="bg-white rounded-xl border border-gray-200 p-8 mb-12 shadow-sm space-y-6">
+                     <h3 className="text-xl font-bold text-bf-slate text-center font-serif">{t('animalsPage.filterTitle')}</h3>
+                     
+                     {/* Manual Filters */}
                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Species Filter */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">{t('animalsPage.filterSpecies')}</label>
                             <select value={speciesFilter} onChange={e => setSpeciesFilter(e.target.value)} className="w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange text-gray-700">
@@ -111,7 +142,6 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
                                 <option value="cat">{t('animalsPage.filterSpeciesCat')}</option>
                             </select>
                         </div>
-                        {/* Age Filter */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">{t('animalsPage.filterAge')}</label>
                             <select value={ageFilter} onChange={e => setAgeFilter(e.target.value)} className="w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange text-gray-700">
@@ -121,7 +151,6 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
                                 <option value="senior">{t('animalsPage.filterAgeSenior')}</option>
                             </select>
                         </div>
-                        {/* Temperament Filter */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">{t('animalsPage.filterTemperament')}</label>
                              <select value={temperamentFilter} onChange={e => setTemperamentFilter(e.target.value)} className="w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-bf-orange focus:border-bf-orange text-gray-700">
@@ -130,6 +159,33 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
                                 <option value="calm">{t('animalsPage.filterTemperamentCalm')}</option>
                                 <option value="shy">{t('animalsPage.filterTemperamentShy')}</option>
                             </select>
+                        </div>
+                     </div>
+
+                     {/* AI Filter */}
+                     <div className="pt-6 border-t border-gray-100">
+                        <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">{t('animalsPage.aiSearchLabel')}</label>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <input 
+                                type="text" 
+                                value={aiQuery} 
+                                onChange={(e) => setAiQuery(e.target.value)} 
+                                placeholder={t('animalsPage.aiSearchPlaceholder')}
+                                className="flex-grow bg-gray-50 border border-gray-300 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-pink-500 focus:border-pink-500 text-gray-700"
+                                onKeyDown={(e) => e.key === 'Enter' && handleAiSearch()}
+                            />
+                            <button 
+                                onClick={handleAiSearch} 
+                                disabled={isAiFiltering || !aiQuery.trim()}
+                                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-6 rounded-md hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shadow-md"
+                            >
+                                {isAiFiltering ? t('animalsPage.aiSearching') : t('animalsPage.aiSearchButton')}
+                            </button>
+                            {aiFilteredNames && (
+                                <button onClick={clearAiFilter} className="bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-md hover:bg-gray-300 transition-colors">
+                                    {t('animalsPage.aiSearchReset')}
+                                </button>
+                            )}
                         </div>
                      </div>
                 </div>
@@ -149,8 +205,18 @@ const AnimalsPage: React.FC<AnimalsPageProps> = (props) => {
                                 </span>
                             </div>
                             <div className="p-6">
-                                <h3 className="text-2xl font-bold text-bf-slate mb-2 font-serif">{animal.name}</h3>
-                                <p className="text-gray-600 text-sm leading-relaxed">{animal.desc}</p>
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-2xl font-bold text-bf-slate font-serif">{animal.name}</h3>
+                                    {aiFilteredNames && aiFilteredNames.includes(animal.name) && (
+                                        <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold border border-pink-200">AI Match</span>
+                                    )}
+                                </div>
+                                <p className="text-gray-600 text-sm leading-relaxed mb-3">{animal.desc}</p>
+                                <div className="flex flex-wrap gap-2 text-xs font-semibold text-gray-500">
+                                    <span className="bg-gray-100 px-2 py-1 rounded">{animal.species}</span>
+                                    <span className="bg-gray-100 px-2 py-1 rounded">{animal.age}</span>
+                                    <span className="bg-gray-100 px-2 py-1 rounded">{animal.temperament}</span>
+                                </div>
                             </div>
                         </div>
                     )) : (

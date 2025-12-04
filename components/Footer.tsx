@@ -15,7 +15,7 @@ const SiteFooter: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Column 1: Logo & Description */}
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-bold tracking-tight text-bf-orange font-serif">Janpanah Shelter</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-bf-orange font-serif">{t('brandName')}</h2>
                         <p className="text-sm leading-relaxed text-gray-300">{t('footer.description')}</p>
                     </div>
                     {/* Column 2: Contact Info */}

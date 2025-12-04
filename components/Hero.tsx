@@ -199,7 +199,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-bf-buff rounded-bl-full opacity-50 -mr-16 -mt-16 hidden md:block"></div>
                     
                     <span className="text-bf-orange font-bold uppercase tracking-widest text-sm mb-4 block">
-                        Lifesaving, this season and beyond
+                        {t('hero.overline')}
                     </span>
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-bf-slate font-serif leading-tight mb-6" dangerouslySetInnerHTML={{ __html: t('hero.title') }} />
                     <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-lg">
@@ -283,7 +283,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
                         <h3 className="text-2xl font-bold text-bf-slate mb-3 group-hover:text-bf-orange transition-colors font-serif">{item.title}</h3>
                         <p className="text-gray-600 mb-6 flex-grow text-base leading-relaxed">{item.description}</p>
                         <a href={item.link} className="inline-flex items-center font-bold text-bf-orange uppercase tracking-wide text-sm hover:underline group-hover:translate-x-1 transition-transform">
-                            Read Story <span className="ml-2 rtl:hidden">»</span><span className="mr-2 hidden rtl:inline">«</span>
+                            {t('home.readStory')} <span className="ml-2 rtl:hidden">»</span><span className="mr-2 hidden rtl:inline">«</span>
                         </a>
                     </div>
                 </div>
@@ -379,7 +379,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
                                 <div className="text-sm font-medium text-gray-500">
                                     <time dateTime={post.date}>{post.date}</time>
                                 </div>
-                                <span className="text-xs font-bold text-bf-orange uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity">Read More</span>
+                                <span className="text-xs font-bold text-bf-orange uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity">{t('home.readMore')}</span>
                             </div>
                         </div>
                     </div>

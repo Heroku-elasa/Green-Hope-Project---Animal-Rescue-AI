@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ setPage, currentPage, user, onLogout })
       {/* Top Bar (Optional, for "Tertiary Menu" look) */}
       <div className="hidden md:block bg-gray-50 border-b border-gray-100 py-1 text-xs text-gray-500">
           <div className="container mx-auto px-4 lg:px-8 text-right rtl:text-left">
-              <span>{t('nav.contact')} | Locations | Shop</span>
+              <span>{t('nav.contact')} | {t('nav.locations')} | {t('nav.shop')}</span>
           </div>
       </div>
 
@@ -97,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({ setPage, currentPage, user, onLogout })
           <div className="flex items-center">
             {/* Logo area */}
             <button onClick={() => handleNavClick('home')} className="flex-shrink-0 text-xl md:text-2xl font-bold tracking-tight text-bf-slate hover:text-bf-orange transition-colors font-serif">
-              Janpanah Shelter
+              {t('brandName')}
             </button>
             <nav className="hidden lg:flex lg:ml-8 lg:mr-8 lg:space-x-6 lg:rtl:space-x-reverse">
               {navItems.map(item => (

@@ -1,5 +1,6 @@
+
 import { GoogleGenAI, Type, GenerateContentResponse, Content, Modality } from "@google/genai";
-import { Grant, GrantSummary, VideoScene, PlantingSite, SuitableTree, EconomicBenefitAnalysis, Coords, GroundedResult, GroundedSource, SiteAnalysis, RescueCampaign } from "../types";
+import { Grant, GrantSummary, VideoScene, PlantingSite, SuitableTree, EconomicBenefitAnalysis, Coords, GroundedResult, GroundedSource, SiteAnalysis, RescueCampaign, AnimalProfile } from "../types";
 
 // FIX: Per coding guidelines, the API key must be obtained from process.env.API_KEY.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -597,4 +598,52 @@ export const generateRescueCampaign = async (name: string, condition: string, ne
     });
 
     return parseJsonResponse(response.text, 'rescue campaign');
+};
+
+export const filterAnimalsByDescription = async (animals: AnimalProfile[], description: string): Promise<string[]> => {
+    const systemInstruction = `You are an intelligent assistant for an animal shelter website. Your task is to match the user's natural language description of their ideal pet with the available animals in our database.
+    
+    Analyze the user's request and the list of animals (name, species, age, temperament, description).
+    Return a JSON object containing an array of strings, where each string is the NAME of an animal that is a good match.
+    If no animals match well, return an empty array.
+    `;
+
+    const animalsContext = animals.map(a => `
+        Name: ${a.name}
+        Species: ${a.species}
+        Age: ${a.age}
+        Temperament: ${a.temperament}
+        Description: ${a.desc}
+    `).join('\n---\n');
+
+    const userPrompt = `
+    Available Animals:
+    ${animalsContext}
+    
+    User Preference: "${description}"
+    
+    Return the names of the matching animals.
+    `;
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    matches: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING }
+                    }
+                },
+                required: ["matches"]
+            }
+        }
+    });
+
+    const result = parseJsonResponse<{ matches: string[] }>(response.text, 'animal filter');
+    return result.matches;
 };

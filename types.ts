@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 const translations: Record<string, any> = {
   en: {
     langCode: 'en-US',
+    brandName: "Janpanah Shelter",
     nav: { 
       home: "Home", 
       about: "About Us",
@@ -12,7 +13,9 @@ const translations: Record<string, any> = {
       contentHub: "Content Hub",
       support: "Support Us",
       contact: "Contact",
-      donate: "Donate Now"
+      donate: "Donate Now",
+      locations: "Locations",
+      shop: "Shop"
     },
     hero: {
         title: "Janpanah Shelter:<br/> Where Healing Begins",
@@ -20,11 +23,14 @@ const translations: Record<string, any> = {
         button1: "Meet the Animals",
         button2: "Support Us",
         // Switched from videoUrl to imageUrl for the new "Splash" design
-        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop" 
+        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop",
+        overline: "Lifesaving, this season and beyond"
     },
     home: {
         introTitle: "\"In the first stage, we are therapists for animals. We treat injured animals that have no supporter. We believe kindness exists in everyone, religious or not.\"",
         servicesTitle: "Our Core Missions",
+        readStory: "Read Story",
+        readMore: "Read More",
         services: [
             { iconKey: 'science', title: 'Medical Treatment', text: 'Our primary goal is treating injured animals and providing necessary veterinary care.' },
             { iconKey: 'grant', title: 'Culture Building', text: 'Educating the public to correct misinformation and promote kindness towards animals.' },
@@ -128,7 +134,12 @@ const translations: Record<string, any> = {
         filterTemperamentAll: "All Temperaments",
         filterTemperamentPlayful: "Playful",
         filterTemperamentCalm: "Calm",
-        filterTemperamentShy: "Shy"
+        filterTemperamentShy: "Shy",
+        aiSearchLabel: "Or Describe Your Ideal Pet",
+        aiSearchPlaceholder: "e.g., A calm dog that is good for apartments and elderly owners...",
+        aiSearchButton: "Find with AI",
+        aiSearching: "Finding Matches...",
+        aiSearchReset: "Clear AI Filter"
     },
     adoptionForm: {
       title: "Adoption Application",
@@ -192,7 +203,7 @@ const translations: Record<string, any> = {
         from: "From",
         analyzeButton: "Analyze",
         error: "An error occurred while searching for grants.",
-        noResults: "No grants found for these keywords. Try a broader search.",
+        noResults: "No grants found for these keywords. Try a search.",
         useGrounding: "Use Live Web Search (more up-to-date)",
         sources: "Sources",
         subtitle: "Search for funding opportunities or analyze your own documents.",
@@ -634,6 +645,7 @@ const translations: Record<string, any> = {
   },
   fa: {
     langCode: 'fa-IR',
+    brandName: "پناهگاه جان‌پناه",
     nav: { 
       home: "خانه", 
       about: "درباره ما",
@@ -642,7 +654,9 @@ const translations: Record<string, any> = {
       contentHub: "مرکز محتوا",
       support: "حمایت و مشارکت",
       contact: "تماس با ما",
-      donate: "کمک مالی"
+      donate: "کمک مالی",
+      locations: "شعب",
+      shop: "فروشگاه"
     },
     hero: {
         title: "پناهگاه جان‌پناه:<br/> جایی که درمان آغاز می‌شود",
@@ -650,11 +664,14 @@ const translations: Record<string, any> = {
         button1: "دیدار با حیوانات",
         button2: "حمایت کنید",
         // Switched from videoUrl to imageUrl for the new "Splash" design
-        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2069&auto=format&fit=crop",
+        overline: "نجات زندگی، در این فصل و فراتر از آن"
     },
     home: {
         introTitle: "«در مرحله اول درمانگر حیوانات هستیم یعنی در ابتدا حیواناتی که دچار آسیب شده‌اند و حمایت کننده‌ای ندارند را درمان می‌کنیم. چرخه محبت و مهربانی همیشه بوده و هست.» - منیره صفری، سرپرست جان‌پناه",
         servicesTitle: "مأموریت‌های اصلی ما",
+        readStory: "خواندن داستان",
+        readMore: "بیشتر بخوانید",
         services: [
             { iconKey: 'science', title: 'درمان پزشکی', text: 'هدف اصلی ما درمان حیوانات آسیب‌دیده و ارائه مراقبت‌های دامپزشکی لازم است.' },
             { iconKey: 'grant', title: 'فرهنگ‌سازی', text: 'آموزش عمومی برای اصلاح اطلاعات غلط و ترویج مهربانی با حیوانات در همه اقشار جامعه.' },
@@ -758,7 +775,12 @@ const translations: Record<string, any> = {
         filterTemperamentAll: "همه خلق و خوها",
         filterTemperamentPlayful: "بازیگوش",
         filterTemperamentCalm: "آرام",
-        filterTemperamentShy: "خجالتی"
+        filterTemperamentShy: "خجالتی",
+        aiSearchLabel: "یا حیوان ایده‌آل خود را توصیف کنید",
+        aiSearchPlaceholder: "مثال: یک سگ آرام که با آپارتمان و افراد مسن سازگار باشد...",
+        aiSearchButton: "یافتن با هوش مصنوعی",
+        aiSearching: "در حال یافتن...",
+        aiSearchReset: "پاک کردن فیلتر هوشمند"
     },
     adoptionForm: {
       title: "فرم درخواست سرپرستی",
@@ -1250,6 +1272,16 @@ const translations: Record<string, any> = {
                 { title: "داشبوردهای سئوی شخص ثالث", text: "برای تحلیل‌های پیشرفته‌تر (مانند ردیابی بک‌لینک‌ها یا عملکرد رقبا)، باید در سرویس‌هایی مانند Ahrefs یا Semrush ثبت‌نام کنیم. این پلتفرم‌ها داشبوردهای جامعی ارائه می‌دهند." }
             ]
         }
+    },
+    errors: {
+        quota: "You have exceeded your current API quota. Please check your billing account or try again later.",
+        internal: "A temporary server issue occurred. Please wait a moment and try again. If the problem persists, consider simplifying your prompt.",
+        permissionDenied: "Permission denied. Please ensure your API key has access to the requested model.",
+        invalidKey: "Your API key is invalid. Please check your configuration.",
+        invalidArgument: "There was an issue with the request (e.g., an invalid value). Please check your input and try again.",
+        network: "A network error occurred. Please check your internet connection and try again.",
+        jsonParse: "The AI returned an unexpected format. Please try your request again.",
+        unknown: "An unexpected error occurred. Please try again later."
     }
   }
 };
@@ -1439,4 +1471,15 @@ export interface AdoptionApplication {
     otherPets: string;
     reason: string;
     submissionDate: string;
+}
+
+// --- Animal Profile for AI Filtering ---
+export interface AnimalProfile {
+    name: string;
+    species: string;
+    age: string;
+    temperament: string;
+    desc: string;
+    status: string;
+    img: string;
 }
