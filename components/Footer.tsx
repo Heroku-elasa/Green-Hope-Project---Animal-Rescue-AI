@@ -1,74 +1,98 @@
 
 import React from 'react';
-import { useLanguage } from '../types';
+import { useLanguage, useAppearance, PageKey } from '../types';
 
-const SiteFooter: React.FC = () => {
+interface SiteFooterProps {
+    setPage: (page: 'home' | PageKey) => void;
+}
+
+const SiteFooter: React.FC<SiteFooterProps> = ({ setPage }) => {
     const { t } = useLanguage();
-    // FIX: Type assertion is now valid because the `t` function's return type is `any`.
-    const quickLinks: { text: string; link: string }[] = t('footer.quickLinks');
-    const mainPhone = (t('footer.phone') || '').replace(/[^\d+]/g, '');
+    const { customLogo } = useAppearance();
+    const quickLinks: { text: string; type: 'page' | 'scroll'; value: string }[] = t('footer.quickLinks');
 
+    const handleNavigation = (e: React.MouseEvent, link: { type: string, value: string }) => {
+        e.preventDefault();
+        if (link.type === 'page') {
+            setPage(link.value as PageKey | 'home');
+            window.scrollTo(0, 0);
+        } else {
+            // If it's a scroll link, ensure we are on home first, then scroll
+            // Ideally this logic should be centralized, but for footer simplicity:
+            if (document.getElementById(link.value)) {
+                document.getElementById(link.value)?.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                setPage('home');
+                setTimeout(() => {
+                    document.getElementById(link.value)?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    };
 
     return (
-        <footer id="footer" className="bg-bf-slate text-white border-t border-gray-700">
+        <footer id="footer" className="bg-gray-100 dark:bg-[#0B0F19] text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     {/* Column 1: Logo & Description */}
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-bold tracking-tight text-bf-orange font-serif">Janpanah Shelter</h2>
-                        <p className="text-sm leading-relaxed text-gray-300">{t('footer.description')}</p>
+                    <div className="space-y-6 md:col-span-1">
+                        <div className="flex items-center space-x-3 rtl:space-x-reverse group">
+                             <img src={customLogo} alt="Arman Law Firm Logo" className="w-16 h-16 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
+                             <div className="flex flex-col">
+                                <span className="font-bold text-2xl text-gray-900 dark:text-white group-hover:text-brand-gold transition-colors">موسسه حقوقی آرمان</span>
+                                <span className="text-xs text-gray-500 tracking-wider">Arman Law Firm</span>
+                             </div>
+                        </div>
+                        <p className="text-sm font-semibold text-brand-gold">{t('footer.slogan')}</p>
+                        <p className="text-sm leading-loose text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                            خدمات اینترنتی موسسه حقوقی آرمان در اوقات اداری بصورت حضوری و در ساعتهای دیگر بصورت غير حضوری قابل دسترس شما خواهد بود.
+                        </p>
+                        <div className="flex space-x-4 rtl:space-x-reverse">
+                            {/* Instagram */}
+                            <a href="https://www.instagram.com/adlpendaar/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors" aria-label="Instagram">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </a>
+                        </div>
                     </div>
-                    {/* Column 2: Contact Info */}
+                    {/* Column 2: Quick Links */}
                     <div className="space-y-4">
-                        <h2 className="text-lg font-semibold text-bf-orange border-b-2 border-bf-orange pb-2">{t('footer.contactTitle')}</h2>
-                        <ul className="space-y-3 text-sm text-white">
-                            <li className="flex items-start">
-                                <span className="mt-1 mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📧</span>
-                                <a href={`mailto:${t('footer.email')}`} className="hover:text-bf-orange transition-colors font-inter">{t('footer.email')}</a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mt-1 mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📞</span>
-                                <a href={`tel:${mainPhone}`} className="hover:text-bf-orange transition-colors">{t('footer.phone')}</a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mt-1 mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📍</span>
-                                <span>{t('footer.address')}</span>
-                            </li>
-                        </ul>
-                         <h2 className="text-lg font-semibold text-bf-orange border-b-2 border-bf-orange pb-2 pt-4">{t('footer.socialMediaTitle')}</h2>
-                         <div className="flex items-center space-x-4 rtl:space-x-reverse pt-2">
-                            <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-bf-orange transition-colors" title={t('footer.instagram')}>
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zm0 1.62c-2.403 0-2.741.01-3.72.058-1.002.046-1.634.21-2.126.41a3.272 3.272 0 00-1.18 1.18c-.2.492-.364 1.124-.41 2.126-.048.978-.058 1.316-.058 3.72s.01 2.742.058 3.72c.046 1.002.21 1.634.41 2.126a3.272 3.272 0 001.18 1.18c.492.2.924.364 2.126.41.978.048 1.316.058 3.72.058 2.403 0 2.741-.01 3.72-.058 1.002-.046 1.634-.21 2.126-.41a3.272 3.272 0 00-1.18-1.18c.2-.492.364-1.124.41-2.126.048-.978.058-1.316-.058-3.72s-.01-2.742-.058-3.72c-.046-1.002-.21-1.634-.41-2.126a3.272 3.272 0 00-1.18-1.18c-.492-.2-.924-.364-2.126-.41-.978-.048-1.316-.058-3.72-.058zM12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 8.652a3.517 3.517 0 110-7.034 3.517 3.517 0 010 7.034zM16.969 6.865a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" clipRule="evenodd" /></svg>
-                            </a>
-                            <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-bf-orange transition-colors" title={t('footer.linkedin')}>
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
-                            </a>
-                            <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-bf-orange transition-colors" title={t('footer.facebook')}>
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg>
-                            </a>
-                         </div>
-                    </div>
-
-                    {/* Column 3: Quick Links */}
-                    <div className="space-y-4">
-                        <h2 className="text-lg font-semibold text-bf-orange border-b-2 border-bf-orange pb-2">{t('footer.quickLinksTitle')}</h2>
-                        <ul className="space-y-3 text-sm">
-                            {quickLinks.map(link => (
-                                <li key={link.text}>
-                                    <a href={link.link} className="hover:text-bf-orange transition-colors text-white">{link.text}</a>
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-brand-gold/50 inline-block pb-2">{t('footer.quickLinksTitle')}</h2>
+                        <ul className="space-y-3 text-sm columns-2 gap-8">
+                            {quickLinks.map((link, index) => (
+                                <li key={index}>
+                                    <a href="#" onClick={(e) => handleNavigation(e, link)} className="hover:text-brand-gold transition-colors flex items-center">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold mr-2 rtl:ml-2 rtl:mr-0"></span>
+                                        {link.text}
+                                    </a>
                                 </li>
                             ))}
                         </ul>
                     </div>
-
-                    {/* Column 4: Location */}
+                    {/* Column 3: Contact Info */}
                     <div className="space-y-4">
-                        <h2 className="text-lg font-semibold text-bf-orange border-b-2 border-bf-orange pb-2">{t('footer.addressTitle')}</h2>
-                        <p className="text-sm text-white">{t('footer.address')}</p>
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-brand-gold/50 inline-block pb-2">تماس</h2>
+                        <div className="flex flex-col space-y-4">
+                             <div>
+                                <p className="text-sm font-bold text-gray-900 dark:text-white">تهران، جردن، خیابان طاهری</p>
+                             </div>
+                             <div>
+                                <p className="text-xl font-bold text-brand-gold dir-ltr">۰۲۱-۲۲۰۴۱۶۵۵</p>
+                             </div>
+                        </div>
                     </div>
                 </div>
-                <div className="mt-16 pt-8 border-t border-gray-700 text-center text-sm text-gray-400">
+            </div>
+            <div className="bg-gray-200 dark:bg-black/30 py-6 border-t border-gray-300 dark:border-gray-800 transition-colors">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
                     <p>{t('footer.copyright')}</p>
+                    <div className="mt-4 md:mt-0 flex space-x-4 rtl:space-x-reverse">
+                        <span>{t('footer.madeBy')}</span>
+                        <span className="w-px h-3 bg-gray-400 dark:bg-gray-700"></span>
+                        <span className="flex items-center space-x-1 rtl:space-x-reverse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                            <span>{t('footer.viewOnGitHub')}</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </footer>
