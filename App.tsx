@@ -1,5 +1,5 @@
-
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
 import Header from './components/Header';
 import SiteFooter from './components/Footer';
 import HomePage from './components/Hero';
@@ -15,8 +15,17 @@ import FunctionDocsPage from './components/FunctionDocsPage';
 import BlogGenerator from './components/BlogGenerator';
 import QuotaErrorModal from './components/QuotaErrorModal';
 import Chatbot from './components/Chatbot';
+import ResearchPage from './components/ResearchPage';
+import AISystemPage from './components/AISystemPage';
+import SEOPage from './components/SEOPage';
+import AboutPage from './components/AboutPage';
+import AnimalsPage from './components/AnimalsPage';
+import ActivitiesPage from './components/ActivitiesPage';
+import SupportPage from './components/SupportPage';
+import ContactPage from './components/ContactPage';
 import { Page, Grant, GrantSummary, VideoScene, ChatMessage, useLanguage, UserProfile, PlantingSite, SuitableTree, Coords, GroundedResult, EconomicBenefitAnalysis } from './types';
 import * as geminiService from './services/geminiService';
+import { initDB, addGrants, getAllGrants, clearAllGrants } from './services/dbService';
 import type { Content } from '@google/genai';
 
 
@@ -56,13 +65,13 @@ const App: React.FC = () => {
 
     // Grant Finder State
     const [grantKeywords, setGrantKeywords] = useState('');
-    const [foundGrants, setFoundGrants] = useState<Grant[]>([]);
+    const [savedGrants, setSavedGrants] = useState<Grant[]>([]);
+    const [allGrants, setAllGrants] = useState<Grant[]>([]);
     const [selectedGrant, setSelectedGrant] = useState<Grant | null>(null);
     const [isAnalyzingGrant, setIsAnalyzingGrant] = useState(false);
     const [grantAnalysis, setGrantAnalysis] = useState<GrantSummary | null>(null);
     const [grantAnalysisError, setGrantAnalysisError] = useState<string | null>(null);
     const [groundedGrants, setGroundedGrants] = useState<GroundedResult | null>(null);
-
 
     // Site Selector State
     const [siteSelectorMode, setSiteSelectorMode] = useState<'locations' | 'trees'>('locations');
@@ -131,8 +140,7 @@ const App: React.FC = () => {
             if (window.google) {
                 // @ts-ignore
                 google.accounts.id.initialize({
-                    // IMPORTANT: Replace with your actual Google Client ID
-                    client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+                    client_id: process.env.GOOGLE_CLIENT_ID as string,
                     callback: handleCredentialResponse,
                 });
                 
@@ -164,24 +172,54 @@ const App: React.FC = () => {
         }
     }, [handleCredentialResponse]);
 
+    // Initialize DB and load saved grants
+    useEffect(() => {
+        initDB().then(() => {
+            getAllGrants().then(grants => setSavedGrants(grants));
+        });
+    }, []);
+
     const handleApiError = useCallback((err: unknown): string => {
-        let message = 'An unexpected error occurred.';
+        let message = t('errors.unknown');
+    
         if (err instanceof Error) {
-            message = err.message;
-            // Handle Quota errors
-            if (message.includes('429') || message.includes('quota') || message.includes('billing')) {
+            const errorMessage = err.message.toLowerCase();
+            console.error("API Error:", err);
+    
+            if (err.name === 'TypeError' && errorMessage.includes('failed to fetch')) {
+                return t('errors.network');
+            }
+    
+            if (errorMessage.includes('429') || errorMessage.includes('quota') || errorMessage.includes('billing')) {
                 setIsQuotaExhausted(true);
-                return t('quotaErrorModal.body');
+                return t('errors.quota');
             }
-            // Handle Internal Server errors (500-level) based on user's feedback
-            if (message.includes('500') || message.toLowerCase().includes('internal server error') || message.toLowerCase().includes('rpc failed')) {
-                return 'A temporary server issue occurred. This is likely a transient problem. Please wait a few moments and try your request again. If the problem persists, consider simplifying your prompt.';
+            if (errorMessage.includes('permission_denied') || errorMessage.includes('permission denied')) {
+                return t('errors.permissionDenied');
             }
+            if (errorMessage.includes('api_key_invalid') || errorMessage.includes('api key not valid')) {
+                return t('errors.invalidKey');
+            }
+            if (errorMessage.includes('500') || errorMessage.includes('internal server error') || errorMessage.includes('rpc failed')) {
+                return t('errors.internal');
+            }
+            if (errorMessage.includes('invalid argument')) {
+                return t('errors.invalidArgument');
+            }
+            if (errorMessage.includes('json')) {
+                 return t('errors.jsonParse');
+            }
+            
+            message = err.message;
+    
         } else if (typeof err === 'string') {
+            console.error("API Error (string):", err);
             message = err;
+        } else {
+            console.error("Unknown API Error type:", err);
         }
-        console.error("API Error:", err);
-        return message; // Return other errors as-is
+        
+        return message;
     }, [t]);
 
     const handleGenerateReport = async (topic: string, description: string, reportType: string) => {
@@ -200,35 +238,36 @@ const App: React.FC = () => {
         }
     };
     
-    const handleFindGrants = async (keywords: string) => {
-        setIsLoading(true);
-        setError(null);
-        setFoundGrants([]);
-        setGroundedGrants(null);
-        try {
-            const grants = await geminiService.findGrants(keywords);
-            setFoundGrants(grants);
-        } catch(e) {
-            setError(handleApiError(e));
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // Grant Finder Handlers
+    const handleSaveGrant = useCallback(async (grant: Grant) => {
+        const newSaved = [...savedGrants, grant];
+        setSavedGrants(newSaved);
+        await addGrants([grant]);
+    }, [savedGrants]);
 
-    const handleFindGrantsWithGrounding = async (keywords: string) => {
-        setIsLoading(true);
-        setError(null);
-        setFoundGrants([]);
-        setGroundedGrants(null);
-        try {
-            const result = await geminiService.findGrantsWithGrounding(keywords);
-            setGroundedGrants(result);
-        } catch (e) {
-            setError(handleApiError(e));
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const handleRemoveGrant = useCallback(async (grant: Grant) => {
+        // Since we don't have a delete method in dbService, we'll re-save the filtered list.
+        // Or optimally, dbService should have a delete. For now, clear and re-add is expensive but safe, or just update state.
+        // Actually, dbService has `addGrants` which puts. To remove properly we need delete.
+        // For this demo, let's assume we filter state. Persisting removal would require dbService update.
+        const newSaved = savedGrants.filter(g => g.link !== grant.link);
+        setSavedGrants(newSaved);
+        // Re-sync DB (inefficient but works for small lists)
+        await clearAllGrants();
+        await addGrants(newSaved);
+    }, [savedGrants]);
+
+    const handleClearAllSaved = useCallback(async () => {
+        setSavedGrants([]);
+        await clearAllGrants();
+    }, []);
+    
+    const handleNoteChange = useCallback(async (index: number, note: string) => {
+        const newSaved = [...savedGrants];
+        newSaved[index].notes = note;
+        setSavedGrants(newSaved);
+        await addGrants([newSaved[index]]);
+    }, [savedGrants]);
 
     const handleAnalyzeGrant = async (grant: Grant) => {
         setSelectedGrant(grant);
@@ -236,8 +275,8 @@ const App: React.FC = () => {
         setGrantAnalysisError(null);
         setIsAnalyzingGrant(true);
         try {
-            // Profile for an environmental NGO
-            const userProfile = "We are an environmental non-profit organization focused on large-scale reforestation, biodiversity restoration, and community-led planting initiatives using data-driven methods.";
+            // Profile for an animal shelter NGO
+            const userProfile = "We are an Animal Shelter and Rescue organization focused on stray animal care, veterinary services, adoption programs, and community education.";
             const analysis = await geminiService.analyzeGrant(grant, userProfile);
             setGrantAnalysis(analysis);
         } catch(e) {
@@ -308,9 +347,7 @@ const App: React.FC = () => {
     const handleFindGrantsForTree = useCallback((query: string) => {
         setGrantKeywords(query);
         setPage('grant');
-        // Clear previous grant results to show loading state correctly
-        setFoundGrants([]);
-        handleFindGrants(query);
+        // We don't trigger search immediately here to allow user to add more context
     }, []);
 
     const handleGenerateScript = async () => {
@@ -397,7 +434,7 @@ const App: React.FC = () => {
         }
     };
 
-    const CHAT_SYSTEM_INSTRUCTION = "You are a friendly and knowledgeable assistant for the Green Hope Project, an organization dedicated to reforestation and environmental conservation using technology. Your goal is to answer user questions about our services (AI-powered site selection, grant acquisition, impact reporting), projects, and mission to plant trees worldwide. Keep your answers concise and helpful. Always communicate in the same language as the user's query.";
+    const CHAT_SYSTEM_INSTRUCTION = "You are a friendly and knowledgeable assistant for the Janpanah Animal Shelter, an organization dedicated to treating injured animals, building a culture of kindness, and promoting animal welfare. Your goal is to answer user questions about our services (medical treatment, adoption, volunteering), our mission, and our founder, Monireh Safari. Keep your answers concise and helpful. Always communicate in the same language as the user's query.";
 
     const handleSendMessage = async (message: string) => {
         setIsChatLoading(true);
@@ -447,24 +484,60 @@ const App: React.FC = () => {
     const renderPage = () => {
         switch (page) {
             case 'home': return <HomePage setPage={setPage} />;
+            case 'about': return <AboutPage />;
+            case 'animals': return <AnimalsPage 
+                                    setPage={setPage}
+                                    originalImage={originalImage} 
+                                    setOriginalImage={setOriginalImage} 
+                                    editedImage={editedImage} 
+                                    prompt={editPrompt} 
+                                    setPrompt={setEditPrompt} 
+                                    onGenerate={handleEditImage} 
+                                    isLoading={isEditingImage} 
+                                    error={error} 
+                                    onClear={() => { setOriginalImage(null); setEditedImage(null); setEditPrompt(''); setError(null); }}
+                                />;
+            case 'activities': return <ActivitiesPage setPage={setPage} />;
+            case 'support': return <SupportPage setPage={setPage} />;
+            case 'contact': return <ContactPage />;
+            
+            // Sub-pages / Tools
             case 'projects': return <ProjectsPage />;
             case 'team': return <TeamPage />;
             case 'docs': return <FunctionDocsPage />;
+            case 'research': return <ResearchPage />;
+            case 'aiSystem': return <AISystemPage />;
+            case 'seo': return <SEOPage />;
             case 'generator': return <ReportGenerator onGenerate={handleGenerateReport} generatedReport={generatedReport} isLoading={isLoading} error={error} isComplete={isReportComplete} topic={reportTopic} setTopic={setReportTopic} description={reportDescription} setDescription={setReportDescription} reportType={reportType} setReportType={setReportType} isQuotaExhausted={isQuotaExhausted} />;
             case 'grant': return (<>
-                <GrantFinder onFindGrants={handleFindGrants} onFindGrantsWithGrounding={handleFindGrantsWithGrounding} isLoading={isLoading} error={error} grants={foundGrants} groundedResult={groundedGrants} onAnalyzeGrant={handleAnalyzeGrant} keywords={grantKeywords} setKeywords={setGrantKeywords} />
+                <GrantFinder 
+                    onPrepareProposal={(grant) => { setPage('generator'); setReportTopic(`Funding Proposal for ${grant.grantTitle}`); setReportDescription(`Based on the grant summary: ${grant.summary}`); setReportType('funding_proposal'); }}
+                    onAnalyzeGrant={handleAnalyzeGrant}
+                    savedGrants={savedGrants}
+                    onSaveGrant={handleSaveGrant}
+                    onRemoveGrant={handleRemoveGrant}
+                    onClearAllSaved={handleClearAllSaved}
+                    onNoteChange={handleNoteChange}
+                    keywords={grantKeywords}
+                    setKeywords={setGrantKeywords}
+                    handleApiError={handleApiError}
+                    isQuotaExhausted={isQuotaExhausted}
+                    allGrants={allGrants}
+                    onGrantsFound={setAllGrants}
+                    onClearAllDbGrants={() => setAllGrants([])}
+                />
                 {selectedGrant && <GrantAdopter grant={selectedGrant} isAnalyzing={isAnalyzingGrant} result={grantAnalysis} error={grantAnalysisError} onClear={() => setSelectedGrant(null)} onPrepareProposal={(grant) => { setPage('generator'); setReportTopic(`Funding Proposal for ${grant.grantTitle}`); setReportDescription(`Based on the grant summary: ${grant.summary}`); setReportType('funding_proposal'); }} />}
             </>);
             case 'siteSelector': return <SiteSelector onFindLocations={handleFindLocations} onFindTrees={handleFindTrees} results={siteSelectorResults} isLoading={isLoading} error={error} mode={siteSelectorMode} setMode={setSiteSelectorMode} locationsInput={siteSelectorLocationsInput} setLocationsInput={setSiteSelectorLocationsInput} coords={siteSelectorCoords} setCoords={setSiteSelectorCoords} suggestedGoals={suggestedGoals} isSuggestingGoals={isSuggestingGoals} onUseSuggestedGoal={handleUseSuggestedGoal} onFindGrantsForTree={handleFindGrantsForTree} handleApiError={handleApiError} />;
             case 'video': return <VideoGenerator prompt={videoPrompt} setPrompt={setVideoPrompt} negativePrompt={videoNegativePrompt} setNegativePrompt={setVideoNegativePrompt} image={videoImage} setImage={setVideoImage} scenes={videoScenes} onSceneChange={(index, desc) => { const newScenes = [...videoScenes]; newScenes[index].description = desc; setVideoScenes(newScenes); }} onApproveScene={(index, isApproved) => { const newScenes = [...videoScenes]; newScenes[index].isApproved = isApproved; setVideoScenes(newScenes); }} onConfirmScene={onConfirmScene} onGenerateScript={handleGenerateScript} isScriptLoading={isScriptLoading} onGenerateSceneVideo={handleGenerateSceneVideo} onGenerateSceneImage={handleGenerateSceneImage} error={error} onClear={() => { setVideoScenes([]); setVideoPrompt(''); setVideoImage(null); }} duration={videoDuration} setDuration={setVideoDuration} aspectRatio={videoAspectRatio} setAspectRatio={setVideoAspectRatio} numberOfVersions={videoVersions} setNumberOfVersions={setVideoVersions} withWatermark={videoWithWatermark} setWithWatermark={setVideoWithWatermark} isQuotaExhausted={isQuotaExhausted} handleApiError={handleApiError} musicPrompt={videoMusicPrompt} setMusicPrompt={setVideoMusicPrompt} musicDescription={videoMusicDescription} isMusicLoading={isMusicLoading} onGenerateMusic={onGenerateMusic} selectedMusicUrl={selectedMusicUrl} onSelectMusicUrl={setSelectedMusicUrl} videoType={videoType} setVideoType={setVideoType} />;
             case 'imageEditor': return <ImageEditor originalImage={originalImage} setOriginalImage={setOriginalImage} editedImage={editedImage} prompt={editPrompt} setPrompt={setEditPrompt} onGenerate={handleEditImage} isLoading={isEditingImage} error={error} onClear={() => { setOriginalImage(null); setEditedImage(null); setEditPrompt(''); setError(null); }} />;
-            case 'blog': return <BlogGenerator />;
+            case 'blog': return <BlogGenerator handleApiError={handleApiError} isQuotaExhausted={isQuotaExhausted} />;
             default: return <HomePage setPage={setPage} />;
         }
     };
 
     return (
-        <div className="bg-slate-900 min-h-screen">
+        <div className="bg-bf-buff min-h-screen font-sans text-bf-gray">
             <Header setPage={setPage} currentPage={page} user={user} onLogout={handleLogout} />
             <main>
                 {renderPage()}

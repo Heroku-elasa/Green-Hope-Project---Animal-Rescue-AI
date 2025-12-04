@@ -1,6 +1,6 @@
 {
-  "name": "Green Hope Project - Animal Rescue AI",
-  "description": "An application for the Green Hope Project, using AI to plan animal shelter operations, find grants, and match adoptable animals with suitable habitats.",
+  "name": "Janpanah Shelter - AI Rescue",
+  "description": "An application for the Janpanah Animal Shelter, using AI to plan shelter operations, find grants, and match adoptable animals with suitable habitats.",
   "requestFramePermissions": [
     "geolocation"
   ]

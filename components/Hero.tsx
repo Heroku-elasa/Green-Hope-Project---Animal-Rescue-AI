@@ -9,7 +9,6 @@ interface HomePageProps {
   setPage: (page: AppState['page']) => void;
 }
 
-// FIX: Replaced JSX.Element with React.ReactElement to fix "Cannot find namespace 'JSX'" error.
 const Icon: React.FC<{ iconKey: string; className?: string }> = ({ iconKey, className = "w-12 h-12" }) => {
     const icons: { [key: string]: React.ReactElement } = {
         science: (
@@ -81,32 +80,62 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   const achievements: { iconKey: string; count: number; label: string; suffix: string }[] = t('home.achievements');
   const customerLogos: { img: string; alt: string }[] = t('home.customerLogos');
   
-  const initialPosts: { img?: string; title: string; date: string; comments: number; link: string }[] = t('home.latestPosts');
-  const [latestPosts, setLatestPosts] = useState(initialPosts);
+  const initialPostsFromT: { img?: string; title: string; date: string; comments: number; link: string }[] = t('home.latestPosts');
+  const [latestPosts, setLatestPosts] = useState(initialPostsFromT);
 
   useEffect(() => {
-    const generateMissingImages = async () => {
-        const postsToUpdate = latestPosts.map(async (post, index) => {
-            if (!post.img) {
-                try {
-                    const imageUrl = await geminiService.generateBlogImage(post.title);
-                    return { ...post, img: imageUrl };
-                } catch (error) {
-                    console.error(`Failed to generate image for post: "${post.title}"`, error);
-                    return post; // Return original post on error
-                }
+    let isMounted = true;
+
+    const processPosts = async () => {
+      const postsNeedingImages = initialPostsFromT.filter(p => !p.img);
+      
+      if (postsNeedingImages.length === 0) {
+        if (isMounted) {
+          setLatestPosts(initialPostsFromT);
+        }
+        return;
+      }
+
+      if (isMounted) {
+        setLatestPosts(initialPostsFromT);
+      }
+
+      const imagePromises = postsNeedingImages.map(post =>
+        geminiService.generateBlogImage(post.title)
+          .then(imageUrl => ({ title: post.title, img: imageUrl }))
+          .catch(error => {
+            console.error(`Failed to generate image for post: "${post.title}"`, error);
+            return { title: post.title, img: null };
+          })
+      );
+      
+      const generatedImages = await Promise.all(imagePromises);
+
+      const imageMap = new Map<string, string>();
+      generatedImages.forEach(result => {
+        if (result.img) {
+          imageMap.set(result.title, result.img);
+        }
+      });
+      
+      if (isMounted) {
+        setLatestPosts(currentPosts => {
+          return initialPostsFromT.map(post => {
+            if (imageMap.has(post.title)) {
+              return { ...post, img: imageMap.get(post.title) };
             }
             return post;
+          });
         });
-
-        const updatedPosts = await Promise.all(postsToUpdate);
-        setLatestPosts(updatedPosts);
+      }
     };
 
-    if (latestPosts.some(p => !p.img)) {
-        generateMissingImages();
-    }
-  }, []); // Run only once on mount
+    processPosts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialPostsFromT]);
 
 
   const servicePageMap: { [key: string]: Page } = {
@@ -126,14 +155,14 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
         });
         mapInstanceRef.current = map;
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        // Changed to a lighter map style
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 10,
         }).addTo(map);
         
-        // Paw Print Map Marker Icon (Custom SVG)
-        const mapIconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ec4899"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 5.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>`;
+        const mapIconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#f58220"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 5.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>`;
         const mapIcon = L.icon({
             iconUrl: 'data:image/svg+xml;base64,' + btoa(mapIconSvg),
             iconSize: [32, 32],
@@ -151,34 +180,34 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   }, [portfolioItems]);
 
   return (
-    <div className="animate-fade-in text-white">
+    <div className="animate-fade-in text-bf-gray font-sans">
       {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[500px] flex items-center justify-center text-center overflow-hidden">
+      <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center text-center overflow-hidden">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute z-0 w-auto min-w-full min-h-full max-w-none"
+          className="absolute z-0 w-auto min-w-full min-h-full max-w-none object-cover"
           src={t('hero.videoUrl')}
         >
           Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-slate-900/70"></div>
-        <div className="relative z-10 px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 tracking-tight"
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative z-10 px-4 max-w-5xl mx-auto">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white font-serif leading-tight tracking-tight mb-6 drop-shadow-md"
               dangerouslySetInnerHTML={{ __html: t('hero.title') }} />
-          <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">{t('hero.subtitle')}</p>
-          <div className="mt-8 flex justify-center gap-4">
+          <p className="mt-4 text-xl sm:text-2xl text-white font-semibold max-w-3xl mx-auto drop-shadow-sm leading-relaxed">{t('hero.subtitle')}</p>
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={() => setPage('projects')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-700 to-pink-700 text-white font-semibold rounded-md shadow-lg hover:scale-105 transition-transform"
+              className="px-10 py-4 bg-bf-orange text-white text-lg font-bold rounded-full shadow-lg hover:bg-white hover:text-bf-orange transition-all uppercase tracking-wide"
             >
               {t('hero.button1')}
             </button>
             <button
               onClick={() => handleScrollTo('footer')}
-              className="px-8 py-3 bg-slate-700/50 border border-slate-600 text-white font-semibold rounded-md shadow-lg hover:bg-slate-700 transition-colors"
+              className="px-10 py-4 bg-white text-bf-orange text-lg font-bold rounded-full shadow-lg hover:bg-gray-100 transition-colors uppercase tracking-wide"
             >
               {t('hero.button2')}
             </button>
@@ -186,33 +215,36 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
         </div>
       </section>
 
-      {/* Intro Section */}
-      <section className="py-16 sm:py-24 bg-slate-900">
+      {/* Intro Section - The "Quote" */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                {t('home.introTitle')}
-            </p>
+            <blockquote className="text-center max-w-4xl mx-auto">
+                <p className="text-2xl sm:text-3xl lg:text-4xl text-bf-slate font-serif italic leading-relaxed">
+                    {t('home.introTitle')}
+                </p>
+            </blockquote>
         </div>
       </section>
       
       {/* Services Section */}
-      <section id="services" className="py-16 sm:py-24 bg-slate-800/50">
+      <section id="services" className="py-20 bg-bf-buff">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.servicesTitle')}</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('home.servicesTitle')}</h2>
+            <div className="w-24 h-1 bg-bf-orange mx-auto mt-4"></div>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
               <button 
                 key={index}
                 onClick={() => setPage(servicePageMap[service.iconKey])}
-                className="text-center p-6 bg-slate-900/60 rounded-lg shadow-lg backdrop-blur-sm border border-slate-700 transition-all duration-300 hover:border-pink-500/50 hover:bg-slate-800/80 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="text-center p-8 bg-white rounded-lg shadow-md border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
               >
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-purple-800 to-pink-800 mx-auto text-pink-300">
-                    <Icon iconKey={service.iconKey} className="w-8 h-8"/>
+                <div className="flex items-center justify-center h-20 w-20 rounded-full bg-bf-buff mx-auto text-bf-orange mb-6 group-hover:bg-bf-orange group-hover:text-white transition-colors">
+                    <Icon iconKey={service.iconKey} className="w-10 h-10"/>
                 </div>
-                <h3 className="mt-6 text-lg font-medium text-white">{service.title}</h3>
-                <p className="mt-2 text-base text-gray-400">{service.text}</p>
+                <h3 className="text-xl font-bold text-bf-slate mb-3">{service.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{service.text}</p>
               </button>
             ))}
           </div>
@@ -220,31 +252,34 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
       </section>
 
       {/* Portfolio Section */}
-      <section className="py-16 sm:py-24 bg-slate-900">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.portfolioTitle')}</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('home.portfolioTitle')}</h2>
           </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
             {portfolioItems.slice(0, 4).map((item, index) => (
-                <div key={index} className="group bg-slate-800/70 rounded-lg shadow-lg backdrop-blur-sm border border-slate-700 overflow-hidden flex flex-col">
-                    <div className="relative h-64 w-full overflow-hidden">
-                        <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    </div>
-                    <div className="p-6 flex-grow flex flex-col">
-                        <h3 className="text-xl font-bold text-pink-400 mb-2">{item.title}</h3>
-                        <p className="text-gray-300 mb-4 flex-grow text-sm">{item.description}</p>
-                         <div className="flex flex-wrap gap-2">
+                <div key={index} className="group bg-white rounded-xl shadow-lg overflow-hidden flex flex-col border border-gray-100 hover:shadow-2xl transition-shadow">
+                    <div className="relative h-72 w-full overflow-hidden">
+                        <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                             {item.tags.map(tag => (
-                                <span key={tag} className="bg-pink-500/20 text-pink-300 text-xs font-semibold px-2 py-1 rounded-full">{tag}</span>
+                                <span key={tag} className="bg-white/90 text-bf-slate text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">{tag}</span>
                             ))}
                         </div>
+                    </div>
+                    <div className="p-8 flex-grow flex flex-col">
+                        <h3 className="text-2xl font-bold text-bf-slate mb-3 group-hover:text-bf-orange transition-colors font-serif">{item.title}</h3>
+                        <p className="text-gray-600 mb-6 flex-grow text-base leading-relaxed">{item.description}</p>
+                        <a href={item.link} className="inline-flex items-center font-bold text-bf-orange uppercase tracking-wide text-sm hover:underline">
+                            Read Story <span className="ml-2">»</span>
+                        </a>
                     </div>
                 </div>
             ))}
           </div>
-           <div className="mt-12 text-center">
-                <button onClick={() => setPage('projects')} className="px-8 py-3 border border-pink-500/50 text-pink-300 font-semibold rounded-md shadow-lg hover:bg-pink-500/20 transition-colors">
+           <div className="mt-16 text-center">
+                <button onClick={() => setPage('projects')} className="px-10 py-3 border-2 border-bf-orange text-bf-orange font-bold rounded-full hover:bg-bf-orange hover:text-white transition-colors uppercase tracking-wide">
                     {t('hero.button1')}
                 </button>
            </div>
@@ -252,17 +287,19 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
       </section>
 
       {/* Achievements Section */}
-      <section className="py-16 sm:py-24 bg-slate-800/50">
+      <section className="py-20 bg-bf-slate text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.achievementsTitle')}</h2>
+            <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-white font-serif">{t('home.achievementsTitle')}</h2>
             </div>
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 text-center">
                 {achievements.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                        <Icon iconKey={item.iconKey} className="w-10 h-10 text-pink-400"/>
-                        <p className="text-4xl font-bold text-white mt-2">{item.count}{item.suffix}</p>
-                        <p className="text-sm text-gray-400 mt-1">{item.label}</p>
+                    <div key={index} className="flex flex-col items-center group">
+                        <div className="text-bf-orange mb-4 group-hover:scale-110 transition-transform">
+                            <Icon iconKey={item.iconKey} className="w-12 h-12"/>
+                        </div>
+                        <p className="text-5xl font-bold text-white mt-2 mb-2 font-serif">{item.count}{item.suffix}</p>
+                        <p className="text-sm text-gray-300 uppercase tracking-widest font-bold">{item.label}</p>
                     </div>
                 ))}
             </div>
@@ -270,15 +307,15 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
       </section>
       
       {/* Map Section */}
-      <section className="py-16 sm:py-24 bg-slate-900">
+      <section className="py-20 bg-bf-buff">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.map.title')}</h2>
-                <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">{t('home.map.subtitle')}</p>
+                <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('home.map.title')}</h2>
+                <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">{t('home.map.subtitle')}</p>
             </div>
-            <div ref={mapRef} className="h-[60vh] w-full rounded-lg bg-slate-800 border border-slate-700 shadow-lg" />
+            <div ref={mapRef} className="h-[60vh] w-full rounded-xl bg-white border border-gray-200 shadow-xl overflow-hidden" />
             <div className="mt-12 text-center">
-                <button onClick={() => setPage('siteSelector')} className="px-8 py-3 bg-gradient-to-r from-teal-600 to-sky-700 text-white font-semibold rounded-md shadow-lg hover:scale-105 transition-transform">
+                <button onClick={() => setPage('siteSelector')} className="px-10 py-3 bg-bf-orange text-white font-bold rounded-full shadow-md hover:bg-bf-orange-dark transition-colors uppercase tracking-wide">
                     {t('home.map.button')}
                 </button>
            </div>
@@ -287,16 +324,16 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
 
 
       {/* Partners Section */}
-      <section className="py-16 sm:py-24 bg-slate-800/50">
+      <section className="py-16 bg-white border-t border-gray-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.customersTitle')}</h2>
+            <div className="text-center mb-10">
+                <h2 className="text-2xl font-bold text-gray-400 uppercase tracking-widest">{t('home.customersTitle')}</h2>
             </div>
-            <div className="mt-12 flow-root">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center">
+            <div className="mt-8 flow-root">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10 items-center justify-items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                     {customerLogos.map((logo, index) => (
-                        <div key={index} className="flex justify-center">
-                            <img className="max-h-12 opacity-60 hover:opacity-100 transition-opacity" src={logo.img} alt={logo.alt} />
+                        <div key={index} className="flex justify-center w-full">
+                            <img className="max-h-12 hover:opacity-100 transition-opacity" src={logo.img} alt={logo.alt} />
                         </div>
                     ))}
                 </div>
@@ -305,27 +342,29 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
       </section>
 
       {/* Blog/Insights Section */}
-      <section className="py-16 sm:py-24 bg-slate-900">
+      <section className="py-20 bg-bf-buff">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">{t('home.calendarTitle')}</h2>
+            <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-bf-slate font-serif">{t('home.calendarTitle')}</h2>
             </div>
             <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {latestPosts.map((post, index) => (
-                    <div key={index} className="group flex flex-col overflow-hidden rounded-lg shadow-lg bg-slate-800/70 border border-slate-700">
-                        <div className="flex-shrink-0 h-48 w-full bg-slate-700 animate-pulse">
-                            {post.img && (
-                               <img className="h-48 w-full object-cover" src={post.img} alt={post.title} />
+                    <div key={index} className="group flex flex-col overflow-hidden rounded-lg shadow-md bg-white border border-gray-100 hover:shadow-xl transition-shadow">
+                        <div className="flex-shrink-0 h-48 w-full bg-gray-200 overflow-hidden">
+                            {post.img ? (
+                               <img className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-500" src={post.img} alt={post.title} />
+                            ) : (
+                                <div className="h-48 w-full bg-gray-200 animate-pulse"></div>
                             )}
                         </div>
                         <div className="flex flex-1 flex-col justify-between p-6">
                             <div className="flex-1">
-                                <a href={post.link} className="mt-2 block">
-                                    <p className="text-xl font-semibold text-gray-100 group-hover:text-pink-400 transition-colors">{post.title}</p>
+                                <a href={post.link} className="block">
+                                    <p className="text-xl font-bold text-bf-slate group-hover:text-bf-orange transition-colors font-serif leading-tight">{post.title}</p>
                                 </a>
                             </div>
-                            <div className="mt-6 flex items-center">
-                                <div className="text-sm text-gray-500">
+                            <div className="mt-6 flex items-center border-t border-gray-100 pt-4">
+                                <div className="text-sm font-medium text-gray-500">
                                     <time dateTime={post.date}>{post.date}</time>
                                 </div>
                             </div>

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 const translations: Record<string, any> = {
@@ -5,101 +6,140 @@ const translations: Record<string, any> = {
     langCode: 'en-US',
     nav: { 
       home: "Home", 
-      reportGenerator: "Shelter Planner", 
-      grantFinder: "Grant Finder", 
-      siteSelector: "Rescue Map",
-      videoGenerator: "Adoption Video",
-      imageEditor: "Photo Editor",
-      blogGenerator: "Blog Generator",
-      projects: "Rescue Missions", 
-      team: "Our Team", 
-      docs: "Function Docs" 
+      about: "About Us",
+      animals: "Our Animals",
+      activities: "Activities & AI Tools",
+      contentHub: "Content Hub",
+      support: "Support Us",
+      contact: "Contact",
+      donate: "Donate Now"
     },
     hero: {
-        title: "Giving Every Paw a<br/> Second Chance with AI",
-        subtitle: "We leverage AI and data science to optimize animal shelter operations, secure funding, and find loving homes for animals in need.",
+        title: "Janpanah Shelter:<br/> Where Healing Begins",
+        subtitle: "We are therapists for animals first. We believe in the cycle of kindness and use technology to support our shelter's mission of treatment, support, and culture building.",
         button1: "Meet the Animals",
-        button2: "Get Involved",
+        button2: "Support Us",
         videoUrl: "https://storage.googleapis.com/verdant-assets/forest-hero-2.mp4"
     },
     home: {
-        introTitle: "The Green Hope Project is now dedicated to animal welfare. We use technology to identify areas with high stray populations, plan efficient shelters, and measure our success in adoptions and rehabilitation.",
-        servicesTitle: "Our Core Strategies",
+        introTitle: "\"In the first stage, we are therapists for animals. We treat injured animals that have no supporter. We believe kindness exists in everyone, religious or not.\"",
+        servicesTitle: "Our Core Missions",
         services: [
-            { iconKey: 'science', title: 'AI Rescue Mapping', text: 'Using data to identify high-density stray areas and optimal locations for new shelters or feeding stations.' },
-            { iconKey: 'grant', title: 'Shelter Grants', text: 'Securing funding from global animal welfare funds to power medical supplies and facility upgrades.' },
-            { iconKey: 'education', title: 'Adoption Analytics', text: 'Generating transparent reports on adoption rates, medical treatments, and community impact.' },
-            { iconKey: 'consulting', title: 'Adoption Awareness', text: 'Creating compelling videos and content to showcase adoptable pets and promote responsible ownership.' }
+            { iconKey: 'science', title: 'Medical Treatment', text: 'Our primary goal is treating injured animals and providing necessary veterinary care.' },
+            { iconKey: 'grant', title: 'Culture Building', text: 'Educating the public to correct misinformation and promote kindness towards animals.' },
+            { iconKey: 'education', title: 'Sterilization', text: 'Advocating for vaccination and sterilization instead of elimination of strays.' },
+            { iconKey: 'consulting', title: 'Shelter Support', text: 'Using AI to find grants and resources to improve our facilities for the animals.' }
         ],
-        portfolioTitle: "Featured Rescue Missions",
+        portfolioTitle: "Janpanah Updates",
         portfolioItems: [
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "Urban Stray Cat Sterilization", link: "#", description: "A comprehensive TNR (Trap-Neuter-Return) program in metropolitan areas to control population and improve feline health.", tags: ["TNR", "Cats", "Urban Health", "Community"], latitude: 41.8781, longitude: -87.6298},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "Wildlife Rehabilitation Center", link: "#", description: "Establishing a sanctuary for injured wildlife in the Sahel region, focusing on habitat restoration and safe release.", tags: ["Wildlife", "Rehab", "Conservation", "Africa"], latitude: 14.4974, longitude: -14.4524},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "Marine Life Rescue", link: "#", description: "A specialized unit for rescuing and treating marine animals affected by pollution and nets in Southeast Asia.", tags: ["Marine Life", "Ocean", "Rescue", "Turtle"], latitude: -2.5489, longitude: 118.0149},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/6f3e334a-9391-450f-a63e-63f5b35274d4.jpeg", title: "Amazon Species Protection", link: "#", description: "Protecting endangered species in the Amazon from poaching and habitat loss through AI monitoring.", tags: ["Endangered", "Amazon", "Protection", "AI"], latitude: -3.4653, longitude: -62.2159},
+            { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "Treatment First", link: "#", description: "At Janpanah, our priority is treating animals who have suffered trauma. We provide medical care to those with no other support.", tags: ["Treatment", "Care", "Janpanah"], latitude: 35.6892, longitude: 51.3890},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "Urban Sterilization", link: "#", description: "A comprehensive program to control the population of urban strays through ethical sterilization and vaccination.", tags: ["TNR", "Cats", "Urban Health"], latitude: 35.7219, longitude: 51.3347},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "Public Education", link: "#", description: "Working to change the culture and showing that kindness to animals is a universal value.", tags: ["Culture", "Education", "Kindness"], latitude: 35.6961, longitude: 51.4231},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "Emergency Rescue", link: "#", description: "Responding to reports of injured animals and providing immediate sanctuary.", tags: ["Rescue", "Emergency", "Shelter"], latitude: 35.7550, longitude: 51.4050},
         ],
-        achievementsTitle: "Our Global Impact",
+        achievementsTitle: "Our Impact",
         achievements: [
-            { iconKey: 'publications', count: 15, suffix: 'K+', label: 'Animals Rescued' },
-            { iconKey: 'funded', count: 8500, suffix: '+', label: 'Successful Adoptions' },
-            { iconKey: 'collaborations', count: 45, suffix: '+', label: 'Shelter Partners' },
-            { iconKey: 'team', count: 12, suffix: '', label: 'Countries Active' },
-            { iconKey: 'trained', count: 20, suffix: 'K+', label: 'Vaccinations Given' }
+            { iconKey: 'publications', count: 1200, suffix: '+', label: 'Animals Treated' },
+            { iconKey: 'funded', count: 500, suffix: '+', label: 'Successful Adoptions' },
+            { iconKey: 'collaborations', count: 10, suffix: '+', label: 'Years of Service' },
+            { iconKey: 'team', count: 100, suffix: '%', label: 'Commitment to Life' },
+            { iconKey: 'trained', count: 5000, suffix: '+', label: 'Vaccinations' }
         ],
         map: {
-            title: "Our Rescue Network",
-            subtitle: "Explore our active shelters and rescue operations around the world.",
-            button: "Find a Shelter Near You"
+            title: "Rescue Network",
+            subtitle: "See where we operate and find animals in need near you.",
+            button: "View Map"
         },
-        customersTitle: "In Collaboration With",
+        customersTitle: "Supported By",
         customerLogos: [
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'World Wildlife Fund' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'Global Environment Facility' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'Partner 1' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'Partner 2' },
             { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png', alt: 'ASPCA' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'Conservation International' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'Partner 3' },
         ],
-        calendarTitle: "Tales from the Shelter",
+        calendarTitle: "News & Stories",
         latestPosts: [
-            { img: "https://storage.googleapis.com/verdant-assets/blog-1.jpg", title: "How AI Helps Match Pets with the Perfect Owners", date: "July 18, 2024", comments: 15, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "Luna's Journey: From Street Dog to Service Animal", date: "June 30, 2024", comments: 22, link: "#" },
+            { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "Janpanah Head: We are Therapists First", date: "Sept 07, 2021", comments: 8, link: "https://hakimemehr.ir/fa/news/65134" },
+            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "The Cycle of Kindness in Society", date: "Aug 15, 2023", comments: 22, link: "#" },
             { title: "Managing Shelter Supplies with Predictive Analytics", date: "June 12, 2024", comments: 9, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "Why Senior Pets Make the Best Companions", date: "May 25, 2024", comments: 18, link: "#" },
+            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "Why Vaccination is Better than Elimination", date: "May 25, 2024", comments: 18, link: "#" },
         ]
     },
     footer: {
-      description: "A non-profit organization dedicated to improving the lives of animals through technology, rescue, and rehabilitation.",
-      contactTitle: "Get in Touch",
-      email: "rescue@greenhope.proj",
-      phone: "+1 555 123 4567",
-      address: "San Francisco, USA",
-      socialMediaTitle: "Follow Our Rescues",
+      description: "Janpanah Shelter: Treating animals, building culture, and spreading kindness.",
+      contactTitle: "Contact Us",
+      email: "info@janpanah.org",
+      phone: "+98 21 1234 5678",
+      address: "Tehran, Iran",
+      socialMediaTitle: "Follow Us",
       instagram: "Instagram",
       linkedin: "LinkedIn",
       facebook: "Facebook",
       quickLinksTitle: "Quick Links",
       quickLinks: [
-        { text: "About Us", link: "#" },
+        { text: "About Janpanah", link: "#" },
         { text: "Our Mission", link: "#services" },
-        { text: "Adopt a Pet", link: "#" },
-        { text: "Volunteer", link: "#" },
+        { text: "Adopt", link: "#" },
+        { text: "Donate", link: "#" },
         { text: "Privacy Policy", link: "#" },
       ],
-      addressTitle: "Our Location",
-      copyright: "© 2024 Green Hope Animal Rescue. All Rights Reserved.",
+      addressTitle: "Location",
+      copyright: "© 2024 Janpanah Shelter. All Rights Reserved.",
     },
     projectsPage: {
         title: "Our Rescue Portfolio",
-        subtitle: "A selection of our key operations demonstrating our commitment to animal welfare."
+        subtitle: "Key operations demonstrating our commitment to animal welfare."
     },
     teamPage: {
-        title: "Meet Our Rescuers",
-        subtitle: "A dedicated team of veterinarians, behaviorists, and technologists committed to saving lives.",
+        title: "Our Team",
+        subtitle: "Dedicated individuals working for the welfare of animals.",
         members: [
-            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'Dr. Aris Thorne', title: 'Chief Veterinarian', bio: 'With 20+ years in vet medicine, Aris leads our medical triage and rehabilitation protocols.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'Lena Petrova', title: 'Director of Shelter AI', bio: 'Specializes in predictive modeling to manage shelter capacity and adoption trends.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'David Chen', title: 'Head of Partnerships', bio: 'Expert in securing grants from animal welfare foundations and building global coalitions.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-4.jpg', name: 'Dr. Samira Iqbal', title: 'Behavior Specialist', bio: 'Focuses on animal rehabilitation and preparing traumatized animals for their forever homes.', linkedin: '#' },
+            { img: 'http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg', name: 'Monireh Safari', title: 'Head of Janpanah Shelter', bio: 'Founder and leader focusing on treatment of injured animals and cultural education regarding animal rights.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'Dr. Aris Thorne', title: 'Lead Veterinarian', bio: 'Specialist in trauma surgery for rescued strays.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'Lena Petrova', title: 'Shelter Manager', bio: 'Manages daily operations and adoption coordination.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'David Chen', title: 'Community Outreach', bio: 'Works on educational programs and cultural building.', linkedin: '#' },
         ]
+    },
+    animalsPage: {
+        filterTitle: "Find Your Perfect Companion",
+        filterSpecies: "Species",
+        filterSpeciesAll: "All Species",
+        filterSpeciesDog: "Dog",
+        filterSpeciesCat: "Cat",
+        filterAge: "Age",
+        filterAgeAll: "All Ages",
+        filterAgeYoung: "Young",
+        filterAgeAdult: "Adult",
+        filterAgeSenior: "Senior",
+        filterTemperament: "Temperament",
+        filterTemperamentAll: "All Temperaments",
+        filterTemperamentPlayful: "Playful",
+        filterTemperamentCalm: "Calm",
+        filterTemperamentShy: "Shy"
+    },
+    adoptionForm: {
+      title: "Adoption Application",
+      subtitle: "Ready to give a forever home? Fill out the form below to start the process.",
+      fullName: "Full Name",
+      fullNamePlaceholder: "e.g., Jane Doe",
+      email: "Email Address",
+      emailPlaceholder: "e.g., jane.doe@example.com",
+      phone: "Phone Number",
+      phonePlaceholder: "e.g., +1 555-123-4567",
+      address: "Full Address",
+      addressPlaceholder: "Street, City, Province/State, Postal Code",
+      homeType: "Type of Home",
+      homeTypeApartment: "Apartment",
+      homeTypeHouse: "House with Yard",
+      homeTypeFarm: "Farm / Rural Property",
+      otherPets: "Do you have other pets?",
+      otherPetsPlaceholder: "e.g., One 5-year-old cat, friendly",
+      reason: "Why do you want to adopt?",
+      reasonPlaceholder: "Tell us about your motivations and what you're looking for in a companion.",
+      submitButton: "Submit Application",
+      validationError: "Please fill out all required fields.",
+      successTitle: "Application Submitted!",
+      successMessage: "Thank you for your interest. Our team will review your application and contact you within 3-5 business days."
     },
     reportTypes: {
         shelter_plan: "Shelter Operations Plan",
@@ -132,7 +172,7 @@ const translations: Record<string, any> = {
         placeholder2: "Fill out the form and click 'Generate' to begin."
     },
     grantFinder: {
-        title: "Animal Welfare Grant Finder",
+        title: "Janpanah Grant Finder",
         searchPlaceholder: "Enter keywords (e.g., 'shelter construction', 'spay neuter funding')",
         searchButton: "Find Grants",
         searching: "Searching...",
@@ -142,6 +182,56 @@ const translations: Record<string, any> = {
         noResults: "No grants found for these keywords. Try a broader search.",
         useGrounding: "Use Live Web Search (more up-to-date)",
         sources: "Sources",
+        // New GrantFinder Translations
+        subtitle: "Search for funding opportunities or analyze your own documents.",
+        uploadLabel: "Upload Grant Document",
+        selectFile: "Select File",
+        removeFile: "Remove File",
+        fileTypes: "Supported: .docx, .txt, .md",
+        or: "OR",
+        keywordsLabel: "Keywords / Supplemental Instructions",
+        keywordsPlaceholder: "e.g., 'focus on feline leukemia research' or 'small rural shelters'",
+        maxResults: "Max Results",
+        readingFile: "Reading File...",
+        finding: "Searching...",
+        findButton: "Find & Analyze Grants",
+        savedTitle: "Saved Grants",
+        clearAll: "Clear All",
+        deadlineLabel: "Deadline",
+        summaryLabel: "Summary",
+        notesLabel: "Your Notes",
+        notesPlaceholder: "Add your thoughts here...",
+        remove: "Remove",
+        saved: "Saved",
+        save: "Save",
+        useForProposal: "Use for Proposal",
+        analyze: "Deep Analysis",
+        crateTitle: "Grant Crate",
+        crateSubtitle: "Grants found in this session",
+        clearCrate: "Clear Crate",
+        loadingTitle: "Scanning for Opportunities...",
+        loadingSubtitle: "AI is reading documents and searching the web.",
+        sortBy: "Sort By",
+        sort: {
+            relevance: "Relevance",
+            deadline: "Deadline",
+            amount: "Amount",
+            geography: "Geography"
+        },
+        documents: "Requirement Docs",
+        parseErrorTitle: "Raw Search Results",
+        parseErrorSubtitle: "We found some information, but couldn't structure it perfectly. Here is the raw text:",
+        crateEmpty: "No grants found yet. Try a search!",
+        fileTypeError: "Invalid file type. Please upload .docx, .txt, or .md.",
+        validationError: "Please upload a file or enter keywords.",
+        fileReadError: "Failed to read the file.",
+        prompt: {
+            common: "You are an expert grant researcher for an Animal Shelter.",
+            supplementalKeywords: "Supplemental user instructions: {keywords}",
+            noSupplementalKeywords: "No supplemental instructions.",
+            fileBased: "{common} I have uploaded a document. Analyze it and finding matching grants. Document text: {documentText}. {keywordInstruction}. Return {maxResults} results in a Markdown table.",
+            keywordBased: "{common} Find grants for these queries: {queries}. Return {maxResults} results in a Markdown table."
+        }
     },
     grantAnalyzer: {
         title: "AI Grant Analysis",
@@ -297,7 +387,7 @@ const translations: Record<string, any> = {
         uploadButton: "Upload an image",
         imagePrompt: "Guides the AI on visual style and mood.",
         removeImage: "Remove Image",
-        addWatermark: "Add Green Hope Watermark",
+        addWatermark: "Add Janpanah Watermark",
         numberOfVersions: "Number of Video Versions",
         aspectRatio: "Aspect Ratio",
         durationLabel: "Approximate Video Duration",
@@ -355,6 +445,29 @@ const translations: Record<string, any> = {
         placeholder: "Your edited image will appear here.",
         validationError: "Please upload an image and provide an edit description."
     },
+    rescueStoryteller: {
+      title: "Rescue Story & Fundraiser",
+      subtitle: "Generate emotional social media campaigns for injured animals, inspired by Cuddly. Perfect for Instagram and Telegram.",
+      form: {
+        nameLabel: "Animal Name",
+        namePlaceholder: "e.g., Hampo",
+        conditionLabel: "Medical Condition / Injury",
+        conditionPlaceholder: "e.g., Broken leg from car accident, severe mange",
+        needsLabel: "Specific Needs (Wishlist)",
+        needsPlaceholder: "e.g., Orthopedic surgery, antibiotics, special food",
+        toneLabel: "Campaign Tone",
+        toneUrgent: "Urgent & Critical",
+        toneHopeful: "Hopeful & Recovery",
+        button: "Generate Campaign"
+      },
+      results: {
+        instagram: "Instagram Caption",
+        telegram: "Telegram Post",
+        hashtags: "Hashtags",
+        wishlist: "Suggested Wishlist Items"
+      },
+      validationError: "Please fill in all fields to generate a compelling story."
+    },
     quotaErrorModal: {
         title: "API Quota Exceeded",
         body: "You have exceeded your current API quota. Please check your billing account or try again later. Some features may be unavailable.",
@@ -370,119 +483,270 @@ const translations: Record<string, any> = {
         sourcesTitle: "Sources:",
     },
     chatbot: {
-        title: "Rescue Assistant",
-        placeholder: "Ask about adoption or rescue...",
-        initialGreeting: "Hello! How can I help you? Ask me about adopting a pet, our rescue missions, or how to volunteer.",
+        title: "Janpanah Assistant",
+        placeholder: "Ask about adoption, rescue, or our treatment center...",
+        initialGreeting: "Hello! I am the Janpanah Assistant. Ask me about Ms. Monireh Safari, our treatment-first policy, or how to help.",
         send: "Send",
         initialPrompts: [
+            "Who is Monireh Safari?",
             "How do I adopt?",
-            "What animals do you rescue?",
-            "Tell me about the latest rescue mission.",
             "Do you need volunteers?",
-            "How does AI help animals?",
-            "Where are your shelters?"
+            "What is 'Treatment First'?",
+            "Where is Janpanah?"
         ]
+    },
+    researchPage: {
+        title: "Research & Development",
+        subtitle: "Exploring the landscape of technology in animal welfare to enhance our rescue operations.",
+        startups: [
+            {
+                name: "Petia (Benchmark)",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Generic Placeholder
+                description: "An Iranian startup founded by Ali Delshad Tehrani. We look to Petia's 'Health Card' concept as a model for digitizing stray animal medical records. Their history highlights the need for stronger municipal cooperation for shelter infrastructure, a challenge we aim to solve with AI data.",
+                link: "https://petia.ir/"
+            },
+            {
+                name: "Cuddly",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Placeholder/Generic as logo not available
+                description: "A crowdfunding platform dedicated to helping animal organizations raise funds for medical cases and wishlists. Essential for our 'Treatment First' mission.",
+                link: "https://cuddly.com/"
+            },
+            {
+                name: "Snout",
+                logo: "https://petstablished.com/favicon.png", // Placeholder
+                description: "Uses nose print biometrics to identify lost dogs, similar to fingerprints for humans. A vital tool for identifying strays where microchips are scarce.",
+                link: "https://www.snoutid.com/"
+            },
+            {
+                name: "Petfinder",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Petfinder_logo.svg/2560px-Petfinder_logo.svg.png",
+                description: "A leading online, searchable database of animals who need homes. It is also a directory of nearly 11,000 animal shelters and adoption organizations.",
+                link: "https://www.petfinder.com/"
+            },
+            {
+                name: "Petstablished",
+                logo: "https://petstablished.com/favicon.png",
+                description: "Provides comprehensive shelter management software, including tools for adoption, fostering, fundraising, and record-keeping.",
+                link: "https://petstablished.com/"
+            },
+            {
+                name: "Doobert",
+                logo: "https://vet-ct.com/images/logo.svg", // Placeholder
+                description: "Connects animal rescues with volunteers for transport, fostering, and photography. Creating a supply chain for saving lives.",
+                link: "https://www.doobert.com/"
+            },
+            {
+                name: "VetCT",
+                logo: "https://vet-ct.com/images/logo.svg",
+                description: "A global teleconsulting and teleradiology company that provides specialist support to veterinary teams.",
+                link: "https://vet-ct.com/"
+            }
+        ]
+    },
+    aiSystemPage: {
+        title: "AI System Design",
+        subtitle: "A technical blueprint of the advanced AI modules powering the Janpanah Shelter's communication and management system.",
+        sections: {
+            goal: "Goal & Application",
+            inputs: "Input Variables",
+            outputs: "Output Structure",
+            prompt: "Sample Prompt"
+        },
+        modules: [
+            { id: 6, name: "Smart Pet Matching", goal: "Analyze applicant profiles and suggest suitable pets with a personalized email.", inputs: "ADOPTER_PROFILE:\n- Name: {{adopter_name}}\n- Housing Type: {{Apartment/House/Farm}}\n- Size: {{square_meters}}\n- Yard: {{Yes/No}}\n- Hours at home: {{hours_home}}\n- Other pets: {{List}}\n- Children: {{Age and number}}\n- Activity level: {{Low/Medium/High}}\n- Previous experience: {{Yes/No}}\n- Preferences: {{Species, size, age}}", outputs: "1. Match score for each pet (0-100)\n2. Reasons for matching\n3. Personalized email with top 3 suggestions\n4. Important notes for each suggestion", prompt_example: "Based on the applicant's profile and list of available pets:\n1. Perform compatibility analysis\n2. Select the top 3 pets\n3. Write a personal email explaining the reason for each suggestion\n4. Add specific care tips for each pet" },
+            { id: 7, name: "Donor Behavior Prediction", goal: "Analyze history to predict the best time and type of donation request.", inputs: "DONOR_HISTORY:\n- ID: {{donor_id}}\n- Donation history: {{dates, amounts}}\n- Average donation: {{average}}\n- Last donation: {{last_donation_date}}\n- Preferred channel: {{email/sms/social}}\n- Interests: {{dogs/cats/all/medical/general}}\n- Email open rate: {{open_rate}}\n- Best engagement time: {{day, time}}", outputs: "1. Prediction of next donation time\n2. Suggested donation amount\n3. Suitable campaign type\n4. Optimized email", prompt_example: "OPTIMAL_SEND_TIME: [Suggested date and time]\nSUGGESTED_ASK: $[Amount]\nCAMPAIGN_TYPE: [Campaign Type]\nPERSONALIZATION_LEVEL: [High/Medium/Basic]\n---\nSUBJECT: [Personalized subject]\n---\n[Email body referring to specific interests]\n---" },
+            { id: 8, name: "Medical Update & Follow-up", goal: "Send health status updates for animals under treatment.", inputs: "MEDICAL_CASE:\n- Pet name: {{pet_name}}\n- Initial condition: {{initial_condition}}\n- Admission date: {{admission_date}}\n- Treatments performed: {{treatments}}\n- Current status: {{current_status}}\n- Prognosis: {{prognosis}}\n- Treatment cost: {{total_cost}}\n- Amount raised: {{raised_amount}}\n- Progress photos: {{photo_urls}}", outputs: "1. Progress report email\n2. Social media post\n3. Website update page", prompt_example: "SUBJECT: 🏥 Good news about {{pet_name}}!\n---\nHi {{supporter_name}},\n\n[Status report with a hopeful tone]\n\n📊 Progress Summary:\n- Day {{day_number}} of treatment\n- [Current status]\n\n💝 How your donation helped:\n[Explain the impact of the donation]\n\n📸 [Progress photos]\n\n[CTA to continue support or share]" },
+            { id: 9, name: "Smart Event & Reminder System", goal: "Manage events and send intelligent reminders.", inputs: "EVENT_DETAILS:\n- Event name: {{event_name}}\n- Type: {{adoption_day/fundraiser/vaccination/training/volunteer}}\n- Date: {{date}}\n- Time: {{time}}\n- Location: {{location}}\n- Capacity: {{capacity}}\n- Registered: {{registered_count}}\n- Fee: {{fee}}\n- Requirements: {{requirements}}", outputs: "For each stage:\nSTAGE: [Stage]\nSEND_DATE: [Send Date]\n---\nSUBJECT: [Subject appropriate for the stage]\n---\n[Email content]\n---\nCALENDAR_INVITE: [ics file]\n---", prompt_example: "Reminder Schedule:\n- 7 days before: Initial invitation\n- 3 days before: Reminder\n- 1 day before: Final details\n- Event day: Morning reminder\n- 1 day after: Thank you and follow-up" },
+            { id: 10, name: "Auto-Response Chatbot", goal: "Automatically answer frequently asked questions via email.", inputs: "INCOMING_EMAIL:\n- Sender: {{sender_email}}\n- Subject: {{subject}}\n- Body: {{body}}\n- Timestamp: {{timestamp}}", outputs: "DETECTED_INTENT: [Inquiry type]\nCONFIDENCE: [Confidence percentage]\nAUTO_REPLY: [Yes/No/Needs human review]\n---\nSUBJECT: Re: {{original_subject}}\n---\n[Automated response]\n---\nHUMAN_FOLLOW_UP_NEEDED: [Yes/No]\nSUGGESTED_ACTIONS: [Suggested actions]", prompt_example: "Inquiry Types:\n1. adoption_process\n2. pet_availability\n3. volunteer_info\n4. donation_info\n5. lost_found\n..." },
+            { id: 11, name: "Sentiment Analysis & Feedback", goal: "Analyze feedback and send appropriate responses.", inputs: "FEEDBACK_INPUT:\n- Source: {{email/survey/social/review}}\n- Content: {{content}}\n- Rating (if available): {{rating}}\n- Related topic: {{adoption/donation/visit/volunteer}}\n- User: {{user_id}}", outputs: "SENTIMENT: [positive/negative/neutral]\nINTENSITY: [1-10]\nKEY_TOPICS: [List of topics]\nURGENCY: [low/medium/high/critical]\n---\nRECOMMENDED_RESPONSE_TYPE: [thank_you/apology/follow_up/escalate]\n---\n[Appropriate response email]\n---\nINTERNAL_ALERT: [If management attention is needed]\n---", prompt_example: "AI Processing:\n1. Detect sentiment\n2. Sentiment intensity\n3. Key topics\n4. Need for immediate follow-up" },
+            { id: 12, name: "Analytics & Reporting", goal: "Generate automated reports for stakeholders.", inputs: "REPORT_REQUEST:\n- Report type: {{report_type}}\n- Period: {{start_date}} to {{end_date}}\n- Audience: {{audience}}\n- Format: {{email/pdf/dashboard}}", outputs: "REPORT_TITLE: {{type}} Report - {{period}}\n---\n📊 Executive Summary:\n[3-4 key points]\n\n📈 Key Metrics:\n[Statistics table with comparison to previous period]\n\n🏆 Successes:\n[List of achievements]\n\n⚠️ Challenges:\n[Problems and proposed solutions]\n\n🎯 Next Period's Goals:\n[List of goals]\n\n💝 Highlight Story:\n[A success story]\n---", prompt_example: "Report Types:\n1. weekly_summary\n2. monthly_impact\n3. donor_report\n4. board_report\n..." },
+            { id: 13, name: "Foster Program Management", goal: "Manage communication with foster families.", inputs: "FOSTER_FAMILY:\n- Name: {{foster_name}}\n- Experience: {{experience_level}}\n- Capacity: {{capacity}}\n- Preferences: {{preferences}}\n- History: {{history}}", outputs: "Email Types:\n1. New foster request\n2. Delivery coordination\n3. Weekly check-in\n4. Medical report\n5. Extension request\n6. Final adoption congratulations\n7. End-of-term thank you", prompt_example: "SUBJECT: 🏠 {{pet_name}} needs your help!\n---\nHi {{foster_name}},\n\nWe have a special foster opportunity we think would be perfect for you!\n\n🐾 Introducing {{pet_name}}:\n[Description of personality and needs]\n\n⏰ Duration: Approx. {{duration}}\n📦 Supplies provided: [List]\n💰 Costs: All medical and food costs are covered.\n\n[CTA: I accept / I have questions]" },
+            { id: 14, name: "Social Media Integration", goal: "Generate tailored content for each platform from a single input.", inputs: "CONTENT_BASE:\n- Type: {{adoption/event/donation/story/alert}}\n- Main info: {{main_content}}\n- Images: {{images}}\n- Link: {{link}}\n- Brand hashtags: {{brand_hashtags}}", outputs: "Instagram:\n📸 Caption (max 2200 chars)\n#Hashtags (max 30)\n\nTwitter/X:\n🐦 Tweet (max 280 chars)\n\nTelegram:\n📱 Channel post\n\nWhatsApp:\n💬 Shareable text", prompt_example: "Generate multi-platform content from a base input, adapting tone and format for each social network." },
+            { id: 15, name: "AI Image Generation Prompts", goal: "Generate effective prompts for AI image creation tools.", inputs: "IMAGE_REQUEST:\n- Type: {{poster/banner/social/email_header}}\n- Subject: {{adoption/event/donation/awareness}}\n- Animal: {{species, breed, color}}\n- Style: {{realistic/cartoon/watercolor/minimalist}}\n- Dimensions: {{dimensions}}\n- Overlay text: {{overlay_text}}", outputs: "For DALL-E / Midjourney:\nPROMPT: [Optimized English prompt]\nNEGATIVE_PROMPT: [Exclusions]\nSTYLE_REFERENCE: [Style reference]\n\nFor Canva AI:\nSEARCH_TERMS: [Search keywords]\nTEMPLATE_SUGGESTION: [Template suggestion]\nCOLOR_PALETTE: [Color palette]", prompt_example: "DALL-E PROMPT:\n'Heartwarming adoption event poster, happy family with rescued golden retriever puppy, warm sunset lighting, soft pastel colors, watercolor style, text space at top and bottom, 4k quality, emotional and inviting atmosphere'" }
+        ]
+    },
+    seoPage: {
+        title: "SEO Hub",
+        subtitle: "A strategic guide to optimizing Janpanah Shelter's online presence to attract more supporters, adopters, and volunteers.",
+        technical: {
+            title: "Technical SEO Foundation",
+            description: "Ensuring search engines like Google can easily find, crawl, and understand our site's content. Since this is a modern web application, we focus on making it accessible to crawlers.",
+            items: [
+                { title: "Dynamic Meta Tags", text: "Each page should have a unique, descriptive title and meta description. This is crucial for appearing correctly in search results." },
+                { title: "Structured Data (Schema)", text: "This is a 'vocabulary' for search engines. By adding it, we can tell Google we are an 'Organization', that our news stories are 'Articles', helping them show richer results." },
+                { title: "Sitemap & robots.txt", text: "A sitemap is a map of all our pages for Google to follow. The robots.txt file gives crawlers rules on what they can and cannot index." },
+                { title: "Page Speed & Core Web Vitals", text: "A fast-loading, stable website is essential for both users and SEO. Our build system (Vite) already handles many optimizations like code minification." }
+            ]
+        },
+        content: {
+            title: "Content & Keyword Strategy",
+            description: "Creating valuable content that answers the questions of our target audience—potential adopters, donors, and volunteers.",
+            items: [
+                { title: "Keyword Research", text: "We must identify the terms people use to find us. Examples for Janpanah include 'animal shelter in Tehran', 'adopt a dog in Iran', or 'how to help injured animals'." },
+                { title: "On-Page SEO", text: "These keywords should be naturally integrated into our page titles, headings, and text content to signal their relevance to search engines." },
+                { title: "High-Quality Content", text: "Our 'Rescue Storyteller' is a perfect SEO tool. Each story is a unique piece of content that can rank for specific terms and attract emotional engagement and links." },
+                { title: "Internal Linking", text: "Connecting pages within our site (e.g., linking from a rescue story to the adoption page) helps users and search engines navigate and understand the site structure." }
+            ]
+        },
+        analytics: {
+            title: "Analytics & Monitoring Dashboard",
+            description: "To measure our success, we need to track performance. Since this is not a traditional WordPress site, we integrate with powerful, industry-standard external services.",
+            items: [
+                { title: "Google Search Console", text: "This is a free service from Google that helps us monitor our site's presence in search results. We must register our domain here to see which queries bring users to our site and to identify any crawl errors." },
+                { title: "Google Analytics 4 (GA4)", text: "This tool tracks user behavior on our site—which pages are popular, where users come from, and how they interact with our content. We need to create a property and add its tracking script to our application." },
+                { title: "Third-Party SEO Dashboards", text: "For more advanced analysis (like tracking backlinks or competitor performance), we would register with services like Ahrefs or Semrush. These platforms provide in-depth dashboards and would be integrated via their APIs." }
+            ]
+        }
+    },
+    errors: {
+        quota: "You have exceeded your current API quota. Please check your billing account or try again later.",
+        internal: "A temporary server issue occurred. Please wait a moment and try again. If the problem persists, consider simplifying your prompt.",
+        permissionDenied: "Permission denied. Please ensure your API key has access to the requested model.",
+        invalidKey: "Your API key is invalid. Please check your configuration.",
+        invalidArgument: "There was an issue with the request (e.g., an invalid value). Please check your input and try again.",
+        network: "A network error occurred. Please check your internet connection and try again.",
+        jsonParse: "The AI returned an unexpected format. Please try your request again.",
+        unknown: "An unexpected error occurred. Please try again later."
     }
   },
   fa: {
     langCode: 'fa-IR',
     nav: { 
       home: "خانه", 
-      reportGenerator: "برنامه‌ریز پناهگاه", 
-      grantFinder: "گرنت یاب", 
-      siteSelector: "نقشه نجات",
-      videoGenerator: "ویدیو ساز",
-      imageEditor: "ویرایشگر عکس",
-      blogGenerator: "بلاگ ساز",
-      projects: "مأموریت‌ها", 
-      team: "تیم ما", 
-      docs: "مستندات" 
+      about: "درباره ما",
+      animals: "حیوانات ما",
+      activities: "فعالیت‌ها و پروژه‌ها",
+      contentHub: "مرکز محتوا",
+      support: "حمایت و مشارکت",
+      contact: "تماس با ما",
+      donate: "کمک مالی"
     },
     hero: {
-        title: "دادن شانسی دوباره به هر پنجه<br/> با هوش مصنوعی",
-        subtitle: "ما از هوش مصنوعی و علم داده برای بهینه‌سازی عملیات پناهگاه حیوانات، تأمین بودجه و یافتن خانه‌های پرمهر برای حیوانات نیازمند استفاده می‌کنیم.",
+        title: "پناهگاه جان‌پناه:<br/> جایی که درمان آغاز می‌شود",
+        subtitle: "ما در مرحله اول درمانگر حیوانات هستیم. ما به چرخه محبت در همه انسان‌ها باور داریم و از فناوری برای حمایت از مأموریت درمان و فرهنگ‌سازی استفاده می‌کنیم.",
         button1: "دیدار با حیوانات",
-        button2: "مشارکت کنید",
+        button2: "حمایت کنید",
         videoUrl: "https://storage.googleapis.com/verdant-assets/forest-hero-2.mp4"
     },
     home: {
-        introTitle: "پروژه امید سبز اکنون به رفاه حیوانات اختصاص دارد. ما از فناوری برای شناسایی مناطق با جمعیت بالای حیوانات بی‌سرپناه، برنامه‌ریزی پناهگاه‌های کارآمد و اندازه‌گیری موفقیت خود در فرزندخواندگی و بازپروری استفاده می‌کنیم.",
-        servicesTitle: "استراتژی‌های اصلی ما",
+        introTitle: "«در مرحله اول درمانگر حیوانات هستیم یعنی در ابتدا حیواناتی که دچار آسیب شده‌اند و حمایت کننده‌ای ندارند را درمان می‌کنیم. چرخه محبت و مهربانی همیشه بوده و هست.» - منیره صفری، سرپرست جان‌پناه",
+        servicesTitle: "مأموریت‌های اصلی ما",
         services: [
-            { iconKey: 'science', title: 'نقشه‌برداری نجات با هوش مصنوعی', text: 'استفاده از داده‌ها برای شناسایی مناطق با تراکم بالای حیوانات ولگرد و مکان‌های بهینه برای پناهگاه‌های جدید.' },
-            { iconKey: 'grant', title: 'گرنت‌های پناهگاه', text: 'تأمین بودجه از صندوق‌های جهانی رفاه حیوانات برای تأمین لوازم پزشکی و ارتقای تأسیسات.' },
-            { iconKey: 'education', title: 'تحلیل فرزندخواندگی', text: 'تهیه گزارش‌های شفاف در مورد نرخ فرزندخواندگی، درمان‌های پزشکی و تأثیر اجتماعی.' },
-            { iconKey: 'consulting', title: 'آگاهی‌بخشی فرزندخواندگی', text: 'ساخت ویدیوها و محتوای جذاب برای نمایش حیوانات قابل واگذاری و ترویج مالکیت مسئولانه.' }
+            { iconKey: 'science', title: 'درمان پزشکی', text: 'هدف اصلی ما درمان حیوانات آسیب‌دیده و ارائه مراقبت‌های دامپزشکی لازم است.' },
+            { iconKey: 'grant', title: 'فرهنگ‌سازی', text: 'آموزش عمومی برای اصلاح اطلاعات غلط و ترویج مهربانی با حیوانات در همه اقشار جامعه.' },
+            { iconKey: 'education', title: 'عقیم‌سازی', text: 'حمایت از واکسیناسیون و عقیم‌سازی به جای حذف و کشتار حیوانات ولگرد.' },
+            { iconKey: 'consulting', title: 'تجهیز پناهگاه', text: 'استفاده از هوش مصنوعی برای یافتن گرنت‌ها و منابع جهت بهبود امکانات برای حیوانات.' }
         ],
-        portfolioTitle: "مأموریت‌های نجات برجسته",
+        portfolioTitle: "اخبار جان‌پناه",
         portfolioItems: [
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "عقیم‌سازی گربه‌های شهری", link: "#", description: "یک برنامه جامع TNR (زنده‌گیری، عقیم‌سازی، رهاسازی) در مناطق کلان‌شهری برای کنترل جمعیت و بهبود سلامت گربه‌ها.", tags: ["TNR", "گربه‌ها", "سلامت شهری", "جامعه"], latitude: 41.8781, longitude: -87.6298},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "مرکز بازپروری حیات وحش", link: "#", description: "ایجاد پناهگاهی برای حیات وحش آسیب‌دیده در منطقه ساحل، با تمرکز بر بازسازی زیستگاه و رهاسازی ایمن.", tags: ["حیات وحش", "بازپروری", "حفاظت", "آفریقا"], latitude: 14.4974, longitude: -14.4524},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "نجات آبزیان", link: "#", description: "یک واحد تخصصی برای نجات و درمان حیوانات دریایی آسیب‌دیده از آلودگی و تورها در جنوب شرقی آسیا.", tags: ["آبزیان", "اقیانوس", "نجات", "لاک‌پشت"], latitude: -2.5489, longitude: 118.0149},
-            { img: "https://storage.googleapis.com/aistudio-public/prompts/6f3e334a-9391-450f-a63e-63f5b35274d4.jpeg", title: "حفاظت از گونه‌های آمازون", link: "#", description: "حفاظت از گونه‌های در معرض خطر در آمازون در برابر شکار غیرقانونی و از دست دادن زیستگاه از طریق نظارت هوش مصنوعی.", tags: ["در معرض خطر", "آمازون", "حفاظت", "هوش مصنوعی"], latitude: -3.4653, longitude: -62.2159},
+            { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "اولویت با درمان است", link: "#", description: "در جان‌پناه، اولویت ما درمان حیواناتی است که دچار تروما شده‌اند. ما به کسانی که هیچ حامی دیگری ندارند خدمات پزشکی ارائه می‌دهдим.", tags: ["درمان", "مراقبت", "جان‌پناه"], latitude: 35.6892, longitude: 51.3890},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/89b12852-9799-470a-8a58-45e69d727b12.jpeg", title: "عقیم‌سازی شهری", link: "#", description: "یک برنامه جامع برای کنترل جمعیت حیوانات شهری از طریق عقیم‌سازی اخلاقی و واکسیناسیون.", tags: ["TNR", "گربه‌ها", "سلامت شهری"], latitude: 35.7219, longitude: 51.3347},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/12a8385d-4f74-4b47-9759-450a80e6c271.jpeg", title: "آموزش همگانی", link: "#", description: "تلاش برای تغییر فرهنگ و نشان دادن اینکه مهربانی با حیوانات یک ارزش همگانی است.", tags: ["فرهنگ", "آموزش", "مهربانی"], latitude: 35.6961, longitude: 51.4231},
+            { img: "https://storage.googleapis.com/aistudio-public/prompts/c7891b92-56c6-4d5b-9d7a-115f573c0545.jpeg", title: "نجات اضطراری", link: "#", description: "پاسخ به گزارش‌های حیوانات آسیب‌دیده و انتقال فوری به پناهگاه.", tags: ["نجات", "اضطراری", "پناهگاه"], latitude: 35.7550, longitude: 51.4050},
         ],
-        achievementsTitle: "تأثیر جهانی ما",
+        achievementsTitle: "تأثیر ما",
         achievements: [
-            { iconKey: 'publications', count: 15, suffix: '+ هزار', label: 'حیوان نجات یافته' },
-            { iconKey: 'funded', count: 8500, suffix: '+', label: 'فرزندخواندگی موفق' },
-            { iconKey: 'collaborations', count: 45, suffix: '+', label: 'پناهگاه همکار' },
-            { iconKey: 'team', count: 12, suffix: '', label: 'کشور فعال' },
-            { iconKey: 'trained', count: 20, suffix: '+ هزار', label: 'واکسیناسیون انجام شده' }
+            { iconKey: 'publications', count: 1200, suffix: '+', label: 'حیوان درمان شده' },
+            { iconKey: 'funded', count: 500, suffix: '+', label: 'فرزندخواندگی موفق' },
+            { iconKey: 'collaborations', count: 10, suffix: '+', label: 'سال خدمت' },
+            { iconKey: 'team', count: 100, suffix: '%', label: 'تعهد به زندگی' },
+            { iconKey: 'trained', count: 5000, suffix: '+', label: 'واکسیناسیون' }
         ],
         map: {
-            title: "شبکه نجات ما",
-            subtitle: "پناهگاه‌های فعال و عملیات نجات ما را در سراسر جهان کاوش کنید.",
-            button: "یافتن پناهگاه نزدیک"
+            title: "شبکه نجات",
+            subtitle: "ببینید کجا فعالیت می‌کنیم و حیوانات نیازمند نزدیک خود را بیابید.",
+            button: "مشاهده نقشه"
         },
-        customersTitle: "با همکاری",
+        customersTitle: "با حمایت",
         customerLogos: [
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'صندوق جهانی طبیعت' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'تسهیلات جهانی محیط زیست' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-wwf.svg', alt: 'Partner 1' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-gef.svg', alt: 'Partner 2' },
             { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png', alt: 'ASPCA' },
-            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'حفاظت بین‌الملل' },
+            { img: 'https://storage.googleapis.com/verdant-assets/logo-conservation-intl.svg', alt: 'Partner 3' },
         ],
-        calendarTitle: "داستان‌های پناهگاه",
+        calendarTitle: "اخبار و داستان‌ها",
         latestPosts: [
-            { img: "https://storage.googleapis.com/verdant-assets/blog-1.jpg", title: "چگونه هوش مصنوعی به ما در یافتن صاحب مناسب کمک می‌کند", date: "۲۸ تیر ۱۴۰۳", comments: 15, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "سفر لونا: از سگ خیابانی تا حیوان خدماتی", date: "۱۰ تیر ۱۴۰۳", comments: 22, link: "#" },
+            { img: "http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg", title: "سرپرست مجموعه جان‌پناه: در مرحله اول درمانگر حیوانات هستیم", date: "۱۶ شهريور ۱۴۰۰", comments: 8, link: "https://hakimemehr.ir/fa/news/65134" },
+            { img: "https://storage.googleapis.com/verdant-assets/blog-2.jpg", title: "چرخه مهربانی در جامعه", date: "۲۴ مرداد ۱۴۰۲", comments: 22, link: "#" },
             { title: "مدیریت لوازم پناهگاه با تحلیل‌های پیش‌بینی‌کننده", date: "۲۳ خرداد ۱۴۰۳", comments: 9, link: "#" },
-            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "چرا حیوانات خانگی مسن بهترین همراهان هستند", date: "۵ خرداد ۱۴۰۳", comments: 18, link: "#" },
+            { img: "https://storage.googleapis.com/verdant-assets/blog-4.jpg", title: "چرا واکسیناسیون بهتر از حذف فیزیکی است", date: "۵ خرداد ۱۴۰۳", comments: 18, link: "#" },
         ]
     },
     footer: {
-      description: "یک سازمان غیرانتفاعی که به بهبود زندگی حیوانات از طریق فناوری، نجات و بازپروری اختصاص دارد.",
-      contactTitle: "در تماس باشید",
-      email: "rescue@greenhope.proj",
-      phone: "۴۵۶۷ ۱۲۳ ۵۵۵ ۱+",
-      address: "سان فرانسیسکو، آمریکا",
-      socialMediaTitle: "عملیات نجات ما را دنبال کنید",
+      description: "پناهگاه جان‌پناه: درمان حیوانات، فرهنگ‌سازی و گسترش مهربانی.",
+      contactTitle: "تماس با ما",
+      email: "info@janpanah.org",
+      phone: "۶۷۸ ۴۵ ۱۲۳ ۲۱ ۹۸+",
+      address: "تهران، ایران",
+      socialMediaTitle: "ما را دنبال کنید",
       instagram: "اینستاگرام",
       linkedin: "لینکدین",
       facebook: "فیسبوک",
       quickLinksTitle: "دسترسی سریع",
       quickLinks: [
-        { text: "درباره ما", link: "#" },
+        { text: "درباره جان‌پناه", link: "#" },
         { text: "مأموریت ما", link: "#services" },
         { text: "فرزندخواندگی", link: "#" },
-        { text: "داوطلب شدن", link: "#" },
+        { text: "کمک مالی", link: "#" },
         { text: "سیاست حفظ حریم خصوصی", link: "#" },
       ],
-      addressTitle: "موقعیت ما",
-      copyright: "© ۲۰۲۴ نجات حیوانات امید سبز. تمامی حقوق محفوظ است.",
+      addressTitle: "موقعیت",
+      copyright: "© ۲۰۲۴ پناهگاه جان‌پناه. تمامی حقوق محفوظ است.",
     },
     projectsPage: {
         title: "نمونه کارهای نجات ما",
-        subtitle: "مجموعه‌ای از عملیات کلیدی ما که تعهد ما به رفاه حیوانات را نشان می‌دهد."
+        subtitle: "عملیات کلیدی که تعهد ما به رفاه حیوانات را نشان می‌دهد."
     },
     teamPage: {
-        title: "با ناجیان ما آشنا شوید",
-        subtitle: "تیمی متعهد از دامپزشکان، رفتارشناسان و فناوران که به نجات جان‌ها متعهد هستند.",
+        title: "تیم ما",
+        subtitle: "افراد متعهدی که برای رفاه حیوانات تلاش می‌کنند.",
         members: [
-            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'دکتر آریس تورن', title: 'دامپزشک ارشد', bio: 'با بیش از ۲۰ سال سابقه در دامپزشکی، آریس پروتکل‌های تریاژ پزشکی و بازپروری ما را رهبری می‌کند.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'لنا پتروا', title: 'مدیر هوش مصنوعی پناهگاه', bio: 'متخصص در مدل‌سازی پیش‌بینی‌کننده برای مدیریت ظرفیت پناهگاه و روندهای فرزندخواندگی.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'دیوید چن', title: 'رئیس مشارکت‌ها', bio: 'متخصص در تأمین گرنت از بنیادهای رفاه حیوانات و ایجاد ائتلاف‌های جهانی.', linkedin: '#' },
-            { img: 'https://storage.googleapis.com/verdant-assets/team-4.jpg', name: 'دکتر سمیرا اقبال', title: 'متخصص رفتارشناسی', bio: 'تمرکز بر بازپروری حیوانات و آماده‌سازی حیوانات آسیب‌دیده برای خانه‌های همیشگی.', linkedin: '#' },
+            { img: 'http://hakimemehr.ir/files/fa/news/1400/6/15/62472_110.jpg', name: 'منیره صفری', title: 'سرپرست پناهگاه جان‌پناه', bio: 'بنیان‌گذار و رهبر مجموعه با تمرکز بر درمان حیوانات آسیب‌دیده و فرهنگ‌سازی در زمینه حقوق حیوانات.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-1.jpg', name: 'دکتر آریس تورن', title: 'دامپزشک ارشد', bio: 'متخصص جراحی تروما برای حیوانات ولگرد نجات‌یافته.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-2.jpg', name: 'لنا پتروا', title: 'مدیر پناهگاه', bio: 'مدیریت عملیات روزانه و هماهنگی فرزندخواندگی.', linkedin: '#' },
+            { img: 'https://storage.googleapis.com/verdant-assets/team-3.jpg', name: 'دیوید چن', title: 'ارتباطات مردمی', bio: 'فعالیت در برنامه‌های آموزشی و فرهنگ‌سازی.', linkedin: '#' },
         ]
+    },
+    animalsPage: {
+        filterTitle: "همراه ایده‌آل خود را پیدا کنید",
+        filterSpecies: "گونه",
+        filterSpeciesAll: "همه گونه‌ها",
+        filterSpeciesDog: "سگ",
+        filterSpeciesCat: "گربه",
+        filterAge: "سن",
+        filterAgeAll: "همه سنین",
+        filterAgeYoung: "جوان",
+        filterAgeAdult: "بالغ",
+        filterAgeSenior: "سالمند",
+        filterTemperament: "خلق و خو",
+        filterTemperamentAll: "همه خلق و خوها",
+        filterTemperamentPlayful: "بازیگوش",
+        filterTemperamentCalm: "آرام",
+        filterTemperamentShy: "خجالتی"
+    },
+    adoptionForm: {
+      title: "فرم درخواست سرپرستی",
+      subtitle: "آماده‌اید تا یک خانه همیشگی هدیه دهید؟ برای شروع فرآیند، فرم زیر را پر کنید.",
+      fullName: "نام و نام خانوادگی",
+      fullNamePlaceholder: "مثال: مریم رضایی",
+      email: "آدرس ایمیل",
+      emailPlaceholder: "مثال: maryam.rezaei@example.com",
+      phone: "شماره تلفن",
+      phonePlaceholder: "مثال: ۰۹۱۲۱۲۳۴۵۶۷",
+      address: "آدرس کامل",
+      addressPlaceholder: "خیابان، شهر، استان، کد پستی",
+      homeType: "نوع محل سکونت",
+      homeTypeApartment: "آپارتمان",
+      homeTypeHouse: "خانه حیاط‌دار",
+      homeTypeFarm: "مزرعه / ملک روستایی",
+      otherPets: "آیا حیوان خانگی دیگری دارید؟",
+      otherPetsPlaceholder: "مثال: یک گربه ۵ ساله، آرام و اجتماعی",
+      reason: "چرا می‌خواهید سرپرستی بگیرید؟",
+      reasonPlaceholder: "درباره انگیزه‌های خود و اینکه به دنبال چه نوع همراهی هستید برای ما بنویسید.",
+      submitButton: "ارسال درخواست",
+      validationError: "لطفاً تمام فیلدهای الزامی را پر کنید.",
+      successTitle: "درخواست شما ثبت شد!",
+      successMessage: "از علاقه شما سپاسگزاریم. تیم ما درخواست شما را بررسی کرده و ظرف ۳ تا ۵ روز کاری با شما تماس خواهد گرفت."
     },
     reportTypes: {
         shelter_plan: "طرح عملیاتی پناهگاه",
@@ -515,7 +779,7 @@ const translations: Record<string, any> = {
         placeholder2: "فرم را پر کرده و روی 'تولید' کلیک کنید تا شروع شود."
     },
     grantFinder: {
-        title: "یابنده گرنت‌های رفاه حیوانات",
+        title: "یابنده گرنت‌های جان‌پناه",
         searchPlaceholder: "کلمات کلیدی را وارد کنید (مثال: 'ساخت پناهگاه'، 'بودجه عقیم‌سازی')",
         searchButton: "جستجوی گرنت‌ها",
         searching: "در حال جستجو...",
@@ -525,6 +789,56 @@ const translations: Record<string, any> = {
         noResults: "هیچ گرنتی برای این کلمات کلیدی یافت نشد. جستجوی گسترده‌تری را امتحان کنید.",
         useGrounding: "استفاده از جستجوی زنده وب (به‌روزتر)",
         sources: "منابع",
+        // New GrantFinder Translations
+        subtitle: "جستجو برای فرصت‌های تأمین مالی یا تحلیل اسناد خودتان.",
+        uploadLabel: "آپلود سند گرنت",
+        selectFile: "انتخاب فایل",
+        removeFile: "حذف فایل",
+        fileTypes: "پشتیبانی می‌شود: .docx, .txt, .md",
+        or: "یا",
+        keywordsLabel: "کلمات کلیدی / دستورالعمل‌های تکمیلی",
+        keywordsPlaceholder: "مثال: 'تمرکز بر تحقیق لوسمی گربه‌ها' یا 'پناهگاه‌های کوچک روستایی'",
+        maxResults: "حداکثر نتایج",
+        readingFile: "خواندن فایل...",
+        finding: "در حال جستجو...",
+        findButton: "یافتن و تحلیل گرنت‌ها",
+        savedTitle: "گرنت‌های ذخیره شده",
+        clearAll: "پاک کردن همه",
+        deadlineLabel: "مهلت",
+        summaryLabel: "خلاصه",
+        notesLabel: "یادداشت‌های شما",
+        notesPlaceholder: "نظرات خود را اینجا بنویسید...",
+        remove: "حذف",
+        saved: "ذخیره شد",
+        save: "ذخیره",
+        useForProposal: "استفاده برای پروپوزال",
+        analyze: "تحلیل عمیق",
+        crateTitle: "جعبه گرنت",
+        crateSubtitle: "گرنت‌های یافت شده در این نشست",
+        clearCrate: "پاک کردن جعبه",
+        loadingTitle: "در حال اسکن فرصت‌ها...",
+        loadingSubtitle: "هوش مصنوعی در حال خواندن اسناد و جستجو در وب است.",
+        sortBy: "مرتب‌سازی بر اساس",
+        sort: {
+            relevance: "ارتباط",
+            deadline: "مهلت",
+            amount: "مبلغ",
+            geography: "جغرافیا"
+        },
+        documents: "اسناد مورد نیاز",
+        parseErrorTitle: "نتایج خام جستجو",
+        parseErrorSubtitle: "ما اطلاعاتی پیدا کردیم، اما نتوانستیم آن را به طور کامل ساختاردهی کنیم. متن خام در اینجا آمده است:",
+        crateEmpty: "هنوز گرنتی پیدا نشده است. یک جستجو امتحان کنید!",
+        fileTypeError: "نوع فایل نامعتبر است. لطفاً .docx، .txt یا .md آپلود کنید.",
+        validationError: "لطفاً یک فایل آپلود کنید یا کلمات کلیدی را وارد نمایید.",
+        fileReadError: "خواندن فایل ناموفق بود.",
+        prompt: {
+            common: "شما یک پژوهشگر متخصص گرنت برای پناهگاه حیوانات هستید.",
+            supplementalKeywords: "دستورالعمل‌های تکمیلی کاربر: {keywords}",
+            noSupplementalKeywords: "بدون دستورالعمل تکمیلی.",
+            fileBased: "{common} من یک سند آپلود کرده‌ام. آن را تحلیل کنید و گرنت‌های منطبق را بیابید. متن سند: {documentText}. {keywordInstruction}. {maxResults} نتیجه را در یک جدول Markdown برگردانید.",
+            keywordBased: "{common} برای این عبارات گرنت پیدا کنید: {queries}. {maxResults} نتیجه را در یک جدول Markdown برگردانید."
+        }
     },
     grantAnalyzer: {
         title: "تحلیل گرنت با هوش مصنوعی",
@@ -680,7 +994,7 @@ const translations: Record<string, any> = {
         uploadButton: "آپلود تصویر",
         imagePrompt: "هوش مصنوعی را در مورد سبک بصری و حال و هوا راهنمایی می‌کند.",
         removeImage: "حذف تصویر",
-        addWatermark: "افزودن واترمارک امید سبز",
+        addWatermark: "افزودن واترمارک جان‌پناه",
         numberOfVersions: "تعداد نسخه‌های ویدیو",
         aspectRatio: "نسبت تصویر",
         durationLabel: "مدت زمان تقریبی ویدیو",
@@ -738,6 +1052,29 @@ const translations: Record<string, any> = {
         placeholder: "تصویر ویرایش شده شما در اینجا نمایش داده خواهد شد.",
         validationError: "لطفاً یک تصویر آپلود کرده و توضیحات ویرایش را ارائه دهید."
     },
+    rescueStoryteller: {
+      title: "داستان‌سرای نجات و تأمین مالی",
+      subtitle: "تولید کمپین‌های احساسی برای حیوانات آسیب‌دیده، الهام گرفته از Cuddly. مناسب برای اینستاگرام و تلگرام.",
+      form: {
+        nameLabel: "نام حیوان",
+        namePlaceholder: "مثال: همپا",
+        conditionLabel: "وضعیت پزشکی / آسیب",
+        conditionPlaceholder: "مثال: شکستگی پا در تصادف، جرب شدید",
+        needsLabel: "نیازهای خاص (لیست آرزوها)",
+        needsPlaceholder: "مثال: جراحی ارتوپدی، آنتی‌بیوتیک، غذای ریکاوری",
+        toneLabel: "لحن کمپین",
+        toneUrgent: "فوری و حیاتی",
+        toneHopeful: "امیدوارکننده و بهبودی",
+        button: "تولید کمپین"
+      },
+      results: {
+        instagram: "کپشن اینستاگرام",
+        telegram: "پست تلگرام",
+        hashtags: "هشتگ‌ها",
+        wishlist: "اقلام پیشنهادی لیست آرزوها"
+      },
+      validationError: "لطفاً تمام فیلدها را پر کنید تا داستانی جذاب تولید شود."
+    },
     quotaErrorModal: {
         title: "سهمیه API تمام شد",
         body: "شما از سهمیه API فعلی خود فراتر رفته‌اید. لطفاً حساب صورتحساب خود را بررسی کنید یا بعداً دوباره تلاش کنید. برخی ویژگی‌ها ممکن است در دسترس نباشند.",
@@ -753,18 +1090,130 @@ const translations: Record<string, any> = {
         sourcesTitle: "منابع:",
     },
     chatbot: {
-        title: "دستیار نجات",
+        title: "دستیار جان‌پناه",
         placeholder: "درباره فرزندخواندگی یا نجات بپرسید...",
-        initialGreeting: "سلام! چگونه می‌توانم به شما کمک کنم؟ می‌توانید درباره پذیرش حیوان خانگی، مأموریت‌های نجات ما یا نحوه داوطلب شدن سؤال کنید.",
+        initialGreeting: "سلام! من دستیار هوشمند جان‌پناه هستم. می‌توانید درباره خانم منیره صفری، سیاست درمان در مرحله اول، یا نحوه کمک به پناهگاه بپرسید.",
         send: "ارسال",
         initialPrompts: [
+            "منیره صفری کیست؟",
+            "سیاست درمان اول چیست؟",
             "چگونه می‌توانم سرپرستی بگیرم؟",
-            "چه حیواناتی را نجات می‌دهید؟",
-            "درباره آخرین مأموریت نجات بگویید.",
             "آیا به داوطلب نیاز دارید؟",
-            "هوش مصنوعی چگونه به حیوانات کمک می‌کند؟",
-            "پناهگاه‌های شما کجا هستند؟"
+            "پناهگاه جان‌پناه کجاست؟"
         ]
+    },
+    researchPage: {
+        title: "تحقیق و توسعه",
+        subtitle: "بررسی چشم‌انداز فناوری در حوزه رفاه حیوانات برای بهبود عملیات نجات.",
+        startups: [
+            {
+                name: "پتیا (الگوی بومی)",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Generic Placeholder
+                description: "استارتاپ پتیا (تاسیس علی دلشاد تهرانی) پیشگام خدمات آنلاین حیوانات است. ما قصد داریم از ایده «پت‌کارت» (کارت سلامت) آن‌ها برای پرونده‌سازی دیجیتال حیوانات حمایتی استفاده کنیم. تجربه آن‌ها در عدم حمایت شهرداری برای ساخت پناهگاه، نقشه راهی برای ماست تا با ابزارهای هوش مصنوعی این موانع را رفع کنیم.",
+                link: "https://petia.ir/"
+            },
+            {
+                name: "Cuddly",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/ASPCA_logo.svg/1200px-ASPCA_logo.svg.png", // Placeholder as specific logo not avail
+                description: "یک پلتفرم تأمین مالی جمعی که به سازمان‌های حیوانات کمک می‌کند تا برای موارد پزشکی و لیست آرزوها کمک مالی جمع کنند. ضروری برای مأموریت 'درمان در اولویت'.",
+                link: "https://cuddly.com/"
+            },
+            {
+                name: "Snout",
+                logo: "https://petstablished.com/favicon.png", // Placeholder
+                description: "استفاده از بیومتریک اثر بینی برای شناسایی سگ‌های گمشده، مشابه اثر انگشت انسان. ابزاری حیاتی برای شناسایی سگ‌های ولگرد در جایی که میکروچیپ کمیاب است.",
+                link: "https://www.snoutid.com/"
+            },
+            {
+                name: "Petfinder",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Petfinder_logo.svg/2560px-Petfinder_logo.svg.png",
+                description: "یک پایگاه داده آنلاین و قابل جستجو از حیواناتی که به خانه نیاز دارند. این سایت همچنین فهرستی از تقریباً ۱۱۰۰۰ پناهگاه و سازمان واگذاری حیوانات در آمریکا، کانادا و مکزیک است.",
+                link: "https://www.petfinder.com/"
+            },
+            {
+                name: "Petstablished",
+                logo: "https://petstablished.com/favicon.png",
+                description: "نرم‌افزار جامع مدیریت پناهگاه که شامل ابزارهایی برای واگذاری، نگهداری موقت، جمع‌آوری کمک‌های مالی و ثبت سوابق است و به بهینه‌سازی عملیات سازمان‌های نجات کمک می‌کند.",
+                link: "https://petstablished.com/"
+            },
+            {
+                name: "Doobert",
+                logo: "https://vet-ct.com/images/logo.svg", // Placeholder
+                description: "اتصال پناهگاه‌ها به داوطلبان برای حمل و نقل، نگهداری موقت و عکاسی. ایجاد زنجیره تأمین برای نجات زندگی‌ها.",
+                link: "https://www.doobert.com/"
+            },
+            {
+                name: "VetCT",
+                logo: "https://vet-ct.com/images/logo.svg",
+                description: "یک شرکت جهانی مشاوره از راه دور و رادیولوژی از راه دور که پشتیبانی تخصصی به تیم‌های دامپزشکی ارائه می‌دهد و دسترسی به مشاوره تخصصی برای موارد پیچیده در مراقبت‌های بهداشتی حیوانات را فراهم می‌کند.",
+                link: "https://vet-ct.com/"
+            }
+        ]
+    },
+    aiSystemPage: {
+        title: "طراحی سیستم هوش مصنوعی",
+        subtitle: "یک طرح فنی و مفهومی از ماژول‌های پیشرفته هوش مصنوعی که سیستم ارتباطات و مدیریت پناهگاه جان‌پناه را قدرت می‌بخشد.",
+        sections: {
+            goal: "هدف و کاربرد",
+            inputs: "متغیرهای ورودی",
+            outputs: "ساختار خروجی",
+            prompt: "پرامپت نمونه"
+        },
+        modules: [
+            { id: 6, name: "تطبیق هوشمند", goal: "تحلیل پروفایل متقاضی و پیشنهاد حیوان مناسب با ایمیل شخصی‌سازی شده.", inputs: "پروفایل متقاضی:\n- نام: {{adopter_name}}\n- نوع مسکن: {{آپارتمان/خانه ویلایی/مزرعه}}\n- متراژ: {{square_meters}}\n- حیاط: {{دارد/ندارد}}\n- ساعات حضور در خانه: {{hours_home}}\n- سایر حیوانات: {{لیست}}\n- کودکان: {{سن و تعداد}}\n- سطح فعالیت: {{کم/متوسط/زیاد}}\n- تجربه قبلی: {{دارد/ندارد}}\n- ترجیحات: {{گونه، اندازه، سن}}", outputs: "۱. امتیاز تطبیق برای هر حیوان (۰-۱۰۰)\n۲. دلایل تطبیق\n۳. ایمیل شخصی با ۳ پیشنهاد برتر\n۴. نکات مهم برای هر پیشنهاد", prompt_example: "بر اساس پروفایل متقاضی و لیست حیوانات موجود:\n۱. تحلیل سازگاری انجام بده\n۲. ۳ حیوان برتر را انتخاب کن\n۳. ایمیل شخصی با توضیح دلیل هر پیشنهاد بنویس\n۴. نکات مراقبتی خاص هر حیوان را اضافه کن" },
+            { id: 7, name: "پیش‌بینی رفتار اهداکنندگان", goal: "تحلیل تاریخچه و پیش‌بینی بهترین زمان و نوع درخواست کمک.", inputs: "تاریخچه اهداکننده:\n- شناسه: {{donor_id}}\n- تاریخچه کمک‌ها: {{dates, amounts}}\n- میانگین کمک: {{average}}\n- آخرین کمک: {{last_donation_date}}\n- کانال ترجیحی: {{email/sms/social}}\n- علاقه‌مندی: {{dogs/cats/all/medical/general}}\n- نرخ باز کردن ایمیل: {{open_rate}}\n- بهترین زمان تعامل: {{day, time}}", outputs: "۱. پیش‌بینی زمان کمک بعدی\n۲. مبلغ پیشنهادی\n۳. نوع کمپین مناسب\n۴. ایمیل بهینه‌شده", prompt_example: "زمان ارسال بهینه: [تاریخ و ساعت پیشنهادی]\nمبلغ پیشنهادی: $[مبلغ]\nنوع کمپین: [نوع کمپین]\nسطح شخصی‌سازی: [بالا/متوسط/پایه]\n---\nموضوع: [موضوع شخصی‌سازی شده]\n---\n[متن ایمیل با اشاره به علاقه‌مندی خاص]\n---" },
+            { id: 8, name: "گزارش پزشکی و پیگیری", goal: "ارسال به‌روزرسانی وضعیت سلامت حیوانات تحت درمان.", inputs: "پرونده پزشکی:\n- نام حیوان: {{pet_name}}\n- وضعیت اولیه: {{initial_condition}}\n- تاریخ پذیرش: {{admission_date}}\n- درمان‌های انجام شده: {{treatments}}\n- وضعیت فعلی: {{current_status}}\n- پیش‌آگهی: {{prognosis}}\n- هزینه درمان: {{total_cost}}\n- مبلغ جمع‌آوری شده: {{raised_amount}}\n- عکس‌های پیشرفت: {{photo_urls}}", outputs: "۱. ایمیل گزارش پیشرفت\n۲. پست شبکه اجتماعی\n۳. صفحه به‌روزرسانی وب", prompt_example: "موضوع: 🏥 خبر خوب درباره {{pet_name}}!\n---\nسلام {{supporter_name}} عزیز،\n\n[گزارش وضعیت با لحن امیدوارکننده]\n\n📊 خلاصه پیشرفت:\n- روز {{day_number}} درمان\n- [وضعیت فعلی]\n\n💝 کمک شما چه تاثیری داشت:\n[توضیح تاثیر کمک]\n\n📸 [تصاویر پیشرفت]\n\n[CTA برای ادامه حمایت یا اشتراک‌گذاری]" },
+            { id: 9, name: "سیستم رویداد هوشمند", goal: "مدیریت رویدادها و ارسال یادآوری‌های هوشمند.", inputs: "جزئیات رویداد:\n- نام رویداد: {{event_name}}\n- نوع: {{adoption_day/fundraiser/vaccination/training/volunteer}}\n- تاریخ: {{date}}\n- ساعت: {{time}}\n- مکان: {{location}}\n- ظرفیت: {{capacity}}\n- ثبت‌نام شده: {{registered_count}}\n- هزینه: {{fee}}\n- الزامات: {{requirements}}", outputs: "برای هر مرحله:\nمرحله: [مرحله]\nتاریخ ارسال: [تاریخ ارسال]\n---\nموضوع: [موضوع متناسب با مرحله]\n---\n[محتوای ایمیل]\n---\nدعوتنامه تقویم: [فایل ics]\n---", prompt_example: "برنامه یادآوری:\n- ۷ روز قبل: دعوت اولیه\n- ۳ روز قبل: یادآوری\n- ۱ روز قبل: جزئیات نهایی\n- روز رویداد: یادآوری صبح\n- ۱ روز بعد: تشکر و پیگیری" },
+            { id: 10, name: "پاسخ‌دهی خودکار", goal: "پاسخ خودکار به سوالات متداول از طریق ایمیل.", inputs: "ایمیل ورودی:\n- فرستنده: {{sender_email}}\n- موضوع: {{subject}}\n- متن: {{body}}\n- زمان: {{timestamp}}", outputs: "قصد شناسایی شده: [نوع سوال]\nاطمینان: [درصد اطمینان]\nپاسخ خودکار: [بله/خیر/نیاز به بررسی انسانی]\n---\nموضوع: Re: {{original_subject}}\n---\n[پاسخ خودکار]\n---\nنیاز به پیگیری انسانی: [بله/خیر]\nاقدامات پیشنهادی: [اقدامات پیشنهادی]", prompt_example: "انواع سوالات:\n۱. فرآیند فرزندخواندگی\n۲. موجودی حیوانات\n۳. اطلاعات داوطلبی\n۴. روش‌های کمک مالی\n۵. گم‌شده و پیدا شده\n..." },
+            { id: 11, name: "تحلیل احساسات و بازخورد", goal: "تحلیل بازخوردها و ارسال پاسخ متناسب.", inputs: "ورودی بازخورد:\n- منبع: {{email/survey/social/review}}\n- متن: {{content}}\n- امتیاز (اگر موجود): {{rating}}\n- موضوع مرتبط: {{adoption/donation/visit/volunteer}}\n- کاربر: {{user_id}}", outputs: "احساس: [مثبت/منفی/خنثی]\nشدت: [۱-۱۰]\nموضوعات کلیدی: [لیست موضوعات]\nفوریت: [کم/متوسط/زیاد/حیاتی]\n---\nنوع پاسخ پیشنهادی: [تشکر/عذرخواهی/پیگیری/ارجاع]\n---\n[ایمیل پاسخ مناسب]\n---\nهشدار داخلی: [اگر نیاز به توجه مدیریت باشد]\n---", prompt_example: "پردازش هوش مصنوعی:\n۱. تشخیص احساس\n۲. شدت احساس\n۳. موضوعات کلیدی\n۴. نیاز به پیگیری فوری" },
+            { id: 12, name: "گزارش و آمار", goal: "تولید گزارش‌های خودکار برای ذینفعان.", inputs: "درخواست گزارش:\n- نوع گزارش: {{report_type}}\n- دوره: {{start_date}} تا {{end_date}}\n- مخاطب: {{audience}}\n- فرمت: {{email/pdf/dashboard}}", outputs: "عنوان گزارش: گزارش {{type}} - {{period}}\n---\n📊 خلاصه اجرایی:\n[۳-۴ نکته کلیدی]\n\n📈 آمار کلیدی:\n[جدول آمار با مقایسه دوره قبل]\n\n🏆 موفقیت‌ها:\n[لیست دستاوردها]\n\n⚠️ چالش‌ها:\n[مشکلات و راه‌حل‌های پیشنهادی]\n\n🎯 اهداف دوره بعد:\n[لیست اهداف]\n\n💝 داستان برجسته:\n[یک داستان موفقیت]\n---", prompt_example: "انواع گزارش:\n۱. خلاصه هفتگی\n۲. تاثیر ماهانه\n۳. گزارش اهداکنندگان\n۴. گزارش هیئت مدیره\n..." },
+            { id: 13, name: "مدیریت سرپرستی موقت", goal: "مدیریت ارتباط با خانواده‌های فاستر.", inputs: "خانواده فاستر:\n- نام: {{foster_name}}\n- تجربه: {{experience_level}}\n- ظرفیت: {{capacity}}\n- ترجیحات: {{preferences}}\n- تاریخچه: {{history}}", outputs: "انواع ایمیل:\n۱. درخواست سرپرستی جدید\n۲. هماهنگی تحویل\n۳. چک‌این هفتگی\n۴. گزارش پزشکی\n۵. درخواست تمدید\n۶. تبریک فرزندخواندگی نهایی\n۷. تشکر پایان دوره", prompt_example: "موضوع: 🏠 {{pet_name}} به کمک شما نیاز دارد!\n---\nسلام {{foster_name}} عزیز،\n\nیک فرصت سرپرستی ویژه داریم که فکر می‌کنیم برای شما مناسب است!\n\n🐾 معرفی {{pet_name}}:\n[توضیحات شخصیت و نیازها]\n\n⏰ مدت: حدود {{duration}}\n📦 تجهیزات ارائه شده: [لیست]\n💰 هزینه‌ها: تمام هزینه‌های پزشکی و غذا تامین می‌شود\n\n[CTA: قبول می‌کنم / سوال دارم]" },
+            { id: 14, name: "یکپارچه‌سازی اجتماعی", goal: "تولید محتوای متناسب برای هر پلتفرم از یک ورودی.", inputs: "پایه محتوا:\n- نوع: {{adoption/event/donation/story/alert}}\n- اطلاعات اصلی: {{main_content}}\n- تصاویر: {{images}}\n- لینک: {{link}}\n- هشتگ‌های برند: {{brand_hashtags}}", outputs: "اینستاگرام:\n📸 کپشن (حداکثر ۲۲۰۰ کاراکتر)\n#هشتگ‌ها (حداکثر ۳۰)\n\nتوییتر/X:\n🐦 توییت (حداکثر ۲۸۰ کاراکتر)\n\nتلگرام:\n📱 پست کانال\n\nواتساپ:\n💬 متن اشتراک‌گذاری", prompt_example: "تولید محتوای چندپلتفرمی از یک ورودی پایه، با تطبیق لحن و فرمت برای هر شبکه اجتماعی." },
+            { id: 15, name: "تولید تصویر با هوش مصنوعی", goal: "تولید پرامپت‌های موثر برای ابزارهای تصویرساز هوش مصنوعی.", inputs: "درخواست تصویر:\n- نوع: {{poster/banner/social/email_header}}\n- موضوع: {{adoption/event/donation/awareness}}\n- حیوان: {{species, breed, color}}\n- سبک: {{realistic/cartoon/watercolor/minimalist}}\n- ابعاد: {{dimensions}}\n- متن روی تصویر: {{overlay_text}}", outputs: "برای DALL-E / Midjourney:\nپرامپت: [پرامپت انگلیسی بهینه]\nپرامپت منفی: [موارد اجتناب]\nمرجع سبک: [مرجع سبک]\n\nبرای Canva AI:\nعبارات جستجو: [کلیدواژه‌های جستجو]\nپیشنهاد قالب: [پیشنهاد قالب]\nپالت رنگ: [پالت رنگ]", prompt_example: "پرامپت DALL-E:\n'پوستر رویداد فرزندخواندگی دلگرم‌کننده، خانواده خوشحال با توله سگ گلدن رتریور نجات‌یافته، نور گرم غروب، رنگ‌های پاستلی نرم، سبک آبرنگ، فضای متن در بالا و پایین، کیفیت 4k، اتمسفر احساسی و دعوت‌کننده'" }
+        ]
+    },
+    seoPage: {
+        title: "مرکز سئو",
+        subtitle: "یک راهنمای استراتژیک برای بهینه‌سازی حضور آنلاین پناهگاه جان‌پناه جهت جذب حامیان، داوطلبان و سرپرستان بیشتر.",
+        technical: {
+            title: "زیرساخت فنی سئو",
+            description: "اطمینان از اینکه موتورهای جستجو مانند گوگل می‌توانند به راحتی محتوای سایت ما را پیدا، خزش و درک کنند. از آنجا که این یک وب اپلیکیشن مدرن است، تمرکز ما بر دسترس‌پذیر کردن آن برای خزنده‌ها است.",
+            items: [
+                { title: "متا تگ‌های پویا", text: "هر صفحه باید عنوان و توضیحات متای منحصر به فرد و توصیفی داشته باشد. این برای نمایش صحیح در نتایج جستجو حیاتی است." },
+                { title: "داده‌های ساختاریافته (Schema)", text: "این یک 'واژگان' برای موتورهای جستجو است. با افزودن آن، می‌توانیم به گوگل بگوییم که ما یک 'سازمان' هستیم یا اخبار ما 'مقاله' هستند، که به نمایش نتایج غنی‌تر کمک می‌کند." },
+                { title: "نقشه سایت و robots.txt", text: "نقشه سایت، نقشه‌ای از تمام صفحات ما برای گوگل است. فایل robots.txt به خزنده‌ها قوانین مربوط به ایندکس کردن را می‌دهد." },
+                { title: "سرعت صفحه و Core Web Vitals", text: "یک وب‌سایت سریع و پایدار برای کاربران و سئو ضروری است. سیستم ساخت ما (Vite) بسیاری از بهینه‌سازی‌ها را انجام می‌دهد." }
+            ]
+        },
+        content: {
+            title: "استراتژی محتوا و کلمات کلیدی",
+            description: "ایجاد محتوای ارزشمند که به سوالات مخاطبان هدف ما—سرپرستان، اهداکنندگان و داوطلبان بالقوه—پاسخ دهد.",
+            items: [
+                { title: "تحقیق کلمات کلیدی", text: "باید عباراتی را که مردم برای یافتن ما استفاده می‌کنند، شناسایی کنیم. مثال‌ها برای جان‌پناه: 'پناهگاه حیوانات در تهران'، 'واگذاری سگ در ایران'، 'کمک به حیوانات آسیب‌دیده'." },
+                { title: "سئوی داخلی (On-Page)", text: "این کلمات کلیدی باید به طور طبیعی در عناوین صفحات، سرتیترها و متن‌ها ادغام شوند تا ارتباط آن‌ها با موضوع به موتورهای جستجو نشان داده شود." },
+                { title: "تولید محتوای با کیفیت", text: "ابزار 'داستان‌سرای نجات' ما یک ابزار سئوی عالی است. هر داستان یک محتوای منحصر به فرد است که می‌تواند برای عبارات خاص رتبه بگیرد." },
+                { title: "لینک‌سازی داخلی", text: "اتصال صفحات مختلف سایت به یکدیگر (مثلاً لینک از یک داستان نجات به صفحه واگذاری) به کاربران و موتورهای جستجو در پیمایش و درک ساختار سایت کمک می‌کند." }
+            ]
+        },
+        analytics: {
+            title: "داشبورد تحلیل و نظارت",
+            description: "برای سنجش موفقیت، باید عملکرد را ردیابی کنیم. از آنجا که این یک سایت وردپرسی سنتی نیست، ما با سرویس‌های خارجی قدرتمند و استاندارد صنعتی ادغام می‌شویم.",
+            items: [
+                { title: "گوگل سرچ کنسول", text: "این یک سرویس رایگان از گوگل است که به ما کمک می‌کند حضور سایت خود در نتایج جستجو را نظارت کنیم. باید دامنه خود را در اینجا ثبت کنیم تا ببینیم کدام جستجوها کاربران را به سایت ما می‌آورند." },
+                { title: "گوگل آنالیتیکس ۴ (GA4)", text: "این ابزار رفتار کاربر در سایت ما را ردیابی می‌کند—کدام صفحات محبوب هستند، کاربران از کجا می‌آیند و چگونه با محتوای ما تعامل دارند. باید یک پراپرتی ایجاد کرده و اسکریپت ردیابی آن را به برنامه اضافه کنیم." },
+                { title: "داشبوردهای سئوی شخص ثالث", text: "برای تحلیل‌های پیشرفته‌تر (مانند ردیابی بک‌لینک‌ها یا عملکرد رقبا)، باید در سرویس‌هایی مانند Ahrefs یا Semrush ثبت‌نام کنیم. این پلتفرم‌ها داشبوردهای جامعی ارائه می‌دهند." }
+            ]
+        }
+    },
+    errors: {
+        quota: "شما از سهمیه API فعلی خود فراتر رفته‌اید. لطفاً حساب صورتحساب خود را بررسی کرده یا بعداً دوباره تلاش کنید.",
+        internal: "یک مشکل موقتی در سرور رخ داده است. لطفاً لحظه‌ای صبر کرده و دوباره تلاش کنید. اگر مشکل ادامه داشت، درخواست خود را ساده‌تر کنید.",
+        permissionDenied: "دسترسی رد شد. لطفاً اطمینان حاصل کنید که کلید API شما به مدل درخواستی دسترسی دارد.",
+        invalidKey: "کلید API شما نامعتبر است. لطفاً پیکربندی خود را بررسی کنید.",
+        invalidArgument: "مشکلی در درخواست وجود داشت (مثلاً یک مقدار نامعتبر). لطفاً ورودی خود را بررسی کرده و دوباره تلاش کنید.",
+        network: "خطای شبکه رخ داد. لطفاً اتصال اینترنت خود را بررسی کرده و دوباره تلاش کنید.",
+        jsonParse: "هوش مصنوعی پاسخی با فرمت غیرمنتظره برگرداند. لطفاً درخواست خود را دوباره امتحان کنید.",
+        unknown: "یک خطای غیرمنتظره رخ داد. لطفاً بعداً دوباره تلاش کنید."
     }
   }
 };
@@ -820,7 +1269,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 };
 
 // --- App State ---
-export type Page = 'home' | 'projects' | 'team' | 'docs' | 'generator' | 'grant' | 'siteSelector' | 'video' | 'blog' | 'imageEditor';
+export type Page = 'home' | 'about' | 'animals' | 'activities' | 'support' | 'contact' | 'projects' | 'team' | 'docs' | 'generator' | 'grant' | 'siteSelector' | 'video' | 'blog' | 'imageEditor' | 'research' | 'aiSystem' | 'seo';
 
 export interface AppState {
   page: Page;
@@ -833,6 +1282,13 @@ export interface Grant {
   summary: string;
   deadline: string;
   link: string;
+  // Extended fields for the new GrantFinder
+  linkTitle?: string;
+  relevanceScore?: number;
+  amount?: string;
+  geography?: string;
+  requirementDocuments?: { title: string; url: string }[];
+  notes?: string;
 }
 
 export interface GrantSummary {
@@ -858,6 +1314,11 @@ export interface GroundedResult {
     text: string;
     sources: GroundedSource[];
 }
+
+export interface GrantResult extends GroundedResult {
+    // Alias for compatibility if needed, but GroundedResult covers text + sources.
+}
+
 
 // --- Site Selector Types ---
 export interface Coords {
@@ -922,4 +1383,24 @@ export interface UserProfile {
     name: string;
     email: string;
     picture: string;
+}
+
+// --- Blog / Rescue Storyteller Types ---
+export interface RescueCampaign {
+    instagramCaption: string;
+    telegramPost: string;
+    hashtags: string[];
+    wishlistItems: string[];
+}
+
+// --- Adoption Form Types ---
+export interface AdoptionApplication {
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    homeType: 'apartment' | 'house' | 'farm' | '';
+    otherPets: string;
+    reason: string;
+    submissionDate: string;
 }

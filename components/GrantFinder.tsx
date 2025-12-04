@@ -1,147 +1,529 @@
-import React, { useState } from 'react';
-import { Grant, GroundedResult } from '../types';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import mammoth from 'mammoth';
+import { findGrants, GrantResult } from '../services/geminiService';
+import { Grant } from '../types';
 import { useLanguage } from '../types';
-import { marked } from 'marked';
 
-interface GrantFinderProps {
-  onFindGrants: (keywords: string) => void;
-  onFindGrantsWithGrounding: (keywords: string) => void;
-  isLoading: boolean;
-  error: string | null;
-  grants: Grant[];
-  groundedResult: GroundedResult | null;
-  onAnalyzeGrant: (grant: Grant) => void;
-  keywords: string;
-  setKeywords: (keywords: string) => void;
-}
+// A more robust helper to parse a markdown link or plain URL.
+const parseMarkdownLink = (text: string): { url: string; title: string } => {
+    const markdownMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(text);
+    let url: string;
+    let title: string;
 
-const GrantItem: React.FC<{ grant: Grant, onAnalyze: (grant: Grant) => void }> = ({ grant, onAnalyze }) => {
-    const { t } = useLanguage();
-    return (
-        <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 space-y-3">
-            <div>
-                <h4 className="font-bold text-pink-400">{grant.grantTitle}</h4>
-                <p className="text-sm text-gray-400">{t('grantFinder.from')} {grant.fundingBody}</p>
-            </div>
-            <p className="text-sm text-gray-300">{grant.summary}</p>
-            <div className="flex justify-between items-center pt-2 border-t border-slate-700/50">
-                <div className="text-xs text-gray-500">
-                    <strong>{t('grantAnalyzer.deadline')}:</strong> {grant.deadline}
-                </div>
-                <button 
-                    onClick={() => onAnalyze(grant)}
-                    className="px-3 py-1 bg-teal-600 text-white text-xs font-semibold rounded-md hover:bg-teal-700 transition-colors"
-                >
-                    {t('grantFinder.analyzeButton')}
-                </button>
-            </div>
-        </div>
-    );
+    if (markdownMatch) {
+        title = markdownMatch[1];
+        url = markdownMatch[2].trim();
+    } else {
+        url = text.trim();
+        title = url;
+    }
+    
+    const isLikelyUrl = url.includes('.') && !url.includes(' ');
+
+    if (isLikelyUrl) {
+        if (!/^https?:\/\//i.test(url)) {
+            url = 'https://' + url;
+        }
+        return { title, url };
+    }
+
+    return { title: text.trim(), url: '' };
 };
 
-const GrantFinder: React.FC<GrantFinderProps> = ({ onFindGrants, onFindGrantsWithGrounding, isLoading, error, grants, groundedResult, onAnalyzeGrant, keywords, setKeywords }) => {
-  const { t } = useLanguage();
-  const [useGrounding, setUseGrounding] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (keywords.trim()) {
-      if (useGrounding) {
-        onFindGrantsWithGrounding(keywords);
-      } else {
-        onFindGrants(keywords);
-      }
+// Helper to parse multiple markdown links from a single table cell.
+const parseDocumentLinks = (text: string): { title: string; url: string }[] => {
+    if (!text) return [];
+    const links: { title: string; url: string }[] = [];
+    const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        links.push({ title: match[1], url: match[2].trim() });
     }
-  };
+    return links;
+};
 
-  return (
-    <section id="grant-finder" className="py-12 sm:py-16">
-      <div className="bg-slate-900/60 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-slate-700">
-        <h2 className="text-2xl font-bold mb-6 text-white">{t('grantFinder.title')}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="text"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
-              className="flex-grow bg-slate-700/80 border-slate-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm text-white"
-              placeholder={t('grantFinder.searchPlaceholder')}
-            />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex-shrink-0 flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 via-purple-700 to-pink-700 hover:from-blue-700 hover:to-pink-800 disabled:bg-gray-500 transition-all"
-            >
-              {isLoading ? t('grantFinder.searching') : t('grantFinder.searchButton')}
-            </button>
-          </div>
-          <div className="relative flex items-start mt-4">
-              <div className="flex h-6 items-center">
-                  <input
-                      id="use-grounding"
-                      name="use-grounding"
-                      type="checkbox"
-                      checked={useGrounding}
-                      onChange={(e) => setUseGrounding(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-500 bg-slate-700 text-pink-600 focus:ring-pink-500 cursor-pointer"
-                  />
-              </div>
-              <div className="ml-3 text-sm leading-6">
-                  <label htmlFor="use-grounding" className="font-medium text-gray-300 cursor-pointer">
-                      {t('grantFinder.useGrounding')}
-                  </label>
-              </div>
-          </div>
-        </form>
 
-        <div className="mt-8">
-            {isLoading && (
-                <div className="text-center text-gray-400">
-                    <div className="w-6 h-6 border-2 border-dashed rounded-full animate-spin border-pink-400 mx-auto"></div>
-                    <p className="mt-2">{t('grantFinder.searching')}</p>
-                </div>
-            )}
-            {error && !isLoading && <div className="text-red-400 p-4 bg-red-900/50 rounded-md">{t('grantFinder.error')}: {error}</div>}
+// Main function to parse the markdown table from Gemini's response
+const parseGrantTable = (markdown: string): Grant[] => {
+    const grants: Grant[] = [];
+    
+    let tableMarkdown = markdown;
+    const headerKeywords = ['| Grant Title', '|Grant Title', '| Grant Name', '|Grant Name', '| Relevance Score'];
+    let tableStartIndex = -1;
+    
+    for (const keyword of headerKeywords) {
+        const index = tableMarkdown.indexOf(keyword);
+        if (index !== -1) {
+            tableStartIndex = index;
+            break;
+        }
+    }
+
+    if (tableStartIndex === -1) {
+        console.warn("Could not find a markdown table header in the AI response.");
+        return [];
+    }
+    
+    tableMarkdown = tableMarkdown.substring(tableStartIndex);
+
+    const rows = tableMarkdown.split('\n').map(row => row.trim()).filter(row => row.startsWith('|') && row.endsWith('|'));
+
+    if (rows.length < 2) { 
+        return [];
+    }
+    
+    const headerRow = rows[0];
+    const headers = headerRow.split('|').map(h => h.trim().toLowerCase()).slice(1, -1);
+    
+    const headerMap: { [key: string]: number } = {};
+    const grantTitleKeys = ['grant title', 'grant name', 'grant'];
+    const fundingBodyKeys = ['funding body', 'organization'];
+    const summaryKeys = ['summary', 'description'];
+    const deadlineKeys = ['deadline', 'due date'];
+    const linkKeys = ['link', 'url', 'website'];
+    const requirementDocumentsKeys = ['requirement documents', 'documents'];
+    const relevanceScoreKeys = ['relevance score', 'relevance'];
+    const amountKeys = ['funding amount', 'amount'];
+    const geographyKeys = ['geography', 'country', 'region'];
+
+    headers.forEach((header, index) => {
+        if (grantTitleKeys.some(key => header.includes(key))) headerMap.grantTitle = index;
+        if (fundingBodyKeys.some(key => header.includes(key))) headerMap.fundingBody = index;
+        if (summaryKeys.some(key => header.includes(key))) headerMap.summary = index;
+        if (deadlineKeys.some(key => header.includes(key))) headerMap.deadline = index;
+        if (linkKeys.some(key => header.includes(key))) headerMap.link = index;
+        if (requirementDocumentsKeys.some(key => header.includes(key))) headerMap.requirementDocuments = index;
+        if (relevanceScoreKeys.some(key => header.includes(key))) headerMap.relevanceScore = index;
+        if (amountKeys.some(key => header.includes(key))) headerMap.amount = index;
+        if (geographyKeys.some(key => header.includes(key))) headerMap.geography = index;
+    });
+    
+    if (headerMap.grantTitle === undefined || headerMap.link === undefined) {
+        console.warn("Could not find essential 'Grant Title' or 'Link' headers in the table.");
+        return [];
+    }
+
+    let dataRowStartIndex = 1;
+    if (rows.length > 1 && rows[1].includes('---')) {
+        dataRowStartIndex = 2;
+    }
+
+    for (let i = dataRowStartIndex; i < rows.length; i++) {
+        const columns = rows[i].split('|').map(col => col.trim()).slice(1, -1);
+        
+        const grantTitle = columns[headerMap.grantTitle] ?? '';
+        if (!grantTitle) continue;
+
+        const fundingBody = headerMap.fundingBody !== undefined ? (columns[headerMap.fundingBody] ?? 'N/A') : 'N/A';
+        const summary = headerMap.summary !== undefined ? (columns[headerMap.summary] ?? 'N/A') : 'N/A';
+        const deadline = headerMap.deadline !== undefined ? (columns[headerMap.deadline] ?? 'Not specified') : 'Not specified';
+        const rawLink = headerMap.link !== undefined ? (columns[headerMap.link] ?? '') : '';
+        const rawDocs = headerMap.requirementDocuments !== undefined ? (columns[headerMap.requirementDocuments] ?? '') : '';
+        
+        const amount = headerMap.amount !== undefined ? (columns[headerMap.amount] ?? 'Not specified') : 'Not specified';
+        const geography = headerMap.geography !== undefined ? (columns[headerMap.geography] ?? 'Not specified') : 'Not specified';
+        const rawScore = headerMap.relevanceScore !== undefined ? columns[headerMap.relevanceScore] : '0';
+        const relevanceScore = parseInt(rawScore?.replace('%', '').trim() || '0', 10);
+
+        const linkData = parseMarkdownLink(rawLink);
+        if (!linkData.url) continue; // Skip grants without a valid link, as it's our primary key
+
+        const requirementDocuments = parseDocumentLinks(rawDocs);
+
+        grants.push({
+            grantTitle,
+            fundingBody,
+            summary,
+            deadline,
+            link: linkData.url,
+            linkTitle: linkData.title,
+            requirementDocuments,
+            relevanceScore: isNaN(relevanceScore) ? 0 : relevanceScore,
+            amount,
+            geography
+        });
+    }
+
+    return grants;
+};
+
+const parseAmount = (amountStr?: string): number => {
+    if (!amountStr || typeof amountStr !== 'string') return 0;
+    const cleaned = amountStr.replace(/[^0-9.MK]/gi, '');
+    let multiplier = 1;
+    if (cleaned.toUpperCase().includes('M')) multiplier = 1000000;
+    else if (cleaned.toUpperCase().includes('K')) multiplier = 1000;
+    const numberPart = parseFloat(cleaned.replace(/[MK]/gi, ''));
+    return isNaN(numberPart) ? 0 : numberPart * multiplier;
+};
+
+const parseDeadline = (deadlineStr?: string): number => {
+    if (!deadlineStr || typeof deadlineStr !== 'string') return Infinity;
+    const lower = deadlineStr.toLowerCase();
+    if (lower.includes('rolling') || lower.includes('not specified')) return Infinity;
+    const date = new Date(deadlineStr);
+    return isNaN(date.getTime()) ? Infinity - 1 : date.getTime();
+};
+
+const readFileContent = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = (error) => reject(error);
+        reader.onload = async () => {
+            try {
+                if (file.name.toLowerCase().endsWith('.docx')) {
+                    const arrayBuffer = reader.result as ArrayBuffer;
+                    const result = await mammoth.extractRawText({ arrayBuffer });
+                    resolve(result.value);
+                } else {
+                    resolve(reader.result as string);
+                }
+            } catch (e) {
+                console.error("Error processing file:", e);
+                reject(new Error("Failed to process the document. It may be corrupted."));
+            }
+        };
+
+        if (file.name.toLowerCase().endsWith('.docx')) {
+            reader.readAsArrayBuffer(file);
+        } else {
+            reader.readAsText(file);
+        }
+    });
+};
+
+interface GrantFinderProps {
+  onPrepareProposal: (grant: Grant) => void;
+  onAnalyzeGrant: (grant: Grant) => void;
+  savedGrants: Grant[];
+  onSaveGrant: (grant: Grant) => void;
+  onRemoveGrant: (grant: Grant) => void;
+  onClearAllSaved: () => void;
+  onNoteChange: (index: number, note: string) => void;
+  keywords: string;
+  setKeywords: (value: string) => void;
+  handleApiError: (err: unknown) => string;
+  isQuotaExhausted: boolean;
+  allGrants: Grant[];
+  onGrantsFound: (grants: Grant[]) => void;
+  onClearAllDbGrants: () => void;
+}
+
+type SortKey = 'relevanceScore' | 'deadline' | 'amount' | 'geography';
+
+const GrantFinder: React.FC<GrantFinderProps> = ({ 
+    onPrepareProposal,
+    onAnalyzeGrant,
+    savedGrants,
+    onSaveGrant,
+    onRemoveGrant,
+    onClearAllSaved,
+    onNoteChange,
+    keywords,
+    setKeywords,
+    handleApiError,
+    isQuotaExhausted,
+    allGrants,
+    onGrantsFound,
+    onClearAllDbGrants
+}) => {
+    const { t } = useLanguage();
+    const [maxResults, setMaxResults] = useState<number>(15);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [rawTextResult, setRawTextResult] = useState<string | null>(null);
+    const [sortKey, setSortKey] = useState<SortKey>('relevanceScore');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [isFileLoading, setIsFileLoading] = useState<boolean>(false);
+    
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) {
+            setSelectedFile(null);
+            return;
+        }
+        const allowedExtensions = ['.docx', '.txt', '.md'];
+        const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            setError(t('grantFinder.fileTypeError'));
+            setSelectedFile(null);
+            event.target.value = '';
+            return;
+        }
+
+        setSelectedFile(file);
+        setError(null);
+    };
+
+    const handleClearFile = () => {
+        setSelectedFile(null);
+        const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+    };
+
+    const handleSearch = async () => {
+        if (!keywords.trim() && !selectedFile) {
+            setError(t('grantFinder.validationError'));
+            return;
+        }
+
+        setError(null);
+        setRawTextResult(null);
+
+        let documentText = '';
+        if (selectedFile) {
+            setIsFileLoading(true);
+            try {
+                documentText = await readFileContent(selectedFile);
+            } catch (e) {
+                setError(e instanceof Error ? e.message : t('grantFinder.fileReadError'));
+                setIsFileLoading(false);
+                return;
+            } finally { setIsFileLoading(false); }
+        }
+        
+        setIsLoading(true);
+
+        const commonInstructions = t('grantFinder.prompt.common');
+        let finalPrompt;
+        if (documentText) {
+            const keywordInstruction = keywords.trim() 
+                ? t('grantFinder.prompt.supplementalKeywords').replace('{keywords}', keywords)
+                : t('grantFinder.prompt.noSupplementalKeywords');
+            finalPrompt = t('grantFinder.prompt.fileBased')
+                .replace('{common}', commonInstructions)
+                .replace('{documentText}', documentText)
+                .replace('{keywordInstruction}', keywordInstruction)
+                .replace('{maxResults}', maxResults.toString());
+        } else {
+            const searchQueriesString = keywords.split(',').map(k => k.trim()).filter(Boolean).map(q => `"${q}"`).join(', ');
+            finalPrompt = t('grantFinder.prompt.keywordBased')
+                .replace('{common}', commonInstructions)
+                .replace('{queries}', searchQueriesString)
+                .replace('{maxResults}', maxResults.toString());
+        }
+
+        try {
+            const grantResults = await findGrants(finalPrompt);
+            const parsed = parseGrantTable(grantResults.text);
             
-            {groundedResult && (
-                <div className="animate-fade-in space-y-6">
-                    <div className="prose prose-sm sm:prose-base prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: marked.parse(groundedResult.text) }} />
-                    {groundedResult.sources && groundedResult.sources.length > 0 && (
-                        <div>
-                            <h4 className="font-semibold text-pink-300 mt-6 mb-2">{t('grantFinder.sources')}:</h4>
-                            <ul className="list-disc list-inside space-y-1 text-sm">
-                                {groundedResult.sources.map((source, index) => (
-                                    source.web && (
-                                        <li key={index}>
-                                            <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" title={source.web.title}>
-                                                {source.web.title || source.web.uri}
-                                            </a>
-                                        </li>
-                                    )
-                                ))}
-                            </ul>
+            if (parsed.length > 0) {
+                onGrantsFound(parsed);
+            } else if (grantResults.text) {
+                setRawTextResult(grantResults.text);
+            }
+        } catch (err) {
+            console.error(err);
+            const msg = handleApiError(err);
+            setError(msg);
+        } finally { setIsLoading(false); }
+    };
+    
+    const isGrantSaved = useCallback((grant: Grant): boolean => {
+        return savedGrants.some(g => g.grantTitle === grant.grantTitle && g.link === grant.link);
+    }, [savedGrants]);
+
+    const sortedGrants = useMemo(() => {
+        const grantsToSort = [...allGrants];
+        grantsToSort.sort((a, b) => {
+            switch (sortKey) {
+                case 'relevanceScore': return (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0);
+                case 'amount': return parseAmount(b.amount) - parseAmount(a.amount);
+                case 'deadline': return parseDeadline(a.deadline) - parseDeadline(b.deadline);
+                case 'geography': return (a.geography ?? '').localeCompare(b.geography ?? '');
+                default: return 0;
+            }
+        });
+        return grantsToSort;
+    }, [allGrants, sortKey]);
+
+    const RelevanceBadge: React.FC<{ score: number }> = ({ score }) => {
+        const getPillColor = () => {
+            if (score >= 75) return 'bg-green-500/20 text-green-300';
+            if (score >= 50) return 'bg-yellow-500/20 text-yellow-300';
+            return 'bg-red-500/20 text-red-300';
+        };
+        return (
+            <div className={`inline-flex items-baseline px-2 py-1 rounded-full text-xs font-semibold ${getPillColor()}`}>
+                <span className="font-bold text-sm">{score}</span><span className="text-xs">%</span>
+                <span className="ml-1.5 font-medium">{t('grantFinder.relevance')}</span>
+            </div>
+        );
+    };
+
+    return (
+        <section id="grant-finder" className="py-16 sm:py-24 space-y-12">
+            <div className="text-center">
+                <h2 className="text-3xl font-bold text-white">{t('grantFinder.title')}</h2>
+                <p className="mt-2 text-gray-400 max-w-2xl mx-auto">{t('grantFinder.subtitle')}</p>
+            </div>
+
+            <div className="max-w-3xl mx-auto bg-gray-800/50 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-gray-700 space-y-6">
+                <div>
+                    <label htmlFor="file-upload" className="block text-sm font-medium text-gray-300 mb-2">{t('grantFinder.uploadLabel')}</label>
+                    <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 p-3 bg-gray-700/50 border-2 border-dashed border-gray-600 rounded-md">
+                        <label htmlFor="file-upload" className="cursor-pointer bg-gray-600 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-md transition-colors w-full sm:w-auto text-center focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-800 focus-within:ring-blue-500">
+                            <span>{t('grantFinder.selectFile')}</span>
+                            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".docx,.txt,.md" />
+                        </label>
+                        <div className="flex-grow">
+                        {selectedFile ? (
+                            <div className="flex items-center justify-between text-sm text-gray-300 w-full">
+                                <span className="truncate pr-2">{selectedFile.name}</span>
+                                <button onClick={handleClearFile} className="text-red-400 hover:text-red-300 font-bold text-lg flex-shrink-0 rounded-full w-6 h-6 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-400" aria-label={t('grantFinder.removeFile')} title={t('grantFinder.removeFile')}>&times;</button>
+                            </div>
+                        ) : <p className="text-sm text-gray-400">{t('grantFinder.fileTypes')}</p> }
                         </div>
-                    )}
+                    </div>
+                </div>
+                 <div>
+                    <div className="relative"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-600"></div></div>
+                        <div className="relative flex justify-center"><span className="bg-gray-800/50 px-2 text-sm text-gray-400 backdrop-blur-sm">{t('grantFinder.or')}</span></div>
+                    </div>
+                </div>
+                <div>
+                    <label htmlFor="keywords-prompt" className="block text-sm font-medium text-gray-300">{t('grantFinder.keywordsLabel')}</label>
+                    <textarea id="keywords-prompt" rows={3} value={keywords} onChange={(e) => setKeywords(e.target.value)}
+                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white"
+                        placeholder={t('grantFinder.keywordsPlaceholder')} />
+                </div>
+                <div>
+                    <label htmlFor="max-results" className="block text-sm font-medium text-gray-300">{t('grantFinder.maxResults')} ({maxResults})</label>
+                    <input id="max-results" type="range" min="5" max="50" step="5" value={maxResults} onChange={(e) => setMaxResults(Number(e.target.value))}
+                        className="mt-1 block w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <button onClick={handleSearch} disabled={isLoading || isFileLoading || (!keywords.trim() && !selectedFile) || isQuotaExhausted}
+                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors">
+                        {isFileLoading ? t('grantFinder.readingFile') : isLoading ? t('grantFinder.finding') : isQuotaExhausted ? t('quotaErrorModal.title') : t('grantFinder.findButton')}
+                    </button>
+                </div>
+            </div>
+            
+            {savedGrants.length > 0 && (
+                <div className="mt-12 space-y-8 animate-fade-in">
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-2xl font-bold text-white">{t('grantFinder.savedTitle')}</h3>
+                        <button onClick={onClearAllSaved} className="px-3 py-1 bg-red-800/70 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500">{t('grantFinder.clearAll')}</button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {savedGrants.map((grant, index) => (
+                            <div key={`${grant.grantTitle}-${index}`} className="bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6 flex flex-col">
+                                <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-400"><h4 className="text-lg font-bold text-green-400">{grant.grantTitle}</h4></a>
+                                <p className="text-sm text-gray-400 mb-2">{t('grantFinder.from')} {grant.fundingBody}</p>
+                                <p className="text-sm font-semibold text-yellow-300 bg-yellow-900/50 px-2 py-1 rounded-md self-start mb-4">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
+                                <div className="space-y-3 text-sm flex-grow">
+                                    <p><strong className="text-gray-300">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-gray-700">
+                                    <label htmlFor={`notes-${index}`} className="block text-sm font-medium text-gray-300 mb-2">{t('grantFinder.notesLabel')}</label>
+                                    <textarea id={`notes-${index}`} rows={3}
+                                        className="w-full bg-gray-900 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white transition-colors"
+                                        placeholder={t('grantFinder.notesPlaceholder')} value={grant.notes || ''} onChange={(e) => onNoteChange(index, e.target.value)} />
+                                </div>
+                                <div className="mt-6 grid grid-cols-2 gap-2">
+                                     <button onClick={() => onRemoveGrant(grant)} className="col-span-2 text-center bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500">{t('grantFinder.remove')}</button>
+                                     <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500">{t('grantFinder.useForProposal')}</button>
+                                     <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-500 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500">{t('grantFinder.analyze')}</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 
-            {!isLoading && !error && !groundedResult && grants.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-                    {grants.map((grant, index) => (
-                        <GrantItem key={grant.link || index} grant={grant} onAnalyze={onAnalyzeGrant} />
-                    ))}
+            <div className="mt-12 space-y-8">
+                <div className="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h3 className="text-2xl font-bold text-white">{t('grantFinder.crateTitle')}</h3>
+                        <p className="text-sm text-gray-400">{t('grantFinder.crateSubtitle')}</p>
+                    </div>
+                    {allGrants.length > 0 &&
+                        <button onClick={onClearAllDbGrants} className="px-3 py-1 bg-red-800/70 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500">{t('grantFinder.clearCrate')}</button>
+                    }
                 </div>
-            )}
 
-            {!isLoading && !error && grants.length === 0 && !groundedResult && keywords && (
-                 <div className="text-center text-gray-500 py-10">
-                    <p>{t('grantFinder.noResults')}</p>
-                </div>
-            )}
-        </div>
-      </div>
-    </section>
-  );
+                {isLoading && (
+                    <div className="max-w-3xl mx-auto bg-gray-800/50 rounded-lg p-8 shadow-lg backdrop-blur-sm border border-gray-700 text-center">
+                        <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-blue-400 mx-auto mb-4"></div>
+                        <h3 className="text-lg font-semibold text-white">{t('grantFinder.loadingTitle')}</h3>
+                        <p className="text-gray-400 mt-2">{t('grantFinder.loadingSubtitle')}</p>
+                    </div>
+                )}
+                {error && !error.includes('(Quota Exceeded)') && <div className="max-w-3xl mx-auto text-red-400 p-4 bg-red-900/50 rounded-md">{error}</div>}
+                
+                {!isLoading && (
+                    <div className="space-y-6">
+                        {sortedGrants.length > 0 ? (
+                            <>
+                                <div className="flex justify-end">
+                                    <label htmlFor="sort-key" className="text-sm text-gray-400 self-center mr-2">{t('grantFinder.sortBy')}:</label>
+                                    <select id="sort-key" value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)}
+                                        className="bg-gray-700 border-gray-600 rounded-md shadow-sm py-1.5 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-white">
+                                        <option value="relevanceScore">{t('grantFinder.sort.relevance')}</option>
+                                        <option value="deadline">{t('grantFinder.sort.deadline')}</option>
+                                        <option value="amount">{t('grantFinder.sort.amount')}</option>
+                                        <option value="geography">{t('grantFinder.sort.geography')}</option>
+                                    </select>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {sortedGrants.map((grant, index) => (
+                                        <div key={grant.link} className="bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6 flex flex-col">
+                                            <div className="flex-grow">
+                                                <div className="flex justify-between items-start mb-2 flex-wrap gap-2">
+                                                    <a href={grant.link} target="_blank" rel="noopener noreferrer" className="hover:underline flex-1 min-w-0 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-400">
+                                                        <h4 className="text-lg font-bold text-green-400 truncate" title={grant.grantTitle}>{grant.grantTitle}</h4>
+                                                    </a>
+                                                    {grant.relevanceScore != null && <RelevanceBadge score={grant.relevanceScore} />}
+                                                </div>
+                                                <p className="text-sm text-gray-400 mb-2">{t('grantFinder.from')} {grant.fundingBody}</p>
+                                                <p className="text-sm font-semibold text-yellow-300 bg-yellow-900/50 px-2 py-1 rounded-md self-start mb-4">{t('grantFinder.deadlineLabel')}: {grant.deadline}</p>
+                                                <div className="space-y-3 text-sm">
+                                                    <p><strong className="text-gray-300">{t('grantFinder.summaryLabel')}:</strong> {grant.summary}</p>
+                                                    {grant.amount && grant.amount !== 'Not specified' && <p><strong className="text-gray-300">{t('grantFinder.sort.amount')}:</strong> {grant.amount}</p>}
+                                                    {grant.geography && grant.geography !== 'Not specified' && <p><strong className="text-gray-300">{t('grantFinder.sort.geography')}:</strong> {grant.geography}</p>}
+                                                    {grant.requirementDocuments && grant.requirementDocuments.length > 0 && (
+                                                        <div>
+                                                            <strong className="text-gray-300">{t('grantFinder.documents')}:</strong>
+                                                            <ul className="list-disc list-inside mt-1 space-y-1">
+                                                                {grant.requirementDocuments.map((doc, i) => (
+                                                                    <li key={i} className="truncate">
+                                                                        <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-400" title={doc.title}>{doc.title}</a>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="mt-6 pt-4 border-t border-gray-700 grid grid-cols-2 gap-2">
+                                                <button onClick={() => onSaveGrant(grant)} disabled={isGrantSaved(grant)} className="col-span-2 text-center font-semibold py-2 px-4 rounded-md transition-colors bg-purple-600 text-white hover:bg-purple-700 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">{isGrantSaved(grant) ? t('grantFinder.saved') : t('grantFinder.save')}</button>
+                                                <button onClick={() => onPrepareProposal(grant)} disabled={isQuotaExhausted} className="col-span-2 text-center bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-500">{t('grantFinder.useForProposal')}</button>
+                                                <button onClick={() => onAnalyzeGrant(grant)} disabled={!grant.link || isQuotaExhausted} className="col-span-2 text-center bg-gray-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-500 transition-colors disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500">{t('grantFinder.analyze')}</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            rawTextResult ? (
+                                <div className="mt-6 bg-gray-800/50 rounded-lg shadow-lg backdrop-blur-sm border border-gray-700 p-6">
+                                    <h4 className="font-semibold text-white mb-2">{t('grantFinder.parseErrorTitle')}</h4>
+                                    <p className="text-sm text-gray-400 mb-4">{t('grantFinder.parseErrorSubtitle')}</p>
+                                    <pre className="whitespace-pre-wrap bg-gray-900/50 p-4 rounded-md text-sm text-gray-300 overflow-x-auto">{rawTextResult}</pre>
+                                </div>
+                            ) : (
+                                <div className="text-center text-gray-500 py-10 bg-gray-800/30 rounded-lg">
+                                    <p>{t('grantFinder.crateEmpty')}</p>
+                                </div>
+                            )
+                        )}
+                    </div>
+                )}
+            </div>
+        </section>
+    );
 };
 
 export default GrantFinder;

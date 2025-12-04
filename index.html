@@ -3,26 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Green Hope Project - Planting Trees with AI</title>
+  <title>Janpanah Shelter - AI Rescue</title>
   
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   
-  <script type="importmap">
-  {
-    "imports": {
-      "react/": "https://aistudiocdn.com/react@^19.1.1/",
-      "react": "https://aistudiocdn.com/react@^19.1.1",
-      "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0",
-      "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-      "marked": "https://aistudiocdn.com/marked@^16.2.1",
-      "html-to-docx": "https://aistudiocdn.com/html-to-docx@^1.8.0"
-    }
-  }
-  </script>
-  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Source+Serif+4:wght@400;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -38,9 +26,16 @@
     tailwind.config = {
       theme: {
         extend: {
+          colors: {
+            'bf-orange': '#f58220',
+            'bf-orange-dark': '#d96e17',
+            'bf-slate': '#3d3d3e',
+            'bf-buff': '#f7f6f2',
+            'bf-gray': '#2c2c2c',
+          },
           fontFamily: {
-            // Using 'sans' for default, also includes Vazirmatn for Persian text
-            sans: ['Inter', 'Vazirmatn', 'sans-serif'],
+            sans: ['Open Sans', 'Vazirmatn', 'sans-serif'],
+            serif: ['Source Serif 4', 'Vazirmatn', 'serif'],
           },
         }
       }
@@ -55,6 +50,8 @@
     body {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      background-color: #f7f6f2; /* bf-buff */
+      color: #2c2c2c;
     }
     
     /* Strikethrough animation for form completion */
@@ -68,7 +65,7 @@
         top: 50%;
         width: 0;
         height: 1.5px;
-        background: #ec4899; /* pink-500 */
+        background: #f58220; /* bf-orange */
         transition: width 0.7s ease-in-out;
         width: 100%;
     }
@@ -108,35 +105,37 @@
         text-align: left;
     }
     .prose-docs h1, .prose-docs h2, .prose-docs h3, .prose-docs h4 {
-      color: #fff;
-      border-bottom: 1px solid #4b5563; /* gray-600 */
+      color: #3d3d3e;
+      border-bottom: 1px solid #e5e7eb;
       padding-bottom: 0.5em;
       margin-top: 1.5em;
+      font-family: 'Source Serif 4', serif;
     }
     .prose-docs p, .prose-docs ul, .prose-docs li {
-      color: #d1d5db; /* gray-300 */
+      color: #4b5563; 
       line-height: 1.7;
     }
     .prose-docs code {
-      background-color: #374151; /* gray-700 */
-      color: #f3f4f6; /* gray-100 */
+      background-color: #f3f4f6; 
+      color: #1f2937;
       padding: 0.2em 0.4em;
       border-radius: 0.25rem;
       font-family: monospace;
       font-size: 0.9em;
     }
     .prose-docs pre {
-      background-color: #1f2937; /* gray-800 */
+      background-color: #1f2937; /* Keep code blocks dark */
+      color: #f3f4f6;
       padding: 1em;
       border-radius: 0.5rem;
       overflow-x: auto;
     }
     .prose-docs a {
-      color: #93c5fd; /* blue-300 */
+      color: #f58220;
     }
     .prose-docs a:hover {
       text-decoration: underline;
-      color: #60a5fa; /* blue-400 */
+      color: #d96e17;
     }
     
     /* Ken Burns effect for project images */
@@ -182,61 +181,75 @@
         background: transparent;
     }
     .chat-messages::-webkit-scrollbar-thumb {
-        background-color: #4b5563; /* gray-600 */
+        background-color: #cbd5e1;
         border-radius: 20px;
     }
     
     /* Leaflet popup customization */
     .leaflet-popup-content-wrapper {
-        background: #1f2937; /* gray-800 */
-        color: #d1d5db; /* gray-300 */
+        background: #ffffff;
+        color: #333;
         border-radius: 8px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
     }
     .leaflet-popup-content {
         margin: 12px;
-        font-family: 'Inter', 'Vazirmatn', sans-serif;
+        font-family: 'Open Sans', 'Vazirmatn', sans-serif;
     }
     .leaflet-popup-tip {
-        background: #1f2937;
+        background: #ffffff;
     }
     .leaflet-popup-close-button {
-        color: #9ca3af !important; /* gray-400 */
+        color: #9ca3af !important;
     }
     .leaflet-popup-close-button:hover {
-        color: #fff !important;
+        color: #333 !important;
     }
 
-    /* Leaflet Draw dark theme customization */
+    /* Leaflet Draw dark theme customization - Adjusted to light */
     .leaflet-draw-toolbar a {
-        background-color: #1f2937; /* gray-800 */
+        background-color: #ffffff;
         border-radius: 4px;
+        color: #333 !important;
     }
     .leaflet-draw-toolbar a:hover {
-        background-color: #374151; /* gray-700 */
+        background-color: #f3f4f6;
     }
     .leaflet-draw-actions li:first-child a {
         border-radius: 4px;
     }
     .leaflet-draw-actions a {
-        background-color: #374151 !important; /* Important to override leaflet styles */
+        background-color: #3d3d3e !important; 
         color: #fff !important;
     }
     .leaflet-draw-actions a:hover {
         background-color: #4b5563 !important;
     }
     .leaflet-draw-tooltip {
-        background: #1f2937;
-        border: 1px solid #4b5563;
-        color: #d1d5db;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        color: #333;
     }
 
   </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "marked": "https://aistudiocdn.com/marked@^17.0.1",
+    "mammoth": "https://aistudiocdn.com/mammoth@^1.11.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-slate-900">
+<body class="bg-[#f7f6f2]">
   <div id="root"></div>
-  <script type="module" src="./index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
 </body>
 </html>

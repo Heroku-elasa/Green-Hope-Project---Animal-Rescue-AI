@@ -1,23 +1,37 @@
-
 import { GoogleGenAI, Type, GenerateContentResponse, Content, Modality } from "@google/genai";
-import { Grant, GrantSummary, VideoScene, PlantingSite, SuitableTree, EconomicBenefitAnalysis, Coords, GroundedResult, GroundedSource, SiteAnalysis } from "../types";
+import { Grant, GrantSummary, VideoScene, PlantingSite, SuitableTree, EconomicBenefitAnalysis, Coords, GroundedResult, GroundedSource, SiteAnalysis, RescueCampaign } from "../types";
 
-// Always use new GoogleGenAI({apiKey: process.env.API_KEY});
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+// FIX: Per coding guidelines, the API key must be obtained from process.env.API_KEY.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export interface ChatResponse {
     responseText: string;
     followUpPrompts: string[];
 }
 
+// Re-export type for compatibility
+export type GrantResult = GroundedResult;
+
+const parseJsonResponse = <T>(jsonStr: string, context: string): T => {
+    try {
+        let cleanJsonStr = jsonStr.trim();
+        if (cleanJsonStr.startsWith('```json')) {
+            cleanJsonStr = cleanJsonStr.substring(7, cleanJsonStr.length - 3).trim();
+        } else if (cleanJsonStr.startsWith('```')) {
+             cleanJsonStr = cleanJsonStr.substring(3, cleanJsonStr.length - 3).trim();
+        }
+        return JSON.parse(cleanJsonStr);
+    } catch (e) {
+        console.error(`Failed to parse JSON for ${context}:`, jsonStr);
+        throw new Error(`The AI returned an invalid JSON format for the ${context}.`);
+    }
+};
+
 export const getChatResponseWithFollowups = async (
     systemInstruction: string,
     history: Content[],
     latestMessage: string
 ): Promise<ChatResponse> => {
-    // Override system instruction to ensure animal shelter persona
-    const shelterPersona = "You are a friendly and knowledgeable assistant for the Green Hope Animal Rescue Project. Your goal is to answer user questions about animal adoption, shelter services, rescue missions, and volunteer opportunities. Keep your answers concise and helpful.";
-    
     const contents: Content[] = [
         ...history,
         { role: 'user', parts: [{ text: latestMessage }] }
@@ -27,7 +41,7 @@ export const getChatResponseWithFollowups = async (
         model: 'gemini-2.5-flash',
         contents,
         config: {
-            systemInstruction: shelterPersona,
+            systemInstruction: systemInstruction,
             responseMimeType: "application/json",
             responseSchema: {
                 type: Type.OBJECT,
@@ -44,8 +58,7 @@ export const getChatResponseWithFollowups = async (
         }
     });
 
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'chatbot response');
 };
 
 
@@ -80,43 +93,25 @@ export const generateReport = async (topic: string, description: string, reportT
     };
 };
 
-export const findGrants = async (keywords: string): Promise<Grant[]> => {
-    const prompt = `
-        Find available Animal Welfare, Shelter, and Veterinary grants related to these keywords: "${keywords} animal shelter rescue".
-        Provide a list of 5 grants. For each grant, provide:
-        - grantTitle: The official title of the grant.
-        - fundingBody: The organization providing the funds.
-        - summary: A brief summary of the grant's purpose for animals.
-        - deadline: The application deadline.
-        - link: A direct URL to the grant page.
-    `;
+export const findGrants = async (prompt: string): Promise<GrantResult> => {
+    // The new GrantFinder sends a full prompt including keywords and document text.
+    // We just pass it through to the model with Google Search.
     
-    // Use ai.models.generateContent with responseSchema for JSON output
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
         config: {
-            responseMimeType: "application/json",
-            responseSchema: {
-                type: Type.ARRAY,
-                items: {
-                    type: Type.OBJECT,
-                    properties: {
-                        grantTitle: { type: Type.STRING },
-                        fundingBody: { type: Type.STRING },
-                        summary: { type: Type.STRING },
-                        deadline: { type: Type.STRING },
-                        link: { type: Type.STRING },
-                    },
-                    required: ["grantTitle", "fundingBody", "summary", "deadline", "link"]
-                }
-            }
+            tools: [{ googleSearch: {} }],
         }
     });
 
-    // Extract text and parse JSON
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+    const sources = groundingChunks.map(chunk => chunk.web).filter(s => s).map(s => ({ web: s })) as GroundedSource[];
+    
+    return {
+        text: response.text,
+        sources: sources,
+    };
 };
 
 export const findGrantsWithGrounding = async (keywords: string): Promise<GroundedResult> => {
@@ -165,17 +160,7 @@ export const analyzeGrant = async (grant: Grant, userProfile: string): Promise<G
         }
     });
     
-    let jsonStr = response.text.trim();
-    // Clean up potential markdown formatting if the model adds it despite instructions.
-    if (jsonStr.startsWith('```json')) {
-        jsonStr = jsonStr.substring(7, jsonStr.length - 3).trim();
-    }
-     try {
-        return JSON.parse(jsonStr);
-    } catch (e) {
-        console.error("Failed to parse JSON from grant analysis:", jsonStr);
-        throw new Error("The model did not return a valid JSON object for the grant analysis.");
-    }
+    return parseJsonResponse(response.text, 'grant analysis');
 };
 
 export const findPlantingSites = async (description: string): Promise<PlantingSite[]> => {
@@ -194,7 +179,8 @@ export const findPlantingSites = async (description: string): Promise<PlantingSi
     `;
     
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
+        // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
+        model: 'gemini-3-pro-preview',
         contents: description,
         config: {
             systemInstruction,
@@ -217,8 +203,7 @@ export const findPlantingSites = async (description: string): Promise<PlantingSi
             }
         }
     });
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'site locations');
 };
 
 export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnalysis> => {
@@ -244,7 +229,8 @@ export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnaly
         - successFactors: List of 2-3 critical success factors (e.g., community volunteers, vet partnership).
     `;
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
+        // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
+        model: 'gemini-3-pro-preview',
         contents: userPrompt,
         config: {
             systemInstruction,
@@ -263,8 +249,7 @@ export const analyzePlantingSite = async (site: PlantingSite): Promise<SiteAnaly
             }
         }
     });
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'site analysis');
 }
 
 export const findPlantingSitesWithMaps = async (query: string, userCoords: Coords): Promise<GroundedResult> => {
@@ -323,7 +308,8 @@ export const findSuitableTrees = async (latitude: number, longitude: number): Pr
     
     const userPrompt = `Recommend suitable animals/breeds for a shelter or home at latitude: ${latitude}, longitude: ${longitude}.`
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
+        // FIX: Use gemini-3-pro-preview for complex text tasks as per guidelines.
+        model: 'gemini-3-pro-preview',
         contents: userPrompt,
         config: {
             systemInstruction,
@@ -343,8 +329,7 @@ export const findSuitableTrees = async (latitude: number, longitude: number): Pr
             }
         }
     });
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'suitable animals');
 };
 
 export const calculateEconomicBenefits = async (treeName: string, scientificName: string, coords: Coords): Promise<EconomicBenefitAnalysis> => {
@@ -382,8 +367,7 @@ export const calculateEconomicBenefits = async (treeName: string, scientificName
             }
         }
     });
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'care cost analysis');
 };
 
 
@@ -411,8 +395,7 @@ export const suggestProjectGoals = async (latitude: number, longitude: number): 
         }
     });
 
-    const jsonStr = response.text.trim();
-    const parsed = JSON.parse(jsonStr);
+    const parsed = parseJsonResponse<{ goals: string[] }>(response.text, 'project goals');
     return parsed.goals;
 };
 
@@ -448,8 +431,7 @@ export const generateVideoScript = async (prompt: string, image: string | null, 
         }
     });
     
-    const jsonStr = response.text.trim();
-    return JSON.parse(jsonStr);
+    return parseJsonResponse(response.text, 'video script');
 };
 
 export const askGoogleBabaAboutImage = async (image: {data: string, mimeType: string}, userFocus?: string): Promise<GroundedResult> => {
@@ -483,18 +465,26 @@ export const generateSceneVideo = async (description: string): Promise<string[]>
 };
 
 export const generateSceneImage = async (description: string): Promise<string> => {
-    const response = await ai.models.generateImages({
-        model: 'imagen-4.0-generate-001',
-        prompt: description,
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [{ text: description }]
+        },
         config: {
-            numberOfImages: 1,
-            outputMimeType: 'image/jpeg',
-            aspectRatio: '16:9'
+            imageConfig: {
+                aspectRatio: "16:9"
+            }
         }
     });
 
-    const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
-    return `data:image/jpeg;base64,${base64ImageBytes}`;
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+            const base64ImageBytes: string = part.inlineData.data;
+            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+        }
+    }
+    
+    throw new Error("No image was generated for the scene.");
 };
 
 export const generateBlogImage = async (title: string): Promise<string> => {
@@ -504,20 +494,28 @@ export const generateBlogImage = async (title: string): Promise<string> => {
     If the title is not in English, visualize the concept of the title.
     The image must be suitable for an animal rescue organization.
     Focus on happy animals (cats, dogs, wildlife) in a safe environment.
-    Avoid text overlays. Aspect ratio 16:9.`;
+    Avoid text overlays.`;
     
-    const response = await ai.models.generateImages({
-        model: 'imagen-4.0-generate-001',
-        prompt: prompt,
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [{ text: prompt }]
+        },
         config: {
-            numberOfImages: 1,
-            outputMimeType: 'image/jpeg',
-            aspectRatio: '16:9'
-        }
+            imageConfig: {
+                aspectRatio: "16:9"
+            }
+        },
     });
 
-    const base64ImageBytes: string = response.generatedImages[0].image.imageBytes;
-    return `data:image/jpeg;base64,${base64ImageBytes}`;
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+            const base64ImageBytes: string = part.inlineData.data;
+            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+        }
+    }
+    
+    throw new Error("No image was generated for the blog post.");
 };
 
 export const editImage = async (base64ImageData: string, mimeType: string, prompt: string): Promise<string> => {
@@ -531,13 +529,11 @@ export const editImage = async (base64ImageData: string, mimeType: string, promp
         text: prompt,
     };
 
+    // FIX: Removed `config` with `responseModalities` as it is not supported for image editing models.
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: {
             parts: [imagePart, textPart],
-        },
-        config: {
-            responseModalities: [Modality.IMAGE],
         },
     });
 
@@ -558,4 +554,47 @@ export const generateMusicDescription = async (prompt: string): Promise<string> 
         contents: `Describe a suitable background music track for a video with the following theme: "${prompt}". Describe the mood (likely heartwarming, playful, or emotional), instruments, and tempo.`,
     });
     return response.text;
+};
+
+export const generateRescueCampaign = async (name: string, condition: string, needs: string, tone: 'Urgent' | 'Hopeful'): Promise<RescueCampaign> => {
+    const systemInstruction = `You are a social media manager for 'Janpanah Shelter' (an Iranian animal rescue NGO). Your goal is to write compelling fundraising posts for injured animals, similar to campaigns on Cuddly. 
+    
+    Tone: ${tone}.
+    Brand Voice: Compassionate, Transparent, Urgent but Dignified. "Treatment First" philosophy.
+    
+    Output Format: JSON with 'instagramCaption', 'telegramPost', 'hashtags', and 'wishlistItems'.
+    Language: The 'telegramPost' and 'instagramCaption' should be in Persian (Farsi), but you can include English translations at the bottom if appropriate. The wishlist items should be in Persian.`;
+
+    const userPrompt = `
+    Animal Name: ${name}
+    Condition: ${condition}
+    Specific Needs: ${needs}
+    
+    Generate:
+    1. An emotional Instagram Caption (storytelling style, emojis).
+    2. An informative Telegram Post (clear facts, bullet points for needs).
+    3. Relevant Hashtags (Persian & English).
+    4. A structured list of 3-5 specific items for the wishlist based on the condition.
+    `;
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+            systemInstruction,
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    instagramCaption: { type: Type.STRING },
+                    telegramPost: { type: Type.STRING },
+                    hashtags: { type: Type.ARRAY, items: { type: Type.STRING } },
+                    wishlistItems: { type: Type.ARRAY, items: { type: Type.STRING } }
+                },
+                required: ["instagramCaption", "telegramPost", "hashtags", "wishlistItems"]
+            }
+        }
+    });
+
+    return parseJsonResponse(response.text, 'rescue campaign');
 };
